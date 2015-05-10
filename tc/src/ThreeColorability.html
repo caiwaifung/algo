@@ -1,0 +1,45 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+There is a H times W rectangle divided into unit cells.
+The rows of cells are numbered 0 to H-1 from top to bottom, and the columns are numbered 0 to W-1 from left to right.
+The corners of cells are called lattice points.
+By definition, there are (H+1)*(W+1) lattice points in our rectangle.
+</p>
+<p>
+Each of the four edges of each cell is painted white.
+Additionally, in some cells exactly one of the two diagonals is painted white.
+In the remaining cells no diagonal is painted white yet.
+Later, you are going to paint exactly one of the diagonals white in each of these cells.
+</p>
+<p>
+Once you are done painting the diagonals, your next goal will be to color each of the lattice points using one of three available colors: red, green, or blue.
+There is only one constraint: adjacent lattice points are not allowed to share the same color.
+</p>
+<p>
+Two lattice points are called <i>adjacent</i> if they are connected by a white line segment.
+(In other words, consecutive corners of a cell are always adjacent, opposite corners of a cell are adjacent if and only if they are connected by a painted diagonal, and no other pairs of lattice points are adjacent.)
+</p>
+<p>
+Obviously, you need to paint the missing diagonals in such a way that there will be a valid coloring of lattice points, if possible.
+</p>
+<p>
+You are given a vector &lt;string&gt; <b>cells</b> with H elements, each consisting of W characters.
+If <b>cells</b>[i][j] is 'N', there is a diagonal line from the top left to the bottom right corner in the cell in row i, column j.
+If <b>cells</b>[i][j] is 'Z', there is a diagonal line from the top right to the bottom left corner in the cell in row i, column j.
+If <b>cells</b>[i][j] is '?', there is no diagonal yet in the cell in row i, column j.
+</p>
+<p>
+If it is impossible to fill in the missing diagonals in such a way that there will be a valid coloring of all lattice points, return an empty vector &lt;string&gt;.
+Otherwise, return a vector &lt;string&gt; that represents the rectangle with all the missing diagonals filled in.
+I.e., the return value must be obtained from <b>cells</b> by replacing each '?' by either 'N' or 'Z'.
+The return value must represent a rectangle for which a valid coloring of its lattice points exists.
+If there are multiple possibilities, return the lexicographically smallest one.
+</p>
+
+</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>ThreeColorability</td></tr><tr><td>Method:</td><td>lexSmallest</td></tr><tr><td>Parameters:</td><td>vector &lt;string&gt;</td></tr><tr><td>Returns:</td><td>vector &lt;string&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;string&gt; lexSmallest(vector &lt;string&gt; cells)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td>&#160;&#160;&#160;&#160;</td></tr><tr><td></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>Given two different vector &lt;string&gt;s A and B with the same number of elements, find the smallest index i such that A[i] and B[i] differ. If A[i] &lt; B[i] we say that A is lexicographically smaller than B and vice versa.</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>cells</b> will contain between 1 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>cells</b> will contain between 1 and 50 characters, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>All elements of <b>cells</b> will contain the same number of characters.</td></tr><tr><td align="center" valign="top">-</td><td>Each character of <b>cells</b> will be either 'N' or 'Z' or '?'.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;Z&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;Z&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2">The given rectangle and a possible coloring is as follows.
+<p>
+<img src="http://www.topcoder.com/contest/problem/ThreeColorability/Color1.png"></img>
+</p>
+
+</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;??&quot;, &quot;?N&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;NN&quot;, &quot;NN&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"><p>
+<img src="http://www.topcoder.com/contest/problem/ThreeColorability/Color2.png"></img>
+</p></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;ZZZ&quot;, &quot;ZNZ&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: { }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;N?N??NN&quot;,&quot;??ZN??Z&quot;,&quot;NN???Z?&quot;,&quot;ZZZ?Z??&quot;,&quot;Z???NN?&quot;,&quot;N?????N&quot;,&quot;ZZ?N?NN&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: { }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;ZZZZ&quot;,&quot;ZZZZ&quot;,&quot;ZZZZ&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;ZZZZ&quot;, &quot;ZZZZ&quot;, &quot;ZZZZ&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

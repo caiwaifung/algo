@@ -1,0 +1,32 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Fox Ciel found two astronomical records.
+They both describe the same solar system.
+Each planet in the system can be characterized by two parameters each being a positive number: planet's size and the distance at which it orbits the sun.
+All orbital distances are pairwise distinct, but sizes of some planets may be the same.
+<br></br>
+<br></br>
+<br></br>
+The first record is a vector &lt;int&gt; <b>A</b> with x elements.
+These elements give the relative sizes of some x planets in the solar system.
+Formally, the sizes of those planets have the ratio <b>A</b>[0] : <b>A</b>[1] : ... : <b>A</b>[x-1].
+The planets described by <b>A</b> are ordered by their distance from the sun.
+(That is, earlier elements of <b>A</b> correspond to planets that are closer to the sun.)
+<br></br>
+<br></br>
+<br></br>
+The second record is a vector &lt;int&gt; <b>B</b> with y elements.
+These elements give the relative sizes of some y planets in the solar system.
+Formally, the sizes of those planets have the ratio <b>B</b>[0] : <b>B</b>[1] : ... : <b>B</b>[y-1].
+The planets described by <b>B</b> are ordered by their distance from the sun.
+<br></br>
+<br></br>
+<br></br>
+Note that the planets considered by a record do not have to be consecutive.
+For example, if a solar system contains the planets P, Q, R, S, T, and U, it is possible that the first record compares P, R, and S, and the second record compares Q, R, T, and U.
+<br></br>
+<br></br>
+<br></br>
+We assume that both records are correct.
+Return the smallest possible total number of planets in the solar system.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>AstronomicalRecords</td></tr><tr><td>Method:</td><td>minimalPlanets</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int minimalPlanets(vector &lt;int&gt; A, vector &lt;int&gt; B)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td>&#160;&#160;&#160;&#160;</td></tr><tr><td></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>A</b> will contain between 2 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>B</b> will contain between 2 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>A</b> will be between 1 and 1,000,000,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>B</b> will be between 1 and 1,000,000,000, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1,2,1,2,1}</pre></td></tr><tr><td><pre>{2,1,2,1,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 6</pre></td></tr><tr><td><table><tr><td colspan="2">There have to be at least 5 planets, because each record compares 5 of them.
+There cannot be exactly 5 planets, because the first one would have to be both smaller than and larger than the second one.
+(Their ratio would have to be both 1:2 and 2:1, which is impossible.)
+There can be exactly 6 planets with relative sizes 1,2,1,2,1,2.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1,2,3,4}</pre></td></tr><tr><td><pre>{2,4,6,8}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4</pre></td></tr><tr><td><table><tr><td colspan="2">There can be only 4 planets because 1:2:3:4 = 2:4:6:8.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{2,3,2,3,2,3,2}</pre></td></tr><tr><td><pre>{600,700,600,700,600,700,600}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 10</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1,2,3,4,5,6,7,8,9}</pre></td></tr><tr><td><pre>{6,7,8,9,10,11,12}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 12</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{100000000,200000000}</pre></td></tr><tr><td><pre>{200000000,100000000}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 3</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
