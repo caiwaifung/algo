@@ -1,0 +1,39 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Alice and Bob are going to play a variant of the traditional rock-paper-scissors game.
+Their game is played using cards.
+Each card shows one of the three pictures: a rock, a paper, or scissors.
+There is a sufficient supply of cards of each type.
+Bob has already chosen a sequence of cards and he has arranged them into a row, face down.
+It is now Alice's turn to do the same.
+Once she does that, they will use the two sequences of cards to play the game:
+For each i, Alice's i-th card and Bob's i-th card will be revealed and compared using the standard rules of rock-paper-scissors.
+The winner of each such game gets <b>win</b> points and the loser gets <b>lose</b> points.
+In case of a draw, each player gets <b>tie</b> points.
+</p>
+
+<p>
+Alice has noticed that somebody has marked Bob's cards.
+Using those marks she can tell which cards have the same picture but she has no idea what that picture is.
+You are given this information as a vector &lt;int&gt; <b>card</b>.
+Each element of <b>card</b> is between 0 and 2, inclusive.
+Each of the numbers represents one type of pictures.
+(For example, it is possible that each 0 is a rock, each 1 are scissors, and each 2 is a paper.)
+</p>
+
+<p>
+Alice wants to surprise Bob by giving an accurate prediction:
+She will announce her final score, then she will lay down her sequence of cards, and finally they will reveal all cards, add together all the scores, and presto: Alice's final score will match the score she announced at the beginning.
+</p>
+
+<p>
+You are given the ints <b>win</b>, <b>lose</b>, <b>tie</b>, and the arrangement of Bob's cards.
+Let X be the number of ways in which Alice can perform the above trick and be sure that it succeeds.
+Two ways are considered different if she either announces a different final score, or if she chooses a different sequence of cards.
+Return the value (X modulo 1,000,000,007).
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>RockPaperScissorsMagic</td></tr><tr><td>Method:</td><td>count</td></tr><tr><td>Parameters:</td><td>int, int, int, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int count(int win, int lose, int tie, vector &lt;int&gt; card)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>The number of elements in <b>card</b> will be between 1 and 1,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Elements in <b>card</b> will be between 0 and 2, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>win</b>, <b>lose</b>,and <b>tie</b> will be between 0 and 1,000, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>0</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>{0,1,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 3</pre></td></tr><tr><td><table><tr><td colspan="2">There are 2 points for a win, 0 for a loss, and 1 for a tie.
+Bob has played three different cards.
+In this setting there are three ways how Alice can perform her trick.
+In each of the ways she will announce that she will score 3 points.
+Then, she will play three cards of the same type.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>0</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>{0,0,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 6</pre></td></tr><tr><td><table><tr><td colspan="2">The scores for win/loss/draw are the same as in Example 0 but now Bob has played three cards of the same kind.
+Alice should announce that she will score 3 points, and then she should play three distinct cards.
+There are 3! = 6 ways in which Alice can order the cards she plays.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>0</pre></td></tr><tr><td><pre>0</pre></td></tr><tr><td><pre>0</pre></td></tr><tr><td><pre>{1,0,2,2,2,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 729</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>514</pre></td></tr><tr><td><pre>451</pre></td></tr><tr><td><pre>145</pre></td></tr><tr><td><pre>{0,0,0,0,0,1,1,1,1,1,1,2,2,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 0</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>3</pre></td></tr><tr><td><pre>6</pre></td></tr><tr><td><pre>9</pre></td></tr><tr><td><pre>{0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2336040</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>514</pre></td></tr><tr><td><pre>451</pre></td></tr><tr><td><pre>145</pre></td></tr><tr><td><pre>{0,0,0,1,1,1,1,1,1,2,2,2,2,2,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 116100</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

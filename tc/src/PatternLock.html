@@ -1,0 +1,36 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+This problem is about a pattern lock similar to the one used on Android devices.
+</p>
+<p></p>
+<p>
+On the screen there is a set of nodes, placed onto vertices of a rectangular grid.
+(Android devices usually use a 3 times 3 grid, but we will use grids of different dimensions in this problem.)
+We will assign Cartesian coordinates to the nodes, starting with (0,0) in a corner.
+</p>
+
+<p>
+To unlock the device, the user has to draw the correct pattern: a path that connects some of the nodes.
+Below we describe the properties of a valid pattern.
+</p>
+
+<p>
+<ul>
+<li>The pattern is a sequence of nodes.</li>
+<li>There must be at least one node in the pattern.</li>
+<li>Each node may only appear in the pattern at most once.</li>
+<li>For any two consecutive nodes A and B in the pattern, each other node that lies on the straight line segment AB must occur in the pattern before A and B.</li>
+</ul>
+</p>
+
+<p>
+According to the last rule, (0,1)-(0,0)-(0,2) is a valid pattern: the segment (0,0)-(0,2) does contain another node (0,1) but that node was already used in the pattern. On the other hand, no valid pattern can start with the nodes (0,0) and (0,2).
+</p>
+
+<p>
+You are given ints <b>N</b> and <b>MOD</b>.
+Alice's device has a grid of 2 times <b>N</b> nodes.
+(That is, the nodes have coordinates between (0,0) and (1,<b>N</b>-1), inclusive.)
+Alice wants to choose a pattern of length 2*<b>N</b> (i.e., the longest possible pattern).
+Let X be the number of different patterns she may choose.
+Return the value (X modulo <b>MOD</b>).
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>PatternLock</td></tr><tr><td>Method:</td><td>solve</td></tr><tr><td>Parameters:</td><td>int, int</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int solve(int N, int MOD)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>Two patterns are considered the same only if they contain nodes in exactly the same order.</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>N will between 1 and 3500, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>MOD will between 2 and 1,000,000,007 (10^9+7), inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1</pre></td></tr><tr><td><pre>12345667</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2">There are only two possible patterns: (0,0)-(1,0) and (1,0)-(0,0).</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>324124124</pre></td></tr></table></td></tr><tr><td><pre>Returns: 24</pre></td></tr><tr><td><table><tr><td colspan="2">All 4! permutations of the 4 nodes give us valid patterns of length 4.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>3</pre></td></tr><tr><td><pre>5325352</pre></td></tr></table></td></tr><tr><td><pre>Returns: 504</pre></td></tr><tr><td><table><tr><td colspan="2">In this case some of the 6! possible permutations are illegal. For example, this is not a valid pattern: (0,0)-(0,2)-(0,1)-(1,0)-(1,2)-(1,1).</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>500</pre></td></tr><tr><td><pre>1000000007</pre></td></tr></table></td></tr><tr><td><pre>Returns: 286169049</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

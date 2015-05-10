@@ -1,0 +1,43 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Algrid2 is a program that uses a single grid with cells colored white or black as input and returns a new one as output. The grid has H rows and W columns. The topmost row is row 0, the bottommost row is row H-1, the leftmost column is column 0 and the rightmost column is column W-1. The cell at row i, column j can be denoted as (i,j). The program works by evaluating pairs of contiguous cells and making decisions depending on their contents. The following pseudo-code describes how the program works:<br></br>
+<br></br>
+<pre>
+For i = 0 to H-2:
+    For j = 0 to W-2:
+        //Get the current colors of cells (i,j) and (i,j+1)
+        A = Color(i,j) , B = Color(i,j+1)
+
+        If (A,B) == (White, White) Then:
+             Do nothing.
+        EndIf
+        If (A,B) == (Black, White) Then: 
+             Repaint cells (i+1,j) and (i+1,j+1) Black.
+        EndIf
+        If (A,B) == (White, Black) Then:
+             Repaint cells (i+1,j) and (i+1,j+1) White.
+        EndIf
+        if (A,B) == (Black, Black) Then:
+             Swap the colors in cells (i+1,j) and (i+1,j+1).
+        EndIf
+    EndFor
+EndFor
+</pre><br></br>
+<br></br>
+You will be given a possible output for the program as a vector &lt;string&gt; <b>output</b>. The j-th character in the i-th element of <b>output</b> represents the color of cell (i,j) where 'W' represents white and 'B' represents black. Count the total number of input grids that can generate this output. Two input grids are different if there is at least one cell in which the colors are different. Since the result may be very large, return it modulo 1000000007.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>AlgridTwo</td></tr><tr><td>Method:</td><td>makeProgram</td></tr><tr><td>Parameters:</td><td>vector &lt;string&gt;</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int makeProgram(vector &lt;string&gt; output)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>64</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>output</b> will contain between 2 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>output</b> will contain between 2 and 50 characters, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>All elements of <b>output</b> will have the same length.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>output</b> will only contain 'W' or 'B' characters.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;BB&quot;,
+ &quot;WB&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2">The only way to generate that output following the rules described is:<br></br>
+<pre>
+BB
+BW
+</pre></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;BBWBBB&quot;,
+ &quot;WBWBBW&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 8</pre></td></tr><tr><td><table><tr><td colspan="2">There are 8 ways in total:<br></br>
+<pre>
+BBWBBB BBWBBB BBWBBB BBWBBB
+BWWWBB WWWBBB BWBBBB WWWWBB
+
+BBWBBB BBWBBB BBWBBB BBWBBB
+WWBBBB BWBWBB WWBWBB BWWBBB
+</pre>
+</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;BWBWBW&quot;,
+ &quot;WWWWWW&quot;,
+ &quot;WBBWBW&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 0</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;WWBWBWBWBWBWBWBW&quot;,
+ &quot;BWBWBWBWBWBWBWBB&quot;,
+ &quot;BWBWBWBWBWBWBWBW&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 73741817</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

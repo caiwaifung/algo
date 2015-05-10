@@ -1,0 +1,29 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Alice and Bob are going to sing a song together.
+You are given three ints: <b>N</b>, <b>low</b>, and <b>high</b>.
+For simplicity, we will assign the numbers 1 through <b>N</b> to the pitches that occur in the song (from the lowest to the highest).
+Alice is only able to sing pitches between <b>low</b> and <b>N</b>, inclusive.
+Bob is only able to sing pitches between <b>1</b> and <b>high</b>, inclusive.
+(It is guaranteed that the ranges of their voices overlap.)
+</p>
+
+<p>
+You are also given a vector &lt;int&gt; <b>pitch</b> containing the pitches of all notes in the song, in order.
+</p>
+
+<p>
+Each note of the song must be sung by exactly one person: either Alice or Bob.
+Each person can only sing notes that are within their range.
+All notes with the same pitch must be sung by the same person.
+The number of times the singer changes during the song must be as small as possible.
+</p>
+
+<p>
+Formally, a switch is a pair of consecutive notes that are sung by different persons.
+Compute and return the smallest possible number of switches when Alice and Bob sing the song.
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>Singing</td></tr><tr><td>Method:</td><td>solve</td></tr><tr><td>Parameters:</td><td>int, int, int, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int solve(int N, int low, int high, vector &lt;int&gt; pitch)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>A singer is not required to sing a consecutive sequence of pitches. For example, sometimes Bob may sing pitches 1 and 3 while Alice sings pitches 2 and 4.</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>N</b> will be between 1 and 1,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>low</b> will be between 1 and <b>N</b>, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>high</b> will be between <b>low</b> and <b>N</b>, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>The number of elements in <b>pitch</b> will be between 1 and 1,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>All elements of <b>pitch</b> will be between 1 and <b>N</b>.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>3</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>{1,2,3,2,1,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2">There are 3 pitches.
+Alice is able to sing pitches 2 and 3, while Bob is able to sing pitches 1 and 2.
+Thus, there are only two different ways in which they can sing the notes of the given song:
+Either they will sing in the order Bob-Alice-Alice-Alice-Bob-Alice (3 switches), or in the order
+Bob-Bob-Alice-Bob-Bob-Bob (only 2 switches).
+The second way of singing the song is better.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>10</pre></td></tr><tr><td><pre>3</pre></td></tr><tr><td><pre>7</pre></td></tr><tr><td><pre>{4,4,5,5,6,5,3,6}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 0</pre></td></tr><tr><td><table><tr><td colspan="2">Alice can sing the entire song. In that case there are no switches.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>6</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>5</pre></td></tr><tr><td><pre>{5,3,1,6,4,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2">In the optimal solution Bob sings the first three notes (pitches 5, 3, and 1), and Alice sings the next three notes.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>10</pre></td></tr><tr><td><pre>4</pre></td></tr><tr><td><pre>5</pre></td></tr><tr><td><pre>{1,4,3,5,2,5,7,5,9}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 3</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>100</pre></td></tr><tr><td><pre>20</pre></td></tr><tr><td><pre>80</pre></td></tr><tr><td><pre>{2,27,3,53,53,52,52,60,85,89,100,53,60,2,3,53,100,89,40,42,2,53,2,85}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 5</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
