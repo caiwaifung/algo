@@ -36,10 +36,30 @@ template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
 
 class OddEvenTree {
 public:
-    vector <int> getTree(vector <string> x) {
-        for (auto &a : x) cout << a << endl;
-        
-        return vector <int>();
+    vector <int> getTree(vector <string> x0) {
+        int n = (int)x0.size();
+        vector<vector<int> > xs(n);
+        forn(i, n) {
+            xs[i].resize(n);
+            forn(j, n) xs[i][j]=(x0[i][j]=='E'?0:1);
+        }
+        forn(k, n) forn(i, n) forn(j, n)
+            if((xs[i][k]^xs[k][j]) != xs[i][j])
+                return vector<int>({-1});
+        int x=-1, y=-1;
+        forn(i, n) forn(j, n)
+            if(i!=j && xs[i][j]==1)
+                x=i, y=j;
+        if(x<0) return vector<int>({-1});
+        vector<int> ans;
+        ans.PB(x); ans.PB(y);
+        forn(i, n) if(i!=x && i!=y) {
+            if(xs[i][x]==1)
+                ans.PB(x), ans.PB(i);
+            else
+                ans.PB(y), ans.PB(i);
+        }
+        return ans;
     }
 
 // BEGIN CUT HERE

@@ -39,8 +39,33 @@ template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
 
 class Mutalisk {
 public:
+    bool ok(vector <int> a, int lim) {
+        int n=(int)a.size();
+        static int f[22][99][99];
+        fillchar(f, 99);
+        f[0][0][0]=0;
+        forn(i, n) forint(x, 0, lim) forint(y, 0, lim) {
+            forint(x2, 0, lim-x) forint(y2, 0, lim-y) {
+                int z2_=a[i]-x2*9-y2*3;
+                int z2=max(0, z2_);
+                if(x2+y2+z2<=lim)
+                    setmin(f[i+1][x+x2][y+y2], f[i][x][y]+z2);
+                if(z2_<0) break;
+            }
+        }
+        forint(x, 0, lim) forint(y, 0, lim)
+            if(f[n][x][y]<=lim)
+                return true;
+        return false;
+    }
     int minimalAttacks(vector <int> x) {
-        return int();
+        int le=1, ri=93;
+        while(le<ri) {
+            int mid=(le+ri)/2;
+            if(ok(x, mid)) ri=mid;
+                else le=mid+1;
+        }
+        return int(le);
     }
     
 // BEGIN CUT HERE
