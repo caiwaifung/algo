@@ -39,9 +39,9 @@ template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
 template<size_t N, size_t M> class BipartiteGraph {
     bool g[N][M], vis[M]; int n, m;
     bool find(int x) {
+        if(vis[x]) return false; vis[x]=true;
         for(int y=1; y<=m; ++y)
-            if(g[x][y] && !vis[y]) {
-                vis[y]=true;
+            if(g[x][y]) {
                 if(ly[y]==0 || find(ly[y])) {
                     ly[y]=x; lx[x]=y;
                     return true;
