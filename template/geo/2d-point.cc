@@ -16,7 +16,7 @@ struct Point {
     friend double mult(Point p0, Point p1, Point p2) { return mult(p1-p0, p2-p0); }
     friend double dot(Point p0, Point p1, Point p2) { return dot(p1-p0, p2-p0); }
     friend double dist(Point p1, Point p2) { return (p1-p2).len(); }
-    double getLambda(Point s, Point t) const { // return c: p=s+(t-s)*c
+    double lambda(Point s, Point t) const { // return c: p=s+(t-s)*c
         return dot(s, t, *this)/dot(s, t, t);
     }
 };
