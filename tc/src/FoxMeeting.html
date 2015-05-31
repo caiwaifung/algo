@@ -1,0 +1,61 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Foxland is a country with n cities.
+The cities are numbered 1 through n.
+The road network in Foxland is a tree.
+You are given the description of the roads: three vector &lt;int&gt;s <b>A</b>, <b>B</b> and <b>L</b> with n-1 elements each.
+For each valid i, there is a bidirectional road connecting the cities <b>A</b>[i] and <b>B</b>[i], and the length of the road is <b>L</b>[i].
+</p>
+
+<p></p>
+
+<p>
+There are some foxes in Foxland.
+Each fox lives in a different city.
+You are given a vector &lt;int&gt; <b>foxes</b>.
+The elements of <b>foxes</b> are the numbers of cities inhabited by foxes.
+</p>
+
+<p></p>
+<p>
+The foxes are running a secret candy-smuggling network.
+Recently they have been harrassed by a new strict police officer: cat Taro.
+In order to avoid him, the foxes have now learned to communicate by waving their tails at each other.
+However, two foxes can only communicate in this way if they see each other.
+More precisely, they must either both be in the same city, or they have to be in two adjacent cities.
+(Adjacent cities are cities directly connected by a road, regardless of the road's length.)
+</p>
+
+<p></p>
+
+<p>
+Foxes can forward messages to other foxes, which makes communication transitive:
+If fox x can talk to fox y and fox y can talk to fox z, fox x will be able to communicate with fox z as well.
+</p>
+
+<p></p>
+
+<p>
+In order to avoid Taro, each fox must be able to talk to all other foxes (either directly or indirectly).
+If it isn't possible in their current configuration, some foxes may be forced to move into different cities.
+The foxes think that it is also suspicious if a fox moves too far from its current home.
+Therefore, they want to minimize the maximum distance traveled by any fox.
+</p>
+
+<p></p>
+
+<p>
+Formally, find and return the smallest integer D with the following property:
+It is possible to relocate some (possibly zero, possibly all) of the foxes into new cities in such a way that:
+<ul>
+<li>For each fox, the total total distance traveled by that fox is at most D.</li>
+<li>After the relocation, all foxes can communicate (either directly or indirectly).</li>
+</ul>
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>FoxMeeting</td></tr><tr><td>Method:</td><td>maxDistance</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, vector &lt;int&gt;, vector &lt;int&gt;, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int maxDistance(vector &lt;int&gt; A, vector &lt;int&gt; B, vector &lt;int&gt; L, vector &lt;int&gt; foxes)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>n will be between 1 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>A</b>, <b>B</b>, and <b>L</b> will contain exactly n-1 elements each.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>A</b> and <b>B</b> will be between 1 and n, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>L</b> will be between 1 and 100,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>A</b>, <b>B</b>, and <b>L</b> will define a tree.</td></tr><tr><td align="center" valign="top">-</td><td>Number of elements in <b>foxes</b> will be between 1 and n, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>foxes</b> will be between 1 and n, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>All the elements of <b>foxes</b> are distinct.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1}</pre></td></tr><tr><td><pre>{2}</pre></td></tr><tr><td><pre>{5}</pre></td></tr><tr><td><pre>{1, 2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 0</pre></td></tr><tr><td><table><tr><td colspan="2">There are two cities connected by a single road of length 5.
+There are two foxes: one in each city.
+As they are in adjacent cities, they can already communicate so no relocation is necessary.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1, 2}</pre></td></tr><tr><td><pre>{2, 3}</pre></td></tr><tr><td><pre>{1, 1}</pre></td></tr><tr><td><pre>{1, 3}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2">This country has three cities and two roads: 1-2 (length 1) and 2-3 (length 1).
+Initially, there is one fox in city 1 and another fox in city 3.
+In one optimal solution, the first fox will move from city 1 to city 2.
+In another optimal solution, both foxes will move from their respective cities to city 2.
+In each of the solutions described above we have D = 1.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1, 2}</pre></td></tr><tr><td><pre>{2, 3}</pre></td></tr><tr><td><pre>{1, 1}</pre></td></tr><tr><td><pre>{1, 2, 3}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 0</pre></td></tr><tr><td><table><tr><td colspan="2"> No relocation is necessary, all foxes can already talk to each other.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{10,8,3,7,2,6,9,1,4}</pre></td></tr><tr><td><pre>{5,5,8,10,5,5,6,10,3}</pre></td></tr><tr><td><pre>{71846,10951,42265,37832,29439,95676,83661,28186,21216}</pre></td></tr><tr><td><pre>{1,2,3,4,5,6,7,8,9,10}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 0</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{8,15,22,24,2,25,13,26,18,4,9,29,1,12,3,16,14,21,19,27,17,7,20,10,30,11,6,5,23}</pre></td></tr><tr><td><pre>{28,28,8,8,28,28,25,2,13,24,24,22,22,29,4,22,8,4,1,24,21,14,18,16,13,21,14,1,25}</pre></td></tr><tr><td><pre>{79374,40629,43195,73589,24200,63937,35339,7598,65109,51764,11142,84017,51078,58051,81387,22035,34883,92710,52283,57337,79309,3383,41904,35839,38242,43208,82062,24676,71838}</pre></td></tr><tr><td><pre>{3,5,7,9,10,14,17,19,20,21,24,25,28}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 107013</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{34,14,22,9,24,19,11,37,33,21,5,30,1,43,7,31,45,27,6,12,13,35,23,47,49,50,26,40,16,10,48,25,29,15,28,46,4,20,44,17,39,32,38,2,42,8,36,3,41}</pre></td></tr><tr><td><pre>{18,18,18,14,9,34,9,24,34,11,18,14,21,21,43,1,22,7,1,30,14,33,13,18,9,5,1,1,26,19,50,33,50,40,29,48,50,37,16,40,48,14,30,22,47,37,7,50,6}</pre></td></tr><tr><td><pre>{22051,11109,85275,6691,43705,47374,27748,5411,62549,84079,89542,38006,82198,24083,16847,66335,3542,72495,37378,73973,85703,51682,68688,94295,31337,
+90071,99317,63484,43244,99079,55857,34503,79709,82140,91137,27033,91599,61168,52345,49569,58919,38133,43361,
+40718,2115,79278,88841,40966,42023}</pre></td></tr><tr><td><pre>{5,12,13,18,23,27,28,29,32,33,34,35,36,37,40,42,43,47,48,49,50}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 89342</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

@@ -1,0 +1,27 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Moose Mod has just learned about the mod operator.
+Given two positive integers x and y, the mod operator returns the remainder when x is divided by y.
+For example, 17 mod 5 = 2 because 17 = 3*5 + 2.
+</p>
+
+<p>
+Moose Mod has just defined a function that applies a sequence of N mod operators to its input.
+Formally, the function looks as follows:
+f(x) = (((x mod <b>m</b>[0]) mod <b>m</b>[1]) ... mod <b>m</b>[N-1]).
+For example, <b>m</b> = { 10, 3 } corresponds to the function f(x) = (x mod 10) mod 3.
+For this function we have f(18) = (18 mod 10) mod 3 = 8 mod 3 = 2.
+</p>
+
+<p>
+You are given the vector &lt;int&gt; <b>m</b>.
+You are also given a int <b>R</b>.
+Moose Mod is interested in finding the sum f(1) + f(2) + ... + f(<b>R</b>).
+Compute and return its value.
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>ModModMod</td></tr><tr><td>Method:</td><td>findSum</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, int</td></tr><tr><td>Returns:</td><td>long long</td></tr><tr><td>Method signature:</td><td>long long findSum(vector &lt;int&gt; m, int R)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>m</b> will have between 1 and 5,000 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>m</b> will be between 1 and 10,000,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>R</b> will be between 1 and 10,000,000, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{5,3,2}</pre></td></tr><tr><td><pre>10</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4</pre></td></tr><tr><td><table><tr><td colspan="2">The values of f from 1 to 10 are 1, 0, 0, 1, 0, 1, 0, 0, 1, 0. The sum of all these values is 4.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{33, 15, 7, 10, 100, 9, 5}</pre></td></tr><tr><td><pre>64</pre></td></tr></table></td></tr><tr><td><pre>Returns: 92</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{995,149,28,265,275,107,555,241,702,462,519,212,362,478,783,381,602,546,183,886,59,317,977,612,328,91,771,131}</pre></td></tr><tr><td><pre>992363</pre></td></tr></table></td></tr><tr><td><pre>Returns: 12792005</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+ 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100}</pre></td></tr><tr><td><pre>100</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4950</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{2934}</pre></td></tr><tr><td><pre>10000000</pre></td></tr></table></td></tr><tr><td><pre>Returns: 14664070144</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
