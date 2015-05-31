@@ -64,7 +64,8 @@ bool ok(double t) {
         rest-=s[i];
         temp+=s[i]*c[i];
     }
-    if(temp>V*X+EPS) return false;
+    //printf("   tmp1=%.8lf\n", temp/V);
+    if(temp>V*X+V*EPS) return false;
     if(rest>EPS) return false;
     rest=V, temp=0;
     forintdown(i, n, 1) {
@@ -72,7 +73,8 @@ bool ok(double t) {
         rest-=s[i];
         temp+=s[i]*c[i];
     }
-    if(temp<V*X-EPS) return false;
+    //printf("   tmp2=%.8lf\n", temp/V);
+    if(temp<V*X-V*EPS) return false;
     return true;
 }
 
@@ -91,6 +93,7 @@ void solve(int cs) {
     double le=0, ri=1e10;
     forn(tt, 299) {
         double mid=(le+ri)/2;
+        //printf("mid=%.9lf:\n",mid);
         if(ok(mid)) ri=mid;
             else le=mid;
     }
@@ -101,6 +104,13 @@ int main() {
     int csn; scanf("%d", &csn);
     forint(cs, 1, csn) {
         init();
+        /*
+        if(cs==92) {
+            printf("---case 92---\n");
+            printf("%.4lf %.4lf:\n",X,V);
+            forint(i, 1, n) printf("%.4lf %.4lf\n", r[i],c[i]);
+        }
+        */
         solve(cs);
     }
     return 0;
