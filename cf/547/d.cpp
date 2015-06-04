@@ -50,11 +50,14 @@ void del(int x, int y) {
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
+    //ios_base::sync_with_stdio(false);
     forint(i, 1, N*2) es[i].clear();
-    int n; cin>>n;
+    int n; //cin>>n;
+    scanf("%d",&n);
     forint(i, 1, n) {
-        int x, y; cin>>x>>y;
+        int x, y; 
+        //cin>>x>>y;
+        scanf("%d%d",&x,&y);
         es[x].insert(MP(N+y,i));
         es[N+y].insert(MP(x,i));
     }
@@ -97,7 +100,8 @@ int main() {
         }
     }
 
-    forint(i, 1, n) cout<<(ans[i]?'r':'b'); cout<<endl;
+    //forint(i, 1, n) cout<<(ans[i]?'r':'b'); cout<<endl;
+    forint(i, 1, n) printf("%c",ans[i]?'r':'b'); printf("\n");
 
     return 0;
 }
