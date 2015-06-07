@@ -40,59 +40,46 @@ template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
 
 class Privateparty {
 public:
+    double f[55][55], g[55];
     int n, a[55];
-    double f[55]; bool bf[55];
-
-    void go_circle(int x) {
-        int p[55], s[55]; fillchar(p, 0);
-        int len=0;
-        for(int cur=1; ; ++cur) {
-            if(p[x]>0) {
-                len=0;
-                forint(i, p[x], cur-1)
-                    p[++len]=s[i];
-                break;
-            }
-            p[x]=cur; s[cur]=x;
-            if(a[x]==x) return;
-            x=a[x];
-        }
-
-        forint(i, 1, len) {
-            assert(bf[p[i]]==false);
-            bf[p[i]]=true;
-            f[p[i]]=0.0;
-        }
-        forint(k, 1, len) {
-            double cur=1.; bool o=true;
-            f[p[k]]+=cur/len;
-            for(int i=k%len+1; i!=k; i=i%len+1) {
-                if(o) { cur=0; o=false; }
-                else cur=.5+.5*(1-cur);
-                f[p[i]]=cur;
-            }
-        }
-    }
-
-    double cal_f(int i) {
-        double &ans=f[i];
-        if(bf[i]) return ans;
-
-        go_circle(i);
-        if(bf[i]) return ans;
-
-        if(a[i]==i) ans=1;
-        else ans=(1-cal_f(a[i]))*.5+.5;
-        return ans;
-    }
 
     double getexp(vector <int> _a) {
         n=(int)_a.size();
         forint(i, 1, n) a[i]=_a[i-1]+1;
 
-        fillchar(bf, false);
+        f[1][1]=1; g[1]=1;
+        forint(i, 2, n) {
+            g[i]=0;
+            forint(j, 1, i) {
+                f[i][j]=1;
+                forint(k, 1, j-1)
+                    f[i][j]-=f[i-1][k];
+                f[i][j]/=i;
+                g[i]+=f[i][j];
+            }
+        }
+
         double ans=0;
-        forint(i, 1, n) ans+=cal_f(i);
+        forint(i, 1, n) {
+            int vis[55]; fillchar(vis, 0);
+            int len=0, y=0;
+            for(int cur=i, id=1; ; ++id) {
+                if(vis[cur]>0) {
+                    y=vis[cur];
+                    len=id-1;
+                    break;
+                }
+                vis[cur]=id, cur=a[cur];
+            }
+            printf("%d %d\n",y,len);
+            double v[55];
+            v[1]=1; v[2]=0; forint(k, 3, len) v[k]=g[k-2];
+
+            double s=0;
+            forint(k, 1, len) s+=v[k];
+            s/=len;
+            ans+=s;
+        }
 
         return double(ans);
     }
@@ -115,6 +102,7 @@ public:
 
 // BEGIN CUT HERE
 int main(){
+    /*
     int p[99]; const int n=4;
     forint(i, 1, n) p[i]=i;
     int ans[99]; fillchar(ans, 0);
@@ -132,6 +120,7 @@ int main(){
     }
     return 0;
 
+    */
 
     Privateparty ___test;
     /*
