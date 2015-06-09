@@ -199,34 +199,15 @@ bool go_path() {
     return false;
 }
 
-void go() {
-//printf("go lim=%d\n", limit);
-    bool good=true;
-    while(good) {
-        good=false;
-
-
-        while(1) {
-            if(go_path()) {
-                good=true;
-            }
-            else
-                break;
-        }
-    }
-}
-
 void solve(int cs) {
-
-
     fillchar(deg, 0);
     limit=0; tot=0;
 
-            while(go_cycle());
+    while(go_cycle());
 
             //*
     while(true) {
-        go();
+        while(go_path());
         if(tot>=need)
             break;
         ++limit;
