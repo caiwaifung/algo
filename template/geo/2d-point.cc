@@ -3,7 +3,7 @@ double sgn(double x) { return x<-EPS ? -1 : x>EPS; }
 struct Point {
     double x, y;
     Point() { }
-    Point(double x, double y) : x(x), y(y) { }
+    Point(double _x, double _y) : x(_x), y(_y) { }
     Point operator +(const Point &p) const { return Point(x+p.x, y+p.y); }
     Point operator -(const Point &p) const { return Point(x-p.x, y-p.y); }
     Point operator *(double b) const { return Point(x*b, y*b); }
@@ -23,6 +23,6 @@ struct Point {
 struct Line {
     double a, b, c;
     Line() { }
-    Line(double a, double b, double c) : a(a), b(b), c(c) { }
+    Line(double _a, double _b, double _c) : a(_a), b(_b), c(_c) { }
     Line(Point p1, Point p2) { a=p2.y-p1.y, b=p1.x-p2.x; c=-(p1.x*a+p1.y*b); }
 };

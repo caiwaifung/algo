@@ -32,12 +32,9 @@ typedef vector<LL> VL;
 typedef vector<int> VI;
 typedef vector<PII> VPI;
 typedef vector<string> VS;
-template<class T> void setmax(T &a, T b) { if(b>a) a=b; }
-template<class T> void setmin(T &a, T b) { if(b<a) a=b; }
-template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
-
-
-// ------------------------ template ends here ------------------------ //
+template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } return false; }
+template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
+template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
     return 0;
