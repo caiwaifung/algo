@@ -24,6 +24,11 @@ using namespace std;
 #define se second
 #define PB push_back
 #define MP make_pair
+#ifdef DEBUG
+    #define _debug(args...) { fprintf(stderr, args); fflush(stderr); }
+#else
+    #define _debug(args...) {}
+#endif
 typedef long long LL;
 typedef pair<LL,LL> PLL;
 typedef pair<int,int> PII;
