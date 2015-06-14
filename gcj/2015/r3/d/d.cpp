@@ -41,11 +41,70 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
+map<LL, LL> a;
+int n;
+
 void init() {
+    int m; cin>>m;
+    static LL p[55555], f[55555];
+    a.clear();
+    forint(i, 1, m) cin>>p[i];
+    forint(i, 1, m) cin>>f[i];
+    LL sum=0;
+    forint(i, 1, m) {
+        a[p[i]]+=f[i];
+        sum+=f[i];
+    }
+    n=0;
+    while((1LL<<n)<sum) ++n;
+    assert((1LL<<n)==sum);
+}
+
+LL ans[66];
+
+bool reduce(map<LL, LL> &s, LL d) {
+    vector<PLL> vs(all(s));
+    if(d==0) {
+        s.clear();
+        for(PLL p: vs) {
+            if(p.se%2!=0) return false;
+            s[p.fi]=p.se/2;
+        }
+        return true;
+    }
+    LL tmp=0;
+    if(d<0) { d=-d; tmp=d; }
+    for(PLL p: vs) {
+        LL num=s[p.fi];
+        if(s[p.fi+d]<num) return false;
+        s[p.fi+d]-=num;
+    }
+    map<LL, LL> t;
+    for(PLL p: s) if(p.se!=0)
+        t[p.fi+tmp]=p.se;
+    s=t;
+    return true;
 }
 
 void solve(int cs) {
-    printf("Case #%d: ", cs);
+    assert(a[0]>0);
+
+    forint(i, 1, n) {
+        bool found=false;
+        for(PLL p: a) if(p.se>0) {
+            map<LL, LL> b=a;
+            if(reduce(b, p.fi)) {
+                found=true;
+                ans[i]=p.fi;
+                a=b;
+                break;
+            }
+        }
+        assert(found);
+    }
+
+    printf("Case #%d: ", cs); fflush(stdout);
+    forint(i, 1, n) cout<<ans[i]<<" "; cout<<endl;
 }
 
 int main() {

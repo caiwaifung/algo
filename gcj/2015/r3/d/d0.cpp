@@ -41,53 +41,43 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-const int MAXN=1010;
-const int MAXK=110;
-
-int s[MAXN];
-int n, k;
+int a[(1<<20)+100];
+int n;
 
 void init() {
-    cin>>n>>k;
-    forint(i, k, n) cin>>s[i];
+    int m; cin>>m;
+    static int p[55555], f[55555];
+    forint(i, 1, m) cin>>p[i];
+    forint(i, 1, m) cin>>f[i];
+
+    int t=0;
+    forint(i, 1, m) forn(j, f[i]) a[++t]=p[i];
+    n=0; while((1<<n)<t) ++n;
+    assert((1<<n)==t);
 }
 
-int u[MAXK], d[MAXK];
-int val[MAXN];
-
 void solve(int cs) {
-    forint(i, 1, k) {
-        val[i]=0;
-        u[i]=d[i]=0;
-    }
-    forint(i, k+1, n) {
-        val[i]=val[i-k]+(s[i]-s[i-1]);
-        setmax(u[(i-1)%k+1], val[i]);
-        setmin(d[(i-1)%k+1], val[i]);
+    printf("Case #%d: ", cs); fflush(stdout);
+
+    multiset<int> s(a+1, a+(1<<n)+1);
+    s.erase(s.find(0));
+    int ans[55];
+    forint(i, 1, n) {
+        ans[i]=*s.begin();
+        //printf("ans[%d]=%d\n", i,ans[i]);
+        forn(st, 1<<(i-1)) {
+            int cur=ans[i];
+            forint(j, 1, i-1) if(st&(1<<(j-1))) cur+=ans[j];
+            s.erase(s.find(cur));
+        }
     }
 
-    int ans=0, r=0;
-    forint(i, 1, k) {
-        val[i]=-d[i];
-        setmax(ans, val[i]+u[i]);
-    }
-    forint(i, 1, k) r+=ans-(val[i]+u[i]);
-    int sum=0;
-    forint(i, 1, k) sum+=val[i];
-    sum=(sum%k+k)%k;
-    int need=(s[k]%k+k)%k;
-    int delta=((need-sum)%k+k)%k;
-    if(delta>r) ++ans;
-
-    printf("Case #%d: ", cs);
-    cout<<ans<<endl;
+    forint(i, 1, n) printf("%d ", ans[i]); printf("\n");
 }
 
 int main() {
-    freopen("b.out", "w", stdout);
     int csn; scanf("%d", &csn);
     forint(cs, 1, csn) {
-        _debug("cs=%d/%d\n", cs,csn);
         init();
         solve(cs);
     }

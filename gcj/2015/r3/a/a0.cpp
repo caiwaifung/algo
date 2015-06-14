@@ -41,10 +41,28 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
+template<class T> class FenwickTree {
+    std::vector<T> a;
+    int n; T v0;
+public:
+    FenwickTree() { }
+    FenwickTree(int n, T v) : a(size_t(n+1), v), n(n), v0(v) { }
+    void add(int x, T v) { for(; x<=n; x+=(x&-x)) a[(size_t)x]+=v; }
+    T get(int x) const { T r=v0; for(; x>=1; x-=(x&-x)) r+=a[(size_t)x]; return r; }
+};
+
 const int MAXN=1000010;
 
 LL s[MAXN]; int fa[MAXN], lc[MAXN], rc[MAXN];
 int n; LL limit;
+
+int st[MAXN], en[MAXN], tot;
+void dfs(int x) {
+    st[x]=++tot;
+    for(int y=lc[x]; y; y=rc[y])
+        dfs(y);
+    en[x]=tot;
+}
 
 void init() {
     cin>>n>>limit;
@@ -58,7 +76,7 @@ void init() {
     forint(i, 2, n) m[i]=(m[i-1]*am+cm)%rm;
     fa[1]=-1;
     forint(i, 2, n) {
-        fa[i]=int(m[i]%(i-1))+1;
+        fa[i]=int(m[i]%(i-1));
     }
 
     fillchar(lc, 0);
@@ -67,63 +85,44 @@ void init() {
         rc[i]=lc[fa[i]];
         lc[fa[i]]=i;
     }
-    //cout<<n<<endl;
 
-    //forint(i, 1, n) cout<<s[i]<<" "; cout<<endl;
-    //forint(i, 1, n) cout<<m[i]<<" "; cout<<endl;
-    //forint(i, 1, n) cout<<fa[i]<<" "; cout<<endl;
+    tot=0;
+    dfs(1);
 }
 
-int ans;
+int ans, delta;
 bool ok_head;
 
 int f[MAXN], fs[MAXN]; 
 int gf(int x) {
-    assert(x>=1 && x<=n);
-    VI st;
-    while(f[x]!=0) {
-        st.PB(x);
-        x=f[x];
-    }
-    for(int y: st) f[y]=x;
-    return x;
+    return f[x]==0 ? x : (f[x]=gf(f[x]));
 }
 void unite(int x, int y) {
     x=gf(x), y=gf(y);
     if(x!=y) f[x]=y, fs[y]+=fs[x];
 }
 
-bool ok[MAXN];
+FenwickTree<int> disabled;
+FenwickTree<int> dsum;
 
 void add(int i) {
-    assert(i>=1 && i<=n);
     if(i==1) ok_head=true;
+    if(disabled.get(st[i])>0) return;
     if(fa[i]>0) unite(i, fa[i]);
 
     if(ok_head) {
-        int tmp=fs[gf(1)];
+        int tmp=fs[gf(1)]+delta;
         setmax(ans, tmp);
     }
 }
 
-void rem(int x) {
-    queue<int> que;
-    que.push(x);
-    while(!que.empty()) {
-        x=que.front(); que.pop();
-        assert(x>=1 && x<=n);
-        if(!ok[x]) continue;
-        ok[x]=false;
-        --fs[gf(x)];
-        for(int y=lc[x]; y; y=rc[y])
-            que.push(y);
-    }
-}
-
 void del(int i) {
-    assert(i>=1 && i<=n);
     if(i==1) ok_head=false;
-    rem(i);
+    if(disabled.get(st[i])>0) return;
+    disabled.add(st[i], 1);
+    disabled.add(en[i]+1, -1);
+
+
 }
 
 void solve(int cs) {
@@ -131,7 +130,8 @@ void solve(int cs) {
     forint(i, 1, n) full.PB(MP(s[i], i));
     sort(all(full));
 
-    fillchar(ok, true);
+    disabled=FenwickTree<int>(n, 0);
+    dsum=FenwickTree<int>(n, 0);
     fillchar(f, 0);
     forint(i, 1, n) fs[i]=1;
     ok_head=false;
@@ -139,10 +139,8 @@ void solve(int cs) {
     ans=0;
     size_t la=0;
     forn(i, full.size()) {
-        while(full[la].fi+limit<full[i].fi) {
-            //cout<<la<<endl; fflush(stdout);
+        while(full[la].fi+limit<full[i].fi)
             del(full[la].se), ++la;
-        }
         add(full[i].se);
     }
 
@@ -151,10 +149,8 @@ void solve(int cs) {
 }
 
 int main() {
-    freopen("a.out", "w", stdout);
     int csn; scanf("%d", &csn);
     forint(cs, 1, csn) {
-        _debug("cs=%d/%d\n", cs,csn);
         init();
         solve(cs);
     }
