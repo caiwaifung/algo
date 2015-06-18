@@ -16,8 +16,8 @@ using namespace std;
 #define all(a) a.begin(), a.end()
 #define rep(i, a, b) for(int i=int(a); i<=int(b); ++i)
 #define irep(i, a, b) for(int i=int(a); i>=int(b); --i)
-#define rep2(i, n) rep(i, 0, (n)-1)
-#define irep2(i, n) irep(i, (n)-1, 0)
+#define repn(i, n) rep(i, 0, (n)-1)
+#define irepn(i, n) irep(i, (n)-1, 0)
 #define fillchar(a, x) memset(a, x, sizeof(a))
 #define fi first
 #define se second

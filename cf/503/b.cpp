@@ -1,3 +1,4 @@
+#include <functional>
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -40,6 +41,20 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
+
 int main() {
+    int n;
+    cin>>n;
+    int len=1, cur=9, ans=0;
+    while(cur<n) {
+        ans+=1<<len;
+        ++len, cur=cur*10+9;
+    }
+    int y=0;
+    while(n>0) y=y*10+n%10, n/=10;
+    int t=0;
+    while(y>0) t=t*2+(y%10==7?1:0), y/=10;
+    ans+=t+1;
+    cout<<ans<<endl;
     return 0;
 }
