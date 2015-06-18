@@ -13,17 +13,16 @@
 #include <map>
 using namespace std;
 
-#define _ (size_t)
 #define all(a) a.begin(), a.end()
-#define forint(i, a, b) for(int i=int(a); i<=int(b); ++i)
-#define forintdown(i, a, b) for(int i=int(a); i>=int(b); --i)
-#define forn(i, n) forint(i, 0, (n)-1)
-#define forndown(i, n) forintdown(i, (n)-1, 0)
+#define rep(i, a, b) for(int i=int(a); i<=int(b); ++i)
+#define irep(i, a, b) for(int i=int(a); i>=int(b); --i)
+#define rep2(i, n) rep(i, 0, (n)-1)
+#define irep2(i, n) irep(i, (n)-1, 0)
 #define fillchar(a, x) memset(a, x, sizeof(a))
 #define fi first
 #define se second
-#define PB push_back
-#define MP make_pair
+#define pb push_back
+#define mp make_pair
 #ifdef DEBUG
     #define _debug(args...) { fprintf(stderr, args); fflush(stderr); }
 #else
