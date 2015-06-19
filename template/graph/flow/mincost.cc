@@ -18,8 +18,8 @@ public:
         memset(g, 0, sizeof(g)); e_cnt=0;
         n=2, src=1, dst=2;
     }
-    int newNode() { return ++n; }
-    void addEdge(int x, int y, T w, T c) {
+    int new_node() { return ++n; }
+    void add_edge(int x, int y, T w, T c) {
         //printf("add %d %d %d %d\n",x,y,w,c);
         Edge *e1=&edges[e_cnt++], *e2=&edges[e_cnt++];
         e1->y=y, e1->c=+c, e1->w=w, e1->oppo=e2, e1->next=g[x], g[x]=e1;

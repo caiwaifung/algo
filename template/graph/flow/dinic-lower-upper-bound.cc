@@ -55,8 +55,8 @@ public:
         add(dst, src, INFI, 0);
         super_e=&edges[e_cnt-2];
     }
-    int newNode() { return ++n; }
-    void addEdge(int x, int y, T lower_w, T upper_w) {
+    int new_node() { return ++n; }
+    void add_edge(int x, int y, T lower_w, T upper_w) {
         //printf("%d-%d %d %d\n",x,y,lower_w,upper_w);
         add(x, y, upper_w-lower_w, 0);
         if(lower_w>0) {
@@ -66,7 +66,7 @@ public:
         super_out+=lower_w;
         if(x==src) tot_lw+=lower_w;
     }
-    T computeMax() {
+    T compute_max() {
         while(build(super_src, super_dst)) find(super_src, super_dst, INFI);
         //printf("super_out=%d out=%d\n",super_out,getOut(super_src));fflush(stdout);
         if(getOut(super_src)!=super_out)

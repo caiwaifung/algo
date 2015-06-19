@@ -36,8 +36,8 @@ public:
         memset(g, 0, sizeof(g)); e_cnt=0;
         n=2, src=1, dst=2;
     }
-    int newNode() { return ++n; }
-    void addEdge(int x, int y, T w1, T w2) {
+    int new_node() { return ++n; }
+    void add_edge(int x, int y, T w1, T w2) {
         Edge *e1=&edges[e_cnt++], *e2=&edges[e_cnt++];
         e1->y=y, e1->w=w1, e1->oppo=e2, e1->next=g[x], g[x]=e1;
         e2->y=x, e2->w=w2, e2->oppo=e1, e2->next=g[y], g[y]=e2;
@@ -45,10 +45,16 @@ public:
     T compute() {
         T ans=0; while(build()) ans+=find(src, INFI); return ans;
     }
-    T getFlow(int x, int y) {
+    T get(int x, int y) {
         for(Edge *e=g[x]; e; e=e->next)
             if(e->y==y)
                 return e->oppo->w;
         return 0;
+    }
+    vector<bool> get_left() {
+        build();
+        vector<bool> ans(n+1);
+        for(int i=1; i<=n; ++i) ans[i]=(d[i]>0);
+        return ans;
     }
 };
