@@ -30,9 +30,9 @@ void cal_sa() {
             x[j2]=x[j1]+(c1<c2);
         }
     }
+    for(int i=1; i<=len; ++i) rank[sa[i]]=i;
 }
 void cal_height() {
-    for(int i=1; i<=len; ++i) rank[sa[i]]=i;
     for(int i=1, h=0; i<=len; ++i) {
         if(h>0) --h;
         int j=sa[rank[i]-1];
