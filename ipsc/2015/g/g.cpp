@@ -11,7 +11,6 @@
 #include <cmath>
 #include <set>
 #include <map>
-#include "../progressbar.h"
 using namespace std;
 
 #define all(a) a.begin(), a.end()
@@ -41,47 +40,120 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-const int MAXN=10010;
+const int MAXN=1000010;
+const int MAXNum=1010;
+const int bsize=1000;
 
-int l[MAXN], r[MAXN], c[MAXN];
+int lc[MAXN], rc[MAXN];
 int n;
 
-void dfs(int x, int d, int color) {
-    queue<PII> que;
-    que.push(mp(x, d));
-    while(!que.empty()) {
-        x=que.front().fi;
-        d=que.front().se;
-        que.pop();
-        c[x]=color;
-        if(d>0) {
-            for(int y=l[x]; y; y=r[y])
-                que.push(mp(y, d-1));
+int lx[MAXN], ld[MAXN], st[MAXN], en[MAXN], tot;
+
+void dfs(int x, int d) {
+    lx[tot]=x, ld[tot]=d, st[x]=tot++;
+    for(int y=lc[x]; y; y=rc[y])
+        dfs(y, d+1);
+    en[x]=tot;
+}
+
+struct Block {
+    int c[bsize], d[bsize];
+    PII p[bsize];
+    int buf[bsize], buftime[bsize]; // at buftime[i] time, color [0,i] with buf[i]
+    int n, curtime;
+
+    void release() {
+        int bestc=0, bestt=0;
+        irepn(i, n) {
+            if(setmax(bestt, buftime[i]))
+                bestc=buf[i];
+            buf[i]=buftime[i]=0;
+            if(bestt>0)
+                c[p[i].se]=bestc;
         }
+    }
+
+    void init(int *deps, int len) {
+        n=len;
+        repn(i, n) d[i]=deps[i], c[i]=1;
+        repn(i, n) p[i]=mp(d[i], i);
+        sort(p, p+n);
+        curtime=0;
+        fillchar(buf, 0);
+        fillchar(buftime, 0);
+    }
+
+    // paint i in [l,r) if dep[i]<=dlimit
+    void paint(int l, int r, int dlimit, int color) {
+        if(l==0 && r==n) {
+            int i=int(lower_bound(p, p+n, mp(dlimit+1,0))-p)-1;
+            if(i>=0) {
+                buftime[i]=++curtime;
+                buf[i]=color;
+            }
+            return;
+        }
+        release();
+        rep(i, l, r-1) if(d[i]<=dlimit) c[i]=color;
+    }
+
+    int get(int i) {
+        release();
+        return c[i];
+    }
+};
+Block blocks[MAXNum];
+int num;
+
+void init() {
+    tot=0; dfs(1, 1);
+    assert(tot==n);
+
+    num=(n-1)/bsize+1;
+    repn(i, num) {
+        int l=bsize*i, r=min(l+bsize, n);
+        blocks[i].init(ld+l, r-l);
+    }
+}
+
+int get_color(int x) {
+    int p=st[x];
+    int c=blocks[p/bsize].get(p%bsize);
+    return c;
+}
+
+void set_color(int x, int d, int c) {
+    int l=st[x], r=en[x], dlimit=ld[l]+d;
+    repn(i, num) {
+        int l0=max(l, 0), r0=min(r, bsize);
+        if(l0<r0)
+            blocks[i].paint(l0, r0, dlimit, c);
+        l-=bsize, r-=bsize;
     }
 }
 
 int main() {
-    freopen("g.out", "w", stdout);
+    freopen("g2.out", "w", stdout);
     int csn; scanf("%d", &csn);
-    progress_start();
     repn(cs, csn) {
         int q; scanf("%d%*d%d", &n,&q);
-        fillchar(l, 0);
+
+        fillchar(lc, 0);
         rep(i, 2, n) {
             int j; scanf("%d", &j);
-            r[i]=l[j], l[j]=i;
+            rc[i]=lc[j], lc[j]=i;
         }
-        rep(i, 1, n) c[i]=1;
+        init();
+
         LL ans=0;
         rep(i, 1, q) {
-            if(i%10000==0) progress_update((cs+i/(double)q)/csn);
+            if(i%100000==0) fprintf(stderr,"cs=%d/%d i=%d/%d\n",cs+1,csn,i,q);
             int x, d, z; scanf("%d%d%d",&x,&d,&z);
             if(z==0) {
-                ans=(ans+LL(c[x])*LL(i))%LL(1e9+7);
+                ans=(ans+LL(get_color(x))*LL(i))%LL(1e9+7);
             }
             else {
-                dfs(x, d, z);
+                set_color(x, d, z);
             }
         }
         printf("%d\n", (int)ans);

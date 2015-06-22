@@ -1,4 +1,3 @@
-// 9:40
 #include <algorithm>
 #include <iostream>
 #include <sstream>
