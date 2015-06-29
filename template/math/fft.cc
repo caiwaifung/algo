@@ -1,7 +1,6 @@
 namespace FFT {
     typedef complex<double> Complex;
     typedef double Real;
-    const int N=66666;
     void fft(Complex *a, Complex *b, int n, bool inv) {
         double arg=acos(-1.0);
         for(int t=n/2; t>=1; t/=2) {
@@ -21,7 +20,7 @@ namespace FFT {
     void convolve(const Real *a, int na, const Real *b, int nb, Real *c, int nc) {
         na=min(na, nc);
         nb=min(nb, nc);
-        if(na*nb<100) {
+        if(na<100/nb) {
             for(int i=0; i<na; ++i)
                 for(int j=0; j<nb; ++j) {
                     if(i+j>=nc) break;
@@ -47,10 +46,13 @@ namespace FFT {
         fft(x, y, n, false);
         return y;
     }
-    void fast_convolve(const Real *a, int na, const Real *b, int nb, const Complex *bdata, Real *c, int nc, int n) {
+    void fast_convolve(
+            const Real *a, int na,
+            const Real *b, int nb, const Complex *bdata,
+            Real *c, int nc, int n) {
         na=min(na, nc);
         nb=min(nb, nc);
-        if(na*nb<100) {
+        if(na<100/nb) {
             for(int i=0; i<na; ++i)
                 for(int j=0; j<nb; ++j) {
                     if(i+j>=nc) break;
