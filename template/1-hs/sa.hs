@@ -3,7 +3,7 @@ import Data.Functor
 import Data.List
 import Data.Array.IO
 
-discretize :: (Ord a, Bounded a, Show a) => [a] -> [Int]
+discretize :: (Ord a, Bounded a) => [a] -> [Int]
 discretize xs = map (negate . snd) . sort $ zip is es where
     (ys, is) = unzip . sort $ zip xs [0..]
     (zs, es) = unzip . scanl1 max $ zip ys [0,-1..]
