@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <cstring>
 #include <cstdlib>
@@ -35,5 +36,21 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    VI a; int n; scanf("%d", &n);
+    a.resize(n); for(int &x: a) scanf("%d", &x);
+    sort(all(a));
+    a.erase(unique(all(a)), a.end());
+
+    int ans=0;
+    rep(t, 1, 1000000) {
+        for(int x: a) {
+            if(LL(x)*LL(t)>LL(a.back())) break;
+            auto it=lower_bound(all(a), x*(t+1));
+            --it; 
+            if(*it>=x*t)
+                setmax(ans, *it-x*t);
+        }
+    }
+    printf("%d\n", ans);
     return 0;
 }
