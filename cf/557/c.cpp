@@ -1,4 +1,4 @@
-#include <map>
+#include <algorithm>
 #include <cassert>
 #include <cstring>
 #include <cstdlib>
@@ -36,20 +36,32 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
-    map<int, int> m, c;
     int n; scanf("%d", &n);
-    static int l[100010];
-    rep(i, 1, n) scanf("%d", &l[i]), m[l[i]]++;
-    rep(i, 1, n) { int d; scanf("%d", &d); c[l[i]]+=d; }
-    VPI ms(all(m)), cs(all(c));
-    int sum=0;
-    irepn(i, ms.size()) {
-        if(ms[i].se*2>n) {
-            printf("%d\n", sum); break;
+    static PII a[100010];
+    rep(i, 1, n) scanf("%d", &a[i].fi);
+    rep(i, 1, n) scanf("%d", &a[i].se);
+    sort(a+1, a+n+1);
+
+    int ans=0, cnt[222];
+    fillchar(cnt, 0);
+    for(int le=1, ri; le<=n; le=ri+1) {
+        for(ri=le; ri<n && a[ri+1].fi==a[ri].fi; ++ri);
+
+        int tmp=0;
+        rep(i, le, ri) tmp+=a[i].se;
+        int r=ri-le;
+        irepn(k, 201) {
+            int take=min(r, cnt[k]);
+            tmp+=take*k;
+            r-=take;
         }
-        sum+=cs[i].se;
-        n-=ms[i].se;
+        setmax(ans, tmp);
+
+        rep(i, le, ri) cnt[a[i].se]++;
     }
+    int sum=0; rep(i, 1, n) sum+=a[i].se;
+    ans=sum-ans;
+    printf("%d\n", ans);
 
     return 0;
 }
