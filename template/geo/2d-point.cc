@@ -25,4 +25,10 @@ struct Line {
     Line() { }
     Line(double _a, double _b, double _c) : a(_a), b(_b), c(_c) { }
     Line(Point p1, Point p2) { a=p2.y-p1.y, b=p1.x-p2.x; c=-(p1.x*a+p1.y*b); }
+    Point cross(const Line &l) const {
+        double t=a*l.b-b*l.a;
+        double x=b*l.c-c*l.b;
+        double y=c*l.a-a*l.c;
+        return Point(x/t, y/t);
+    }
 };
