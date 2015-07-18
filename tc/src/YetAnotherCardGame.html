@@ -1,0 +1,33 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Petr and Snuke are playing a cooperative card game.
+The game is played with special cards: each card is labeled with some positive integer.
+The integers on cards are not necessarily distinct.
+<br></br>
+<br></br>
+At the beginning of the game Petr is holding some cards in his hand and Snuke is holding all the other cards in his hand.
+You are given vector &lt;int&gt;s <b>petr</b> and <b>snuke</b> that describe the state at the beginning of the game:
+the elements of <b>petr</b> are the numbers on Petr's cards and the elements of <b>snuke</b> are the numbers on Snuke's cards.
+<br></br>
+<br></br>
+During the game the players will place some of their cards onto a pile.
+Initially, the pile is empty.
+The players take alternating turns, Petr goes first.
+In each turn, if the current player has no cards in his hand, the game ends.
+Otherwise, the player must make exactly one valid move.
+There are three types of valid moves:
+<ul>
+<li>If the pile is empty, the player may choose any card and place it onto the pile.</li>
+<li>If the pile is not empty, the player may choose any card and place it on top of the pile. However, this move is only valid if the number on the new card is strictly greater than the number on the card that was previously on the top of the pile.</li>
+<li>The player may always choose one of his cards and eat it.</li>
+</ul>
+<br></br>
+Petr and Snuke have a common goal: they want to create a pile with as many cards as possible.
+Return the size of the pile at the end of the game, assuming that they cooperate and play the game optimally.
+</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>YetAnotherCardGame</td></tr><tr><td>Method:</td><td>maxCards</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int maxCards(vector &lt;int&gt; petr, vector &lt;int&gt; snuke)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>petr</b> and <b>snuke</b> will contain between 1 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>petr</b> and <b>snuke</b> will contain the same number of elements.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>petr</b> and <b>snuke</b> will be between 1 and 100, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{2, 5}</pre></td></tr><tr><td><pre>{3, 1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 3</pre></td></tr><tr><td><table><tr><td colspan="2">One optimal way is as follows.
+<ul>
+<li>Petr puts 2 onto the pile.</li>
+<li>Snuke puts 3 onto the pile.</li>
+<li>Petr puts 5 onto the pile.</li>
+<li>Snuke eats 1.</li>
+<li>The game ends because Petr has no cards in his hand.</li>
+</ul>
+</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1, 1, 1, 1, 1}</pre></td></tr><tr><td><pre>{1, 1, 1, 1, 1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2">The integers on cards are not necessarily distinct.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1, 4, 6, 7, 3}</pre></td></tr><tr><td><pre>{1, 7, 1, 5, 7}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 6</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{19, 99, 86, 30, 98, 68, 73, 92, 37, 69, 93, 28, 58, 36, 86, 32, 46, 34, 71, 29}</pre></td></tr><tr><td><pre>{28, 29, 22, 75, 78, 75, 39, 41, 5, 14, 100, 28, 51, 42, 9, 25, 12, 59, 98, 83}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 28</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

@@ -1,0 +1,34 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>In this problem we are using half-open intervals.
+The half-open interval from x (inclusive) to y (exclusive) is denoted [x,y).
+Formally, [x,y) is the set of all real numbers z such that x &lt;= z &lt; y.
+<br></br>
+<br></br>
+When cat Snuke last traveled by train, he noticed that there was a long seat.
+Whenever a passenger boarded the train, if there was enough room for the passenger somewhere on the seat, the passenger sat down somewhere.
+Otherwise, the passenger had to stand.
+<br></br>
+<br></br>
+Formally, the seat can be represented as the half-open interval [0,<b>L</b>).
+A person of width w sitting at coordinate x covers the interval [x,x+w).
+People may sometimes sit on non-integer coordinates.
+For each sitting passenger the interval covered by the passenger must be a subset of the seat.
+The intervals covered by different sitting passengers must be disjoint.
+<br></br>
+<br></br>
+You are given the int <b>L</b> and a vector &lt;int&gt; <b>width</b>.
+<b>L</b> is the length of the seat.
+The seat is currently empty.
+Elements of <b>width</b> are the widths of passengers in the order in which they will board the train.
+You are guaranteed that each person who is able to sit down will sit down somewhere.
+However, note that sometimes there can be multiple (even infinitely many) places where a person can sit.
+In that case, the person may choose any of those places, and you have no information about which place they will choose.
+<br></br>
+<br></br>
+Return a vector &lt;string&gt; that contains the same number of elements as <b>width</b>.
+For each valid i, element i of your return value should be:
+<ul>
+<li>"Sit" if we are sure that the i-th passenger (0-based index) will have a place to sit.</li>
+<li>"Stand" if we are sure that the i-th passenger will have to stand.</li>
+<li>"Unsure" otherwise (i.e., if it is possible but not certain that this passenger will have a place to sit).</li>
+</ul></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>LongSeat</td></tr><tr><td>Method:</td><td>canSit</td></tr><tr><td>Parameters:</td><td>int, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>vector &lt;string&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;string&gt; canSit(int L, vector &lt;int&gt; width)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>L</b> will be between 1 and 10^9, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>width</b> will contain between 1 and 8 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>width</b> will be between 1 and 10^9, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>{1, 1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;Sit&quot;, &quot;Unsure&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2">The first passenger will sit down for sure.
+We are unsure about the second passenger: for example, if the first passenger sits at 0 and fills the interval [0, 1), there is enough room for the second passenger to sit, however, if the first passenger sits at 0.5 and fills the interval [0.5, 1.5), the second passenger has to stand.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>10</pre></td></tr><tr><td><pre>{100, 2, 4, 2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;Stand&quot;, &quot;Sit&quot;, &quot;Sit&quot;, &quot;Unsure&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>37</pre></td></tr><tr><td><pre>{3, 7, 5, 6, 4, 4, 1, 3}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;Sit&quot;, &quot;Sit&quot;, &quot;Sit&quot;, &quot;Unsure&quot;, &quot;Unsure&quot;, &quot;Unsure&quot;, &quot;Sit&quot;, &quot;Unsure&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>400</pre></td></tr><tr><td><pre>{92, 65, 99, 46, 24, 85, 95, 84}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;Sit&quot;, &quot;Sit&quot;, &quot;Unsure&quot;, &quot;Unsure&quot;, &quot;Unsure&quot;, &quot;Unsure&quot;, &quot;Stand&quot;, &quot;Unsure&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1000000000</pre></td></tr><tr><td><pre>{1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;Sit&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1</pre></td></tr><tr><td><pre>{1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot;, &quot;Stand&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

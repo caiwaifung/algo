@@ -1,0 +1,37 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>In this problem, popcount(n) denotes the number of ones in the binary representation of n.
+For example, popcount(2015) = 10 because 2015 is 11111011111 in binary.
+<br></br>
+<br></br>
+The horizontal plane is divided into an infinite grid of unit square cells.
+All cells are currently white.
+Cat Snuke has just bought a strange robot and placed it onto the grid.
+The current coordinates of the robot are (0, 0).
+The robot is going to paint some of the cells black.
+<br></br>
+<br></br>
+You are given a long long <b>T</b>.
+For each t from 0 to <b>T</b>-1, inclusive, the robot will execute the following sequence of steps:
+<ol>
+<li>The robot paints the current cell black. (If the cell is already black, the robot does nothing.)</li>
+<li>If popcount(t) mod 4 = 0, the robot increases its x-coordinate by 1.</li>
+<li>If popcount(t) mod 4 = 1, the robot increases its y-coordinate by 1.</li>
+<li>If popcount(t) mod 4 = 2, the robot decreases its x-coordinate by 1.</li>
+<li>If popcount(t) mod 4 = 3, the robot decreases its y-coordinate by 1.</li>
+</ol>
+<br></br>
+You are also given four ints: <b>Q</b>, <b>M</b>, <b>x</b>, and <b>y</b>.
+Compute ans in the following pseudocode:
+<pre>
+ans = 0;
+for(i = 0; i &lt; <b>Q</b>; i++){
+	if(the cell (<b>x</b>,<b>y</b>) is black after the robot stops working) ans++;
+	<b>x</b> = ((<b>x</b> + <b>M</b>) * 7180087 + 5205425) % (2 * <b>M</b> + 1) - <b>M</b>;
+	<b>y</b> = ((<b>y</b> + <b>M</b>) * 6132773 + 9326231) % (2 * <b>M</b> + 1) - <b>M</b>;
+}
+return ans;
+</pre>
+</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>PopcountRobot</td></tr><tr><td>Method:</td><td>countBlack</td></tr><tr><td>Parameters:</td><td>long long, int, int, int, int</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int countBlack(long long T, int Q, int M, int x, int y)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>The intended solution can compute the colors of any set of up to 500,000 cells in the range [-10^9, 10^9] x [-10^9, 10^9].</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>T</b> will be between 1 and 10^18, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>Q</b> will be between 1 and 500,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>M</b> will be between 0 and 1,000,000,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>x</b> and <b>y</b> will be between -<b>M</b> and <b>M</b>, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>5</pre></td></tr><tr><td><pre>10</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>-1</pre></td></tr><tr><td><pre>-2</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2">The ten coordinates you get in the pseudocode are: (-1, -2), (0, -1), (2, 2), (1, 1), (-1, -2), (0, -1), (2, 2), (1, 1), (-1, -2), and (0, -1).
+Two of them ((1, 1) twice) are colored black when <b>T</b> = 5.
+<br></br>
+<br></br>
+<img src="http://www.topcoder.com/contest/problem/PopcornRobot/pic.png"></img></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>30</pre></td></tr><tr><td><pre>500000</pre></td></tr><tr><td><pre>5</pre></td></tr><tr><td><pre>3</pre></td></tr><tr><td><pre>4</pre></td></tr></table></td></tr><tr><td><pre>Returns: 0</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2015</pre></td></tr><tr><td><pre>500000</pre></td></tr><tr><td><pre>50</pre></td></tr><tr><td><pre>12</pre></td></tr><tr><td><pre>34</pre></td></tr></table></td></tr><tr><td><pre>Returns: 40000</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1000000000000000000</pre></td></tr><tr><td><pre>500000</pre></td></tr><tr><td><pre>1000000000</pre></td></tr><tr><td><pre>94296562</pre></td></tr><tr><td><pre>-42562967</pre></td></tr></table></td></tr><tr><td><pre>Returns: 32306</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>720875421873</pre></td></tr><tr><td><pre>500000</pre></td></tr><tr><td><pre>312</pre></td></tr><tr><td><pre>-288</pre></td></tr><tr><td><pre>36</pre></td></tr></table></td></tr><tr><td><pre>Returns: 68000</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
