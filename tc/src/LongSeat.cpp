@@ -41,30 +41,28 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 struct State {
-    VI ei, ej; VPI ek;
+    VI ei, ej; VL ek;
     VI p;
 };
 int L;
 
-PII d[10];
+LL d[10];
 
 bool check(State s) {
     fillchar(d, 50);
-    d[9]=mp(L, 1);
-    d[8]=mp(0, 1);
+    d[9]=L*10000LL;
+    d[8]=0LL;
 
     bool updated=false;
     repn(times, 13) {
         updated=false;
         repn(i, s.ei.size()) {
-            int x=s.ei[i], y=s.ej[i], v=s.ek[i].fi, v2=s.ek[i].se;
-            PII tmp=d[y];
-            tmp.fi+=v; if(v2) tmp.se=0;
-            if(setmin(d[x], tmp)) updated=true;
+            int x=s.ei[i], y=s.ej[i]; LL v=s.ek[i];
+            if(setmin(d[x], d[y]+v)) updated=true;
         }
     }
     if(updated) return false;
-    return d[8]==mp(0, 1) && d[9]==mp(L, 1);
+    return d[8]==0LL && d[9]==L*10000LL;
 }
 
 class LongSeat {
@@ -82,20 +80,19 @@ public:
 
         vector<string> ans;
         repn(wi, wn) {
-            bool can_sit=false, can_stand=false;
-            vector<State> tmp;
+            bool can_sit=false, can_stand=false; vector<State> tmp;
             for(const State &s: cur) {
                 State t0=s;
                 repn(i, s.p.size()-1) {
                     State t=s;
                     t.p.insert(t.p.begin()+i+1, wi);
-                    t.ei.pb(s.p[i]); t.ej.pb(wi); t.ek.pb(mp(-width[s.p[i]], 0));
-                    t.ei.pb(wi); t.ej.pb(s.p[i+1]); t.ek.pb(mp(-width[wi], 0));
+                    t.ei.pb(s.p[i]); t.ej.pb(wi); t.ek.pb(-width[s.p[i]]*10000LL);
+                    t.ei.pb(wi); t.ej.pb(s.p[i+1]); t.ek.pb(-width[wi]*10000LL);
                     if(check(t)) {
                         tmp.pb(t); can_sit=true;
                     }
                     t0.ei.pb(s.p[i+1]); t0.ej.pb(s.p[i]); 
-                    t0.ek.pb(mp(width[wi]+width[s.p[i]], 1));
+                    t0.ek.pb((width[wi]+width[s.p[i]])*10000LL-1);
                 }
                 if(check(t0)) {
                     tmp.pb(t0); can_stand=true;
@@ -114,7 +111,6 @@ public:
 // BEGIN CUT HERE
 	public:
 	void run_test(int Case) { if ((Case == -1) || (Case == 0)) test_case_0(); if ((Case == -1) || (Case == 1)) test_case_1(); if ((Case == -1) || (Case == 2)) test_case_2(); if ((Case == -1) || (Case == 3)) test_case_3(); if ((Case == -1) || (Case == 4)) test_case_4(); if ((Case == -1) || (Case == 5)) test_case_5(); }
-	private:
 	template <typename T> string print_array(const vector<T> &V) { ostringstream os; os << "{ "; for (typename vector<T>::const_iterator iter = V.begin(); iter != V.end(); ++iter) os << '\"' << *iter << "\","; os << " }"; return os.str(); }
 	void verify_case(int Case, const vector <string> &Expected, const vector <string> &Received) { cerr << "Test Case #" << Case << "..."; if (Expected == Received) cerr << "PASSED" << endl; else { cerr << "FAILED" << endl; cerr << "\tExpected: " << print_array(Expected) << endl; cerr << "\tReceived: " << print_array(Received) << endl; } }
 	void test_case_0() { int Arg0 = 2; int Arr1[] = {1, 1}; vector <int> Arg1(Arr1, Arr1 + (sizeof(Arr1) / sizeof(Arr1[0]))); string Arr2[] = {"Sit", "Unsure" }; vector <string> Arg2(Arr2, Arr2 + (sizeof(Arr2) / sizeof(Arr2[0]))); verify_case(0, Arg2, canSit(Arg0, Arg1)); }
@@ -123,6 +119,7 @@ public:
 	void test_case_3() { int Arg0 = 400; int Arr1[] = {92, 65, 99, 46, 24, 85, 95, 84}; vector <int> Arg1(Arr1, Arr1 + (sizeof(Arr1) / sizeof(Arr1[0]))); string Arr2[] = {"Sit", "Sit", "Unsure", "Unsure", "Unsure", "Unsure", "Stand", "Unsure" }; vector <string> Arg2(Arr2, Arr2 + (sizeof(Arr2) / sizeof(Arr2[0]))); verify_case(3, Arg2, canSit(Arg0, Arg1)); }
 	void test_case_4() { int Arg0 = 1000000000; int Arr1[] = {1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000}; vector <int> Arg1(Arr1, Arr1 + (sizeof(Arr1) / sizeof(Arr1[0]))); string Arr2[] = {"Sit", "Stand", "Stand", "Stand", "Stand", "Stand", "Stand", "Stand" }; vector <string> Arg2(Arr2, Arr2 + (sizeof(Arr2) / sizeof(Arr2[0]))); verify_case(4, Arg2, canSit(Arg0, Arg1)); }
 	void test_case_5() { int Arg0 = 1; int Arr1[] = {1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000}; vector <int> Arg1(Arr1, Arr1 + (sizeof(Arr1) / sizeof(Arr1[0]))); string Arr2[] = {"Stand", "Stand", "Stand", "Stand", "Stand", "Stand", "Stand", "Stand" }; vector <string> Arg2(Arr2, Arr2 + (sizeof(Arr2) / sizeof(Arr2[0]))); verify_case(5, Arg2, canSit(Arg0, Arg1)); }
+	void test_case_6() { int Arg0 = 8; int Arr1[] = {1, 4, 4, 5, 3, 2, 2, 2}; vector <int> Arg1(Arr1, Arr1 + (sizeof(Arr1) / sizeof(Arr1[0]))); string Arr2[] = {"Sit", "Unsure", "Stand", "Stand", "Unsure", "Unsure", "Unsure", "Unsure"}; vector <string> Arg2(Arr2, Arr2 + (sizeof(Arr2) / sizeof(Arr2[0]))); verify_case(5, Arg2, canSit(Arg0, Arg1)); }
 
 // END CUT HERE
 
@@ -135,6 +132,7 @@ int main(){
        ___test.run_test(0);
     /*/
       ___test.run_test(-1);
+      ___test.test_case_6();
     //*/
     return 0;
 }
