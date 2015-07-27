@@ -1,4 +1,4 @@
-class Treap {
+class Treap { //{{{
     struct Node {
         int val, rkey;
         int l, r, size;
@@ -83,4 +83,4 @@ public:
     int query(int ind) {
         return ask(root, ind);
     }
-};
+}; //}}}
