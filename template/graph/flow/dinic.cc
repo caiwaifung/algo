@@ -1,4 +1,4 @@
-template<size_t N, size_t E, class T, T INFI> class Dinic {
+template<size_t N, size_t E, class T, T INFI> class Dinic { //{{{
     struct Edge {
         int y;  T w;
         Edge *next, *oppo;
@@ -57,4 +57,4 @@ public:
         for(int i=1; i<=n; ++i) ans[i]=(d[i]>0);
         return ans;
     }
-};
+}; //}}}
