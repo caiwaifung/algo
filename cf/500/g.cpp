@@ -1,3 +1,6 @@
+// (yesterday) 21:51
+// -> (know how to do) - 21:39 (making it clear)
+// -> (clear, but time to sleep) 22:48
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -36,8 +39,6 @@ template<class T> void setmin(T &a, T b) { if(b<a) a=b; }
 template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
 
 
-// ------------------------ template ends here ------------------------ //
-
 int main() {
-	return 0;
+    return 0;
 }
