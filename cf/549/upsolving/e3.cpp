@@ -145,14 +145,6 @@ bool go(const VP &a, const VP &b, int i, int j) {
     return false;
 }
 
-bool inside_convex(Point p, const VP &a) {
-    if(a.size()<3) return false;
-    repn(i, a.size())
-        if(mult(a[i], a[(i+1)%a.size()], p)<0)
-            return false;
-    return true;
-}
-
 bool solve(VP a, VP b) {
     if(a.size()==1) return true;
     if(a.size()>2) a=cal_convex(a);
