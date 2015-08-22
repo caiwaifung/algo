@@ -1,0 +1,91 @@
+<html><body bgcolor="#ffffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Allen is playing a very difficult game.
+The game has N levels, numbered 0 through N-1 in the order in which they have to be completed.
+Each level can be described by two parameters: <b>prob</b>[i] and <b>value</b>[i].
+The meaning of these parameters is as follows:
+<ul>
+<li>Whenever Allen plays level i, he either completes it or dies. The probability that he completes the level is always <b>prob</b>[i]/1000. (He always tries his best to complete each level.)</li>
+<li>At the end of level i there is a treasure chest that contains <b>value</b>[i] units of gold. When Allen completes the level, he picks up the gold from the chest.</li>
+</ul>
+</p>
+
+<p>
+At the beginning of a new game Allen starts in level 0 with no gold.
+For each valid i, whenever Allen completes level i, he moves on to play level i+1.
+The game ends as soon as he completes level N-1.
+</p>
+
+<p>
+Whenever Allen dies, several things happen in order:
+<ol>
+<li>All the gold that is currently neither in a treasure chest nor carried by Allen is removed from the game.</li>
+<li>All the gold Allen is currently carrying is dropped at the beginning of the level where he died.
+    As soon as Allen reaches this level again, he will be able to pick it all up again, even before attempting to complete the level.
+    (Note that if he dies again before collecting it, this gold will be lost forever.)</li>
+<li>New gold is added to all chests to refill them to the amounts they originally contained.</li>
+<li>Allen is returned to the beginning of level 0. He is carrying no gold.</li>
+</ol>
+</p>
+
+<p>
+Hence, after Allen's death there is always at most one pile of gold that is not in a treasure chest.
+That pile is at the beginning of the level where Allen most recently died.
+</p>
+
+<p>
+You are given the vector &lt;int&gt;s <b>prob</b> and <b>value</b> with N elements each.
+In order to avoid precision errors, <b>prob</b> will always be such that the probability that Allen wins the entire game without ever dying will be at least 10^(-6).
+Compute and return the expected amount of gold Allen will carry when he wins the game.
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>AToughGame</td></tr><tr><td>Method:</td><td>expectedGain</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>double</td></tr><tr><td>Method signature:</td><td>double expectedGain(vector &lt;int&gt; prob, vector &lt;int&gt; value)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Notes</h3></td></tr><tr><td align="center" valign="top">-</td><td>Your return value must have an absolute or relative error smaller than 1e-6</td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>prob,value</b> will contain between 2 and 1,000 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>prob,value</b> will have the same length.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>prob,value</b> will be between 1 and 1,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>The probability of beating all levels without dying is at least 10^-6.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1000,500}</pre></td></tr><tr><td><pre>{3,4}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 10.0</pre></td></tr><tr><td><table><tr><td colspan="2"><p>
+This game has 2 levels.
+Allen will beat level 0 with probability 1, and he will beat level 1 with probability 1/2.
+Allen will gain 3 units of gold for beating level 0, and 4 units of gold for beating level 1.
+</p>
+
+<p>
+Here is an example how Allen could have played the game:
+<ol>
+<li>He completes level 0 and collects 3 gold.</li>
+<li>He dies in level 1. He drops the 3 gold at the beginning of level 1. Treasure chest in level 0 is refilled to 3 gold.</li>
+<li>He completes level 0 again and collects the new 3 gold.</li>
+<li>As he reaches level 1, he collects the 3 gold he dropped when he first died.</li>
+<li>Again, he dies in level 1. This time he drops 6 gold at the beginning of level 1. Treasure chest in level 0 is refilled again.</li>
+<li>He completes level 0 for the third time and collects the new 3 gold.</li>
+<li>As he reaches level 1, he collects the 6 gold he dropped when he last died. He now has 9 gold.</li>
+<li>This time he completes level 1 and collects the 4 gold from its chest.</li>
+<li>As Allen completes level 1, the game ends. He is currently carrying 13 gold.</li>
+</ol>
+</p>
+
+<p>
+Allen will win level 1 exactly once.
+It can be shown that on average Allen will play (and win) level 0 twice.
+Thus, the expected amount of gold he will have at the end is 2*3 + 4 = 10.
+</p></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1000,1}</pre></td></tr><tr><td><pre>{3,4}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 3003.9999999999977</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{500,500,500,500,500}</pre></td></tr><tr><td><pre>{1,2,3,4,5}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 16.626830517153095</pre></td></tr><tr><td><table><tr><td colspan="2"><p>
+In this game there are 5 levels, and Allen can complete each of them with probability 1/2.
+Here is an example how Allen could have played this game:
+</p>
+
+<p>
+<ol>
+<li>He completes levels 0, 1, and 2, collecting 1+2+3 = 6 gold.</li>
+<li>He then dies in level 3 and drops the 6 gold at the beginning of level 3.</li>
+<li>Starting again, he completes levels 0, 1, 2, and 3. He will collect 1+2+3 gold for completing the first three levels, then 6 gold for reaching level 3, and finally 4 gold for completing level 3. Allen now has a total of 16 gold.</li>
+<li>He then dies in level 4 and drops the 16 gold at the beginning of level 4.</li>
+<li>Allen starts the game for the third time, completes level 0 and gains 1 gold.</li>
+<li>This time, he dies in level 1. The 16 gold that was waiting in level 4 is now lost forever. Instead, Allen just drops the 1 gold he is currently carrying at the beginning of level 1.</li>
+<li>In his fourth attempt Allen completes all five levels in a row. He ends the game with 1+2+3+4+5 gold collected when completing the levels, and the 1 extra gold that he collected at the beginning of level 1.</li>
+</ol>
+</p>
+
+<p>
+The probability of this particular playthrough is 1/(2^(16)).
+</p></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{250,750}</pre></td></tr><tr><td><pre>{1000,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1067.6666666666667</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{916,932,927,988,958,996,944,968,917,939,960,965,960,998,920,990,915,972,995,916,902,
+968,970,962,922,959,994,915,996,996,994,986,945,947,912,946,972,951,973,965,921,910,
+938,975,942,950,900,983,960,998,982,980,902,974,952,938,900,962,920,931,964,974,953,
+995,946,946,903,921,923,985,919,996,930,915,991,967,996,911,999,936,1000,962,970,929,
+966,960,930,920,958,926,983}</pre></td></tr><tr><td><pre>{583,428,396,17,163,815,31,536,175,165,532,781,29,963,331,987,599,497,380,180,780,25,
+931,607,784,613,468,140,488,604,401,912,204,785,697,173,451,849,714,914,650,652,338,
+336,177,147,22,652,901,548,370,9,118,487,779,567,818,440,10,868,316,666,690,714,623,
+269,501,649,324,773,173,54,391,745,504,578,81,627,319,301,16,899,658,586,604,83,520,
+81,181,943,157}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 54204.93356505282</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
