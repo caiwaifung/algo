@@ -48,6 +48,49 @@ int n;
 
 class AToughGame {
 public:
+    int ran() {
+        double r=rand()%10000/10000.;
+        rep(i, 0, n) {
+            if(r<=p[i]) return i;
+            r-=p[i];
+        }
+        assert(false);
+        return n;
+    }
+    double e0() {
+        double ans=0; int cnt=99999;
+        repn(t, cnt) {
+            double cur=0; int la=0;
+            while(la!=n) {
+                int i=ran();
+                if(i<la) cur=0;
+                la=i, cur+=s[i];
+            }
+            ans+=cur;
+        }
+        return ans/cnt;
+    }
+    double e1() {
+        double tmp[N]; memcpy(tmp, p, sizeof(p));
+        double ans=0; int cnt=999999;
+        repn(t, cnt) {
+            double cur=0; int la=0;
+            //printf("start\n");
+            while(la!=n) {
+                //rep(k, 0, n) printf("p[%d]=%.5lf\n",k,p[k]);
+                int i=ran();
+                //printf("i=%d\n", i);
+                la=i, cur+=s[i];
+                double rest=accumulate(p+i, p+n+1, 0.);
+                rep(k, 0, i-1) p[k]=0;
+                rep(k, i, n) p[k]/=rest;
+            }
+            ans+=cur;
+            memcpy(p, tmp, sizeof(p));
+            if(t%99999==0) printf("   %.9lf\n",ans/(t+1));
+        }
+        return ans/cnt;
+    }
     double expectedGain(vector <int> prob, vector <int> value) {
         n=(int)prob.size();
         {
@@ -62,34 +105,13 @@ public:
             rep(i, 1, n) s[i]=s[i-1]+(double)value[i-1];
         }
 
-        //rep(i, 0, n) printf("p[%d]=%.3lf s[%d]=%.1lf\n",i,p[i],i,s[i]);
-
-        /*
-        fillchar(f, 0); f[0]=1; 
-        double ans=0;
-        double rp=1;
-        rep(i, 0, n-1) {
-            double p0=p[i]/rp;
-            ans+=f[i]*s[i]*1/(1-p0);
-            rp-=p[i];
-            rep(j, i+1, n) {
-                double curp=p[j]/rp;
-                f[j]+=f[i]*curp;
-            }
+        fillchar(f, 0);
+        rep(i, 1, n) {
+            rep(j, 0, i-1) f[i]+=p[j]*f[j];
+            f[i]+=s[i];
+            if(i<n) f[i]/=1-p[i];
         }
-        ans+=f[n]*s[n];
-        rep(i, 0, n) printf("f[%d]=%.4lf\n",i,f[i]);
-        */
-
-        fillchar(f, 0); f[n]=0;
-        irep(i, n-1, 1) {
-            double c=0; rep(j, i, n) c+=p[j];
-            double c0=p[i]/c;
-            f[i]=c0*s[i];
-            rep(j, i+1, n) f[i]+=(f[j]+s[j])*p[j]/c;
-            f[i]/=1-c0;
-        }
-        double ans=f[1];
+        double ans=f[n];
 
         return (double)(ans);
     }
