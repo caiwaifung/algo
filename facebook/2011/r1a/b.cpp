@@ -34,25 +34,42 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-const LL MOD=1051962371;
+void solve(int cs) {
+    int n, m; scanf("%d%d", &n,&m);
+    int rows[20];
+    repn(i, n) {
+        char s[22]; scanf("%s", s);
+        rows[i]=0;
+        repn(j, m) if(s[j]=='.') rows[i]|=(1<<j);
+    }
 
-LL c[110][110];
-LL fac[110];
+    int bits[1<<20];
+    bits[0]=0;
+    rep(i, 1, (1<<m)-1) bits[i]=bits[i-(i&-i)]+1;
+    int ans=1<<30;
+    repn(first, 1<<m) {
+        int last=(rows[0]^first^(first<<1)^(first>>1))&((1<<m)-1);
+        int o0=first;
+        int tot=bits[first];
+        rep(i, 1, n-1) {
+            int o=last;
+            last=(rows[i]^o0^o^(o<<1)^(o>>1))&((1<<m)-1);
+            tot+=bits[o];
+            o0=o;
+        }
+        if(last==0) setmin(ans, tot);
+    }
+    if(ans>=(1<<30)) ans=-1;
+
+    printf("Case #%d: %d\n", cs, ans);
+}
 
 int main() {
-    fac[0]=1; rep(i, 1, 100) fac[i]=fac[i-1]*i%MOD;
-    fillchar(c, 0);
-    rep(i, 0, 100) c[i][0]=c[i][i]=1;
-    rep(i, 1, 100) rep(j, 1, i-1) c[i][j]=(c[i-1][j-1]+c[i-1][j])%MOD;
-    LL f[110][110];
-    fillchar(f, 0); f[0][0]=1;
-    rep(i, 1, 100) rep(j, 0, i) {
-        if(j>0) (f[i][j]+=f[i-1][j-1]) %= MOD;
-        rep(k, 2, i) (f[i][j]+=f[i-k][j]*c[i-1][k-1]%MOD*fac[k-1])%=MOD;
+    freopen("/Users/fqw/Downloads/turn_on_the_lights.txt", "r", stdin); freopen("out.txt", "w", stdout);
+    int csn; scanf("%d", &csn);
+    rep(cs, 1, csn) {
+        fprintf(stderr, "[%d/%d]\n",cs,csn);
+        solve(cs);
     }
-    int t; scanf("%d", &t);
-    rep(tt, 1, t) { int x, y ;scanf("%d%d", &x,&y);
-    LL ans=0; rep(i, y, x) (ans+=f[x][i])%=MOD;
-    printf("Case #%d: %d\n",tt,(int)ans); }
     return 0;
 }
