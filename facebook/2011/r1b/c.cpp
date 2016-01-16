@@ -1,3 +1,5 @@
+// 9:24
+// 9:27 - 9:36 - ac
 #include <cassert>
 #include <cstring>
 #include <cstdlib>
@@ -34,12 +36,47 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
+int g(int x) {
+    x = int((LL(x) * 5402147 + 54321) % 10000001);
+    return x;
+}
+
 void solve(int cs) {
-    printf("Case #%d: %d\n", cs, ans);
+    int n; scanf("%d", &n);
+    VI a((size_t)n); for(int& x: a) scanf("%d", &x);
+    VI ans, tmp;
+    printf("Case #%d: ", cs);
+    for(int first=a[0]; first<10000001; first+=1000) {
+        bool ok=true;
+        int secret=first;
+        for(int x: a) {
+            if(secret%1000 != x) { ok=false; break; }
+            secret=g(secret);
+        }
+        if(ok) {
+            tmp.clear();
+            repn(i, 10) {
+                tmp.pb(secret%1000);
+                secret=g(secret);
+            }
+            if(ans.size()==0) ans=tmp;
+            else {
+                if(ans!=tmp) {
+                    printf("Not enough observations\n");
+                    return;
+                }
+            }
+        }
+    }
+    if(ans.size()>0) {
+        for(int x: ans) printf("%d ", x); printf("\n");
+    } else {
+        printf("Wrong machine\n");
+    }
 }
 
 int main() {
-    //freopen("/Users/fqw/Downloads/in.txt", "r", stdin); freopen("out.txt", "w", stdout);
+    freopen("/Users/fqw/Downloads/slot_machine_hacker.txt", "r", stdin); freopen("out.txt", "w", stdout);
     int csn; scanf("%d", &csn);
     rep(cs, 1, csn) {
         fprintf(stderr, "[%d/%d]\n",cs,csn);

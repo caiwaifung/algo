@@ -1,3 +1,6 @@
+// 9:08
+// 9:14 - 9:21
+#include <iostream>
 #include <cassert>
 #include <cstring>
 #include <cstdlib>
@@ -35,11 +38,26 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 void solve(int cs) {
-    printf("Case #%d: %d\n", cs, ans);
+    LL N, K; cin>>N>>K;
+    LL p=1, n=2;
+    while(n<=N) {
+        LL t=(n-p)/(K+1);
+        if(t>0) {
+            t=min(t, N-n+1);
+            p+=(K+1)*t; assert(p<=n);
+            n+=t;
+        } else {
+            p=(p+K)%n+1;
+            ++n;
+        }
+    }
+    
+    printf("Case #%d: ", cs);
+    cout<<p<<endl;
 }
 
 int main() {
-    //freopen("/Users/fqw/Downloads/in.txt", "r", stdin); freopen("out.txt", "w", stdout);
+    freopen("/Users/fqw/Downloads/diminishing_circle.txt", "r", stdin); freopen("out.txt", "w", stdout);
     int csn; scanf("%d", &csn);
     rep(cs, 1, csn) {
         fprintf(stderr, "[%d/%d]\n",cs,csn);
