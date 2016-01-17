@@ -7,6 +7,7 @@
 #include <cmath>
 using namespace std;
 
+//{{{
 #define all(a) a.begin(), a.end()
 #define rep(i, a, b) for(int i=int(a); i<=int(b); ++i)
 #define irep(i, a, b) for(int i=int(a); i>=int(b); --i)
@@ -33,17 +34,26 @@ typedef vector<string> VS;
 template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } return false; }
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
+template<class T> T absv(T _x) { return _x>0?_x:-_x; }
+//}}}
 
-void solve(int cs) {
-    printf("Case #%d: %d\n", cs, ans);
+int n;
+
+void read_input() {
+}
+
+int solve() {
+    return 0;
 }
 
 int main() {
     //freopen("/Users/fqw/Downloads/in.txt", "r", stdin); freopen("out.txt", "w", stdout);
     int csn; scanf("%d", &csn);
-    rep(cs, 1, csn) {
-        fprintf(stderr, "[%d/%d]\n",cs,csn);
-        solve(cs);
+    rep(cs, 1, csn) { fprintf(stderr, "\033[0;31m### [%d/%d]\033[0m\n",cs,csn);
+        read_input();
+        int ans=solve();
+        printf("Case #%d: %d\n", cs, ans);
     }
     return 0;
 }
+
