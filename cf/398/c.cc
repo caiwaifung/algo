@@ -32,5 +32,19 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    int n; scanf("%d", &n);
+    if(n==5) {
+        printf("1 2 2\n");
+        printf("1 3 1\n");
+        printf("2 4 1\n");
+        printf("4 5 1\n");
+        printf("3 4\n3 5\n");
+        return 0;
+    }
+    rep(i, 1, n/2) printf("%d %d 1\n", i, i+n/2);
+    rep(i, n/2+1, n-1) printf("%d %d %d\n", i, i+1, (i-n/2)*2-1);
+    printf("1 3\n");
+    rep(i, 1, n/2-1) printf("%d %d\n", i, i+1);
+
     return 0;
 }

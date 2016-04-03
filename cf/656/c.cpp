@@ -1,9 +1,9 @@
+#include <iostream>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
@@ -31,6 +31,24 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
+int ind(char c) {
+    if(c>='a' && c<='z') return int(c-'a'+1);
+    return int(c-'A'+1);
+}
+
 int main() {
+    string str; cin>>str;
+    LL res=0;
+    for(char c: str) {
+        bool x1=('@'<c);
+        bool x2=('['>c);
+        bool x3=('`'<c);
+        bool x4=('{'>c);
+        int y1=int(x1 && x2);
+        int y2=int(x3 && x4);
+        int y3=ind(c);
+        res+=y1*y3-y2*y3;
+    }
+    cout<<res<<endl;
     return 0;
 }

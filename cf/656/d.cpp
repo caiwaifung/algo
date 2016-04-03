@@ -3,7 +3,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
@@ -32,5 +31,8 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    int a; scanf("%d", &a);
+    int r=0; while(a>0) r+=(a%8==1), a/=8;
+    printf("%d\n", r);
     return 0;
 }
