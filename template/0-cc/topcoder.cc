@@ -1,18 +1,15 @@
-#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
-#include <cassert>
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
 #include <string>
 #include <vector>
-#include <queue>
-#include <cmath>
-#include <set>
-#include <map>
 using namespace std;
 
+#define _ (int)
 #define all(a) a.begin(), a.end()
 #define rep(i, a, b) for(int i=int(a); i<=int(b); ++i)
 #define irep(i, a, b) for(int i=int(a); i>=int(b); --i)
@@ -23,11 +20,6 @@ using namespace std;
 #define se second
 #define pb push_back
 #define mp make_pair
-#ifdef DEBUG
-    #define _debug(args...) { fprintf(stderr, args); fflush(stderr); }
-#else
-    #define _debug(args...) {}
-#endif
 typedef long long LL;
 typedef pair<LL,LL> PLL;
 typedef pair<int,int> PII;
@@ -51,11 +43,7 @@ public:
 $BEGINCUT$
 int main(){
     $CLASSNAME$ ___test;
-    /*
-       ___test.run_test(0);
-    /*/
-      ___test.run_test(-1);
-    //*/
+    ___test.run_test(-1);
     return 0;
 }
 $ENDCUT$
