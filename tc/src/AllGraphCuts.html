@@ -1,0 +1,83 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+All graphs in this problem statement are simple undirected graphs with nonnegative integer edge weights.
+Here, "simple" means that there are no self-loops and each pair of vertices is connected by at most one direct edge.
+</p>
+
+<p>
+Given a connected graph G, a cut between vertices i and j is a set E of edges such that each path from i to j contains at least one edge from the set E.
+In other words, if you cut all edges in E, the vertices i and j will end in different connected components.
+</p>
+
+<p>
+If E is a set of edges, the weight of E is the sum of weights of edges it contains.
+For any distinct vertices i and j, the min cut weight between i and j is the minimum weight of a cut between i and j.
+Additionally, for any vertex i we define that the min cut weight between i and i is 0.
+</p>
+
+<p>
+You are given a vector &lt;int&gt; <b>x</b> with n*n elements.
+You would like to find a connected graph G with n vertices, labeled 0 through n-1.
+The graph G must have the following properties:
+<ol>
+<li>For each i and j, the min cut weight between vertices i and j must be exactly <b>x</b>[i*n+j].</li>
+<li>G must have at most 1000 edges.</li>
+<li>The weight of each edge must be between 0 and 10^5, inclusive.</li>
+</ol>
+For the given constraints it is guaranteed that whenever there is a graph that has the first property, there is a graph that has all three properties.
+</p>
+
+<p>
+If there are no solutions, return the vector &lt;int&gt; {-1}.
+Otherwise, find any graph G that has the required properties and return a vector &lt;int&gt; with exactly m elements, where m is the number of edges in G.
+If G contains an edge (i,j) with weight w, the return value should contain the number (w*n*n + i*n + j).
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>AllGraphCuts</td></tr><tr><td>Method:</td><td>findGraph</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>vector &lt;int&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;int&gt; findGraph(vector &lt;int&gt; x)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>n will be between 2 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>x</b> will have exactly n*n elements.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>x</b> will be between 0 and 10^5, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,1,
+ 1,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {6 }</pre></td></tr><tr><td><table><tr><td colspan="2">In this case n = 2. The output can be decoded as a single edge between nodes 0 and 1 with weight 1 (i.e. 1*2*2 + 1*2 + 0 = 6).</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,1,
+ 1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {-1 }</pre></td></tr><tr><td><table><tr><td colspan="2">Note that since we have <b>x</b>[1*2+1] != 0, there is no valid solution.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,2,2,
+ 2,0,2,
+ 2,2,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {10, 11, 14 }</pre></td></tr><tr><td><table><tr><td colspan="2">This graph can be decoded as a triangle graph, where all the edge weights are 1.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,1,2,3,4,
+ 1,0,2,3,4,
+ 1,2,0,3,4,
+ 1,2,3,0,4,
+ 1,2,3,4,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {-1 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,0,0,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {2 }</pre></td></tr><tr><td><table><tr><td colspan="2">Note that some edge weights can be zero.
+The empty vector &lt;int&gt; {} is not a correct return value, since the graph G you return must be connected.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{
+0, 2545, 2348, 2993, 2606, 2623, 2013, 3001, 2626, 2440, 2495, 2262, 2342, 2617, 2773, 2662, 2736, 2827, 3044, 3082,
+2545, 0, 2348, 2545, 2545, 2545, 2013, 2545, 2545, 2440, 2495, 2262, 2342, 2545, 2545, 2545, 2545, 2545, 2545, 2545,
+2348, 2348, 0, 2348, 2348, 2348, 2013, 2348, 2348, 2348, 2348, 2262, 2342, 2348, 2348, 2348, 2348, 2348, 2348, 2348,
+2993, 2545, 2348, 0, 2606, 2623, 2013, 2993, 2626, 2440, 2495, 2262, 2342, 2617, 2773, 2662, 2736, 2827, 2993, 2993,
+2606, 2545, 2348, 2606, 0, 2606, 2013, 2606, 2606, 2440, 2495, 2262, 2342, 2606, 2606, 2606, 2606, 2606, 2606, 2606,
+2623, 2545, 2348, 2623, 2606, 0, 2013, 2623, 2623, 2440, 2495, 2262, 2342, 2617, 2623, 2623, 2623, 2623, 2623, 2623,
+2013, 2013, 2013, 2013, 2013, 2013, 0, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013,
+3001, 2545, 2348, 2993, 2606, 2623, 2013, 0, 2626, 2440, 2495, 2262, 2342, 2617, 2773, 2662, 2736, 2827, 3001, 3001,
+2626, 2545, 2348, 2626, 2606, 2623, 2013, 2626, 0, 2440, 2495, 2262, 2342, 2617, 2626, 2626, 2626, 2626, 2626, 2626,
+2440, 2440, 2348, 2440, 2440, 2440, 2013, 2440, 2440, 0, 2440, 2262, 2342, 2440, 2440, 2440, 2440, 2440, 2440, 2440,
+2495, 2495, 2348, 2495, 2495, 2495, 2013, 2495, 2495, 2440, 0, 2262, 2342, 2495, 2495, 2495, 2495, 2495, 2495, 2495,
+2262, 2262, 2262, 2262, 2262, 2262, 2013, 2262, 2262, 2262, 2262, 0, 2262, 2262, 2262, 2262, 2262, 2262, 2262, 2262,
+2342, 2342, 2342, 2342, 2342, 2342, 2013, 2342, 2342, 2342, 2342, 2262, 0, 2342, 2342, 2342, 2342, 2342, 2342, 2342,
+2617, 2545, 2348, 2617, 2606, 2617, 2013, 2617, 2617, 2440, 2495, 2262, 2342, 0, 2617, 2617, 2617, 2617, 2617, 2617,
+2773, 2545, 2348, 2773, 2606, 2623, 2013, 2773, 2626, 2440, 2495, 2262, 2342, 2617, 0, 2662, 2736, 2773, 2773, 2773,
+2662, 2545, 2348, 2662, 2606, 2623, 2013, 2662, 2626, 2440, 2495, 2262, 2342, 2617, 2662, 0, 2662, 2662, 2662, 2662,
+2736, 2545, 2348, 2736, 2606, 2623, 2013, 2736, 2626, 2440, 2495, 2262, 2342, 2617, 2736, 2662, 0, 2736, 2736, 2736,
+2827, 2545, 2348, 2827, 2606, 2623, 2013, 2827, 2626, 2440, 2495, 2262, 2342, 2617, 2773, 2662, 2736, 0, 2827, 2827,
+3044, 2545, 2348, 2993, 2606, 2623, 2013, 3001, 2626, 2440, 2495, 2262, 2342, 2617, 2773, 2662, 2736, 2827, 0, 3044,
+3082, 2545, 2348, 2993, 2606, 2623, 2013, 3001, 2626, 2440, 2495, 2262, 2342, 2617, 2773, 2662, 2736, 2827, 3044, 0
+}
+</pre></td></tr></table></td></tr><tr><td><pre>Returns: 
+{76801, 87602, 76403, 15604, 14005, 14406, 95607, 14408, 45609, 54010,
+ 113211, 102812, 53613, 72414, 10015, 90416, 110417, 108818, 76819, 20022,
+ 5223, 16824, 14025, 20426, 37227, 115628, 118829, 105230, 39631, 114032,
+ 70833, 2434, 9235, 71636, 3637, 108438, 68439, 16443, 24444, 37245, 54046,
+ 118447, 46048, 13249, 38450, 27651, 23652, 105253, 76054, 22455, 112056,
+ 5657, 82458, 28859, 31264, 117665, 73666, 91667, 11268, 67269, 110870,
+ 18471, 114872, 119673, 22074, 86075, 44876, 22477, 74478, 93679, 96085,
+ 8486, 59687, 110088, 1689, 107290, 56091, 56092, 74893, 61294, 109295,
+ 109296, 18097, 66498, 20899, 12506, 98907, 82908, 77309, 51710, 110111,
+ 108112, 22513, 66514, 43315, 36516, 19717, 15318, 26519, 34127, 70128,
+ 8929, 20930, 131, 81732, 80133, 29334, 68935, 53336, 81737, 36538, 57739,
+ 35348, 96149, 25750, 19351, 15752, 4153, 80554, 107355, 96556, 70557,
+ 66958, 48559, 33769, 81370, 55771, 15372, 61373, 72574, 11375, 2976, 66577,
+ 108178, 57779, 590, 78991, 14992, 10593, 69794, 47395, 33796, 113397,
+ 77398, 68999, 77811, 28212, 12613, 64614, 80215, 9816, 27017, 30618, 73819,
+ 46632, 66633, 7834, 100635, 636, 7437, 4238, 76639, 87453, 16254, 10255,
+ 31856, 50257, 18258, 3459, 73474, 69475, 63876, 41077, 3878, 28679, 13495,
+ 56696, 109497, 101098, 116699, 60316, 107517, 12318, 98719, 51137, 91138,
+ 81139, 108358, 119959, 106379 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
