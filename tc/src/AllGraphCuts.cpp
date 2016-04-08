@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <functional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -43,17 +44,25 @@ public:
 
     bool solve(VI xs) {
         if(xs.size()<=1) return true;
-        int mv=-1;
-        for(int x: xs) for(int y: xs) setmax(mv, g[x][y]);
+        int mv=-1, x0=-1;
+        for(int x: xs) for(int y: xs) if(setmax(mv, g[x][y])) x0=x;
         vector<bool> bs(n, false);
-        for(int x: xs) for(int y: xs) if(g[x][y]==mv) bs[x]=bs[y]=true;
-        for(int x: xs) for(int y: xs) if(x!=y) {
-            bool z1=(g[x][y]==mv);
-            bool z2=(bs[x] && bs[y]);
-            if(z1!=z2) return false;
+        function<void(int)> dfs=[&](int x) {
+            if(bs[x]) return;
+            bs[x]=true; for(int y: xs) if(g[x][y]==mv) dfs(y);
+        };
+        dfs(x0);
+        for(int x: xs) for(int y: xs) {
+            if(x!=y && bs[x] && bs[y]) {
+                if(g[x][y]!=mv) return false;
+            }
         }
+
         VI ys, zs;
         for(int x: xs) if(bs[x]) ys.pb(x); else zs.pb(x);
+        for(int z: zs) {
+            for(int y: ys) if(g[y][z]!=g[ys[0]][z]) return false;
+        }
         rep(i, 1, ys.size()-1) add(ys[0], ys[i], mv);
         zs.pb(ys[0]);
         return solve(zs);
