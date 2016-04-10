@@ -37,38 +37,37 @@ const int N=150;
 int a[N][N], n;
 
 int match() {
-    VI cx(n, 0), cy(n, 0);
-    VI lnk(n, -1);
+    VI lnk(n, -1), cx(n, 0), cy(n, 0);
     repn(cur, n) {
         VI slack(n, 1<<30), pre(n, -1);
         vector<bool> vis(n, false);
         int j0=-1;
         while(1) {
             if(j0>=0) vis[j0]=true;
-            int i0=(j0<0?cur:lnk[j0]); if(i0<0) break;
-            int minv=1<<30, minj=-1;
+            int i0=(j0<0?cur:lnk[j0]);
+            if(i0<0) break;
+            int d=1<<30, j1=-1;
             repn(j, n) if(!vis[j]) {
                 if(setmin(slack[j], a[i0][j]-cx[i0]-cy[j]))
                     pre[j]=j0;
-                if(setmin(minv, slack[j]))
-                    minj=j;
+                if(setmin(d, slack[j])) j1=j;
             }
-            cx[cur]+=minv;
+            cx[cur]+=d;
             repn(j, n) if(vis[j]) {
-                cx[lnk[j]]+=minv;
-                cy[j]-=minv;
+                cx[lnk[j]]+=d;
+                cy[j]-=d;
             } else {
-                slack[j]-=minv;
+                slack[j]-=d;
             }
-            j0=minj;
+            j0=j1;
         }
         while(j0>=0) {
             int j=pre[j0];
             lnk[j0]=(j<0?cur:lnk[j]), j0=j;
         }
     }
-    int ans=0; repn(j, n) ans+=a[lnk[j]][j];
-    return ans;
+    int r=0; repn(j, n) r+=a[lnk[j]][j];
+    return r;
 }
 
 int main() {

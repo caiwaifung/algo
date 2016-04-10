@@ -1,8 +1,7 @@
 int a[N][N], n;
 
 int match() {
-    VI cx(n, 0), cy(n, 0);
-    VI lnk(n, -1);
+    VI lnk(n, -1), cx(n, 0), cy(n, 0);
     repn(cur, n) {
         VI slack(n, 1<<30), pre(n, -1);
         vector<bool> vis(n, false);
