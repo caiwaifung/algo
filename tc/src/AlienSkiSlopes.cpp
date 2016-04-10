@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -32,88 +33,42 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-namespace KM {
-int w[50][50];
-int x[50], y[50];
-int n;
-
-bool vx[50], vy[50];
-int lx[50], ly[50];
-
-bool find(int i) {
-    vx[i] = true;
-    for (int j = 0; j < n; j++) {
-        if (w[i][j] == x[i] + y[j] && !vy[j]) {
-            vy[j] = true;
-            if (ly[j] < 0 || find(ly[j])) {
-                lx[i] = j; ly[j] = i;
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-int solve() {
-    std::fill(lx, lx + n, -1);
-    std::fill(ly, ly + n, -1);
-    std::fill(x, x + n, 0);
-    std::fill(y, y + n, 0);
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            x[i] = std::max(x[i], w[i][j]);
-        }
-    }
-    for (int k = 0; k < n; ) {
-        std::fill(vx, vx + n, false);
-        std::fill(vy, vy + n, false);
-        if (find(k)) {
-            ++k;
-            continue;
-        }
-        int d = 0x7fffffff;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (vx[i] && !vy[j])
-                    d = std::min(d, x[i] + y[j] - w[i][j]);
-            }
-        }
-        for (int i = 0; i < n; i++) {
-            if (vx[i])
-                x[i] -= d;
-        }
-        for (int i = 0; i < n; i++) {
-            if (vy[i])
-                y[i] += d;
-        }
-    }
-    int ans = 0;
-    for (int i = 0; i < n; i++) {
-        ans += w[i][lx[i]];
-    }
-    return ans;
-}
-}
-
 class AlienSkiSlopes {
 public:
-    int a[50][50], n;
     vector <int> raise(vector <int> h) {
-        n=0; while(n*n<_ h.size()) ++n;
+        int n=(int)round(sqrt(h.size()));
+        vector<VI> a(n, VI(n));
         repn(i, n) repn(j, n) a[i][j]=h[i*n+j];
-        KM::n=n;
-        repn(i, n) repn(j, n) KM::w[i][j]=a[i][j];
-        KM::solve();
 
-        VI p(n); repn(i, n) p[i]=KM::lx[i];
-
-        VI ans(n, 0);
-        repn(k, n) {
-            repn(i, n) repn(j, n) {
-                setmax(ans[j], ans[p[i]]+a[i][j]-a[i][p[i]]);
+        VI cx(n, 1<<30), cy(n, 0), lnk(n, -1);
+        repn(cur, n) {
+            VI slack(n, 1<<30), pre(n, -1);
+            vector<bool> vis(n, false);
+            int j0=-1;
+            while(1) {
+                if(j0>=0) vis[j0]=true;
+                int i0=(j0<0?cur:lnk[j0]);
+                if(i0<0) break;
+                int d=1<<30, j1=-1;
+                repn(j, n) if(!vis[j]) {
+                    if(setmin(slack[j], cx[i0]+cy[j]-a[i0][j])) pre[j]=j0;
+                    if(setmin(d, slack[j])) j1=j;
+                }
+                cx[cur]-=d;
+                repn(j, n) if(vis[j]) {
+                    cx[lnk[j]]-=d;
+                    cy[j]+=d;
+                } else {
+                    slack[j]-=d;
+                }
+                j0=j1;
+            }
+            while(j0>=0) {
+                int j=pre[j0];
+                lnk[j0]=(j<0?cur:lnk[j]), j0=j;
             }
         }
-        return ans;
+        return cy;
     }
     
 // BEGIN CUT HERE

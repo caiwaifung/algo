@@ -37,7 +37,7 @@ const int N=150;
 int a[N][N], n;
 
 int match() {
-    VI lnk(n, -1), cx(n, 0), cy(n, 0);
+    VI lnk(n, -1), cx(n, 1<<30), cy(n, 0);
     repn(cur, n) {
         VI slack(n, 1<<30), pre(n, -1);
         vector<bool> vis(n, false);
@@ -48,14 +48,14 @@ int match() {
             if(i0<0) break;
             int d=1<<30, j1=-1;
             repn(j, n) if(!vis[j]) {
-                if(setmin(slack[j], a[i0][j]-cx[i0]-cy[j]))
+                if(setmin(slack[j], cx[i0]+cy[j]-a[i0][j]))
                     pre[j]=j0;
                 if(setmin(d, slack[j])) j1=j;
             }
-            cx[cur]+=d;
+            cx[cur]-=d;
             repn(j, n) if(vis[j]) {
-                cx[lnk[j]]+=d;
-                cy[j]-=d;
+                cx[lnk[j]]-=d;
+                cy[j]+=d;
             } else {
                 slack[j]-=d;
             }
@@ -73,11 +73,9 @@ int match() {
 int main() {
     scanf("%d", &n);
     repn(i, n) repn(j, n) scanf("%d", &a[i][j]);
-    int ans=-100*n;
-    repn(i, n) repn(j, n) {
-        ans+=a[i][j]; a[i][j]=100-a[i][j];
-    }
-    ans+=match();
+    int ans=0;
+    repn(i, n) repn(j, n) ans+=a[i][j];
+    ans-=match();
     printf("%d\n", ans);
     return 0;
 }
