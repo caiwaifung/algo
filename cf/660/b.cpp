@@ -31,6 +31,32 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
+int a[110][4], n, m;
+
 int main() {
+    cin>>n>>m;
+
+    int cur=1; fillchar(a, 0);
+    rep(i, 1, n) {
+        if(cur>m) break;
+        a[i][0]=cur++;
+        if(cur>m) break;
+        a[i][3]=cur++;
+    }
+    rep(i, 1, n) {
+        if(cur>m) break;
+        a[i][1]=cur++;
+        if(cur>m) break;
+        a[i][2]=cur++;
+    }
+
+    VI ans;
+    rep(i, 1, n) {
+        ans.pb(a[i][1]);
+        ans.pb(a[i][0]);
+        ans.pb(a[i][2]);
+        ans.pb(a[i][3]);
+    }
+    for(int x: ans) if(x>0) cout<<x<<" "; cout<<endl;
     return 0;
 }

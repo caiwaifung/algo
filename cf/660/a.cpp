@@ -32,5 +32,13 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    int n; cin>>n;
+    VI a(n); for(int& x: a) cin>>x;
+    repn(i, a.size()-1) if(gcd(a[i], a[i+1])>1) {
+        a.insert(a.begin()+i+1, 1);
+    }
+    cout<<(a.size()-n)<<endl;
+    for(int x: a) cout<<x<<" ";
+    cout<<endl;
     return 0;
 }
