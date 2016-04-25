@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cstring>
+#include <complex>
 #include <cstdlib>
 #include <cstdio>
 #include <set>
@@ -21,9 +22,9 @@ using namespace std;
 #define pb push_back
 #define mp make_pair
 #ifdef DEBUG
-    #define _debug(args...) { fprintf(stderr, args); fflush(stderr); }
+#define _debug(args...) { fprintf(stderr, args); fflush(stderr); }
 #else
-    #define _debug(args...) {}
+#define _debug(args...) {}
 #endif
 typedef long long LL;
 typedef pair<LL,LL> PLL;
@@ -40,38 +41,55 @@ template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 const LL MOD=LL(1e9)+7;
 const LL CAP=LL(8e18);
-const int K=1<<16;
+const int K=1<<16; static_assert(K>=60000 && K<=70000, "");
 
-void add(LL* a, const LL* b, int n) { repn(i, n) { a[i]+=b[i]; if(a[i]>=MOD) a[i]-=MOD; } }
-void dec(LL* a, const LL* b, int n) { repn(i, n) { a[i]-=b[i]; if(a[i]<0) a[i]+=MOD; } }
+typedef complex<long double> Complex;
 
-LL mem[10*K]; int cur=0;
+void fft(Complex *a, int n, bool inv) {
+    static Complex b[K];
+    long double arg=acos(-1.0)*(inv?-1:1);
+    for(int t=n/2; t>=1; t/=2) {
+        Complex w(cos(arg), sin(arg));
+        Complex p(1.0, 0.0);
+        for(int j=0; j<n/2; j+=t, p*=w)
+            for(int i=0; i<t; ++i) {
+                Complex u=a[i+j*2];
+                Complex v=p*a[i+t+j*2];
+                b[i+j]=u+v;
+                b[i+j+n/2]=u-v;
+            }
+        memcpy(a, b, sizeof(Complex)*n);
+        arg/=2;
+    }
+}
 
-//int cnt[99999]={0};
 void convolute(const LL* a, const LL* b, LL* c, int n) {
-    //++cnt[n];
-    if(n<=32) {
-        repn(i, n) repn(j, n) {
-            c[i+j]+=a[i]*b[j];
-            if(c[i+j]>CAP) c[i+j]%=MOD;
-        }
-        repn(i, n*2) c[i]%=MOD;
-        return;
+    static Complex a1[K], a2[K];
+    static Complex b1[K], b2[K];
+    static Complex c1[K], c2[K], c3[K];
+    static const LL L=30000;
+    n*=2; 
+    fillchar(a1, 0); fillchar(b1, 0);
+    fillchar(a2, 0); fillchar(b2, 0);
+    repn(i, n/2) {
+        a1[i]=Complex(double(a[i]/L), 0); b1[i]=Complex(double(b[i]/L), 0); 
+        a2[i]=Complex(double(a[i]%L), 0); b2[i]=Complex(double(b[i]%L), 0);
     }
-    convolute(a, b, c, n/2);
-    convolute(a+n/2, b+n/2, c+n, n/2);
-
-    LL* x=mem+cur; cur+=n/2; repn(i, n/2) { x[i]=a[i]+a[i+n/2]; if(x[i]>=MOD) x[i]-=MOD; }
-    LL* y=mem+cur; cur+=n/2; repn(i, n/2) { y[i]=b[i]+b[i+n/2]; if(y[i]>=MOD) y[i]-=MOD; }
-    LL* z=mem+cur; cur+=n; memset(z, 0, sizeof(LL)*n);
-    convolute(x, y, z, n/2);
-    repn(i, n) z[i]-=c[i]+c[i+n];
-    
-    repn(i, n) {
-        (c[i+n/2]+=z[i])%=MOD;
-        if(c[i+n/2]<0) c[i+n/2]+=MOD;
+    fft(a1, n, false); fft(b1, n, false); 
+    fft(a2, n, false); fft(b2, n, false);
+    repn(i, n) c1[i]=a1[i]*b1[i];
+    repn(i, n) c2[i]=a2[i]*b2[i];
+    repn(i, n) c3[i]=(a1[i]+a2[i])*(b1[i]+b2[i]);
+    fft(c1, n, true);
+    fft(c2, n, true);
+    fft(c3, n, true);
+    repn(i, n/2) {
+        LL x1=LL(c1[i].real()/n+.5)%MOD;
+        LL x2=LL(c2[i].real()/n+.5)%MOD;
+        LL x3=LL(c3[i].real()/n+.5)%MOD;  x3=((x3-x1-x2)%MOD+MOD)%MOD;
+        LL v=((x1*L+x3)%MOD*L+x2)%MOD;
+        c[i]=v;
     }
-    cur-=n*2;
 }
 
 int k, kn, k2;
@@ -137,7 +155,5 @@ int main() {
     k2=k-(int)n; kn=1; while(kn<=k2+1) kn*=2;
     prepare();
     cout<<solve((int)n)<<endl;
-    //cout<<cnt<<endl;
-    //for(int i=0; i<99999; ++i) if(cnt[i]>0) printf("cnt[%d]=%d\n", i,cnt[i]);
     return 0;
 }
