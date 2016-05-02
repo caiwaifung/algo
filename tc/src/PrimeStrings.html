@@ -1,0 +1,73 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+In this problem we deal with binary representations of integers.
+For clarity, decimal numbers will be given as numbers and their binary representations as strings.
+For example, the binary representation of 47 is "101111".
+</p>
+
+<p></p>
+
+<p>
+Additionally, in the entire problem statement, <b>k</b> is a positive integer constant.
+(The value of <b>k</b> will be given to you as one of the inputs.)
+</p>
+
+<p></p>
+
+<p>
+Let A be a positive integer.
+Consider the following process:
+<ol>
+<li>Find the string S that is the binary representation of A.</li>
+<li>Let L = max( 1, length(S)-<b>k</b> ).</li>
+<li>Let T be any (not necessarily contiguous) subsequence of S such that the length of T is between 1 and L, inclusive.</li>
+<li>Convert T to decimal and output the result.</li>
+</ol>
+</p>
+
+<p>
+Each integer B that can be the result of the above process is called a <i>binary substring</i> of A.
+Note that S never starts with a leading zero, but T might.
+Some examples are shown below.
+
+<ul>
+<li>
+Let A = 10 and <b>k</b> = 1.
+  <ol>
+  <li>We convert A to S = "1010".</li>
+  <li>Then we compute that L = 3, which means that we are interested in subsequences of length at most 3.</li>
+  <li>Hence, T is one of "0", "1", "00", "01", "10", "11", "010", "100", "101", or "110".</li>
+  <li>This means that the binary substrings of A are 0, 1, 2, 3, 4, 5, and 6.</li>
+  </ol>
+</li>
+<li>
+Let A = 10 and <b>k</b> = 2.
+Now we have L = 2, which means that the possible values of T are "0", "1", "00", "01", "10", and "11".
+Thus, the binary substrings of A are 0, 1, 2, and 3.
+</li>
+<li>
+For A = 10 and <b>k</b> &gt;= 3 the only binary substrings of A are the integers 0 and 1.
+</li>
+<li>
+For A = 15 and <b>k</b> = 1 the binary substrings of A are the integers 1, 3, and 7.
+</li>
+</ul>
+</p>
+
+<p>
+You are given the int <b>k</b>.
+You are also given long longs <b>x</b> and <b>y</b>.
+Consider the integers between 1 and <b>x</b>, inclusive, such that their largest binary substring is smaller than or equal to <b>y</b>.
+</p>
+
+<p></p>
+
+<p>
+Compute and return the number of such integers.
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>PrimeStrings</td></tr><tr><td>Method:</td><td>getCount</td></tr><tr><td>Parameters:</td><td>long long, long long, int</td></tr><tr><td>Returns:</td><td>long long</td></tr><tr><td>Method signature:</td><td>long long getCount(long long x, long long y, int k)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>x</b> will be between 1 and 10<sup>12</sup>, both inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>y</b> will be between 1 and 10<sup>12</sup>, both inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>k</b> will be between 1 and 40, both inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>1</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2">Given that <b>k</b>=1, the only binary substring of 1 is 1, and the binary substrings of 2 are 0 and 1.
+In both cases, the largest binary substring is less than or equal to <b>y</b>=1.
+Thus, the answer is 2.
+</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>6</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>1</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4</pre></td></tr><tr><td><table><tr><td colspan="2">As <b>x</b>=6, we are interested in the numbers between 1 and 6, inclusive.
+For <b>k</b>=1, the largest binary substrings of 1, 2, 3, 4, 5, and 6 are 1, 1, 1, 2, 3, and 3, respectively.
+As we only count those for which the largest binary substring does not exceed 2, the answer is 4.
+
+</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>6</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>3</pre></td></tr></table></td></tr><tr><td><pre>Returns: 6</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>31</pre></td></tr><tr><td><pre>6</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: 20</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>413</pre></td></tr><tr><td><pre>34</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: 130</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1000000000</pre></td></tr><tr><td><pre>1000000000</pre></td></tr><tr><td><pre>5</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1000000000</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">6)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>549755813602</pre></td></tr><tr><td><pre>8369864093</pre></td></tr><tr><td><pre>5</pre></td></tr></table></td></tr><tr><td><pre>Returns: 178429547459</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

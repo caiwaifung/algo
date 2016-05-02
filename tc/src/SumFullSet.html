@@ -1,0 +1,25 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Let S be a sequence of (not necessarily distinct) integers.
+We say that S is <i>closed under addition</i> if it has the following property:
+For any pair of <i>valid and distinct</i> indices i and j, the number S[i]+S[j] does also occur in the sequence S (one or more times).
+</p>
+
+<p></p>
+
+<p>
+Note that the numbers S[i] and S[j] may be equal, only the indices i and j are required to be distinct.
+Also note that from the definition it follows that any 0-element or 1-element sequence is closed under addition, as there are no valid pairs of distinct indices into such a sequence.
+</p>
+
+<p></p>
+
+<p>
+You are given a sequence of integers in a vector &lt;int&gt; <b>elements</b>.
+Return "closed" (quotes for clarity) if the given sequence is closed under addition.
+Otherwise, return "not closed".
+</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>SumFullSet</td></tr><tr><td>Method:</td><td>isSumFullSet</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>string</td></tr><tr><td>Method signature:</td><td>string isSumFullSet(vector &lt;int&gt; elements)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>Number of elements in <b>elements</b> will be between 1 and 50, both inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>elements</b> will be between -50 and 50, both inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{-1,0,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;closed&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"><ul>
+<li>(-1) + 0 = (-1), which does appear in our sequence</li>
+<li>(-1) + 1 = 0, which does appear in our sequence</li>
+<li>0 + 1 = 1, which does appear in our sequence</li>
+<li>hence, our sequence is closed under addition</li>
+</ul></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{-1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;not closed&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;closed&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;not closed&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">This sequence is not closed under addition because 1+1 = 2, which is not an element of our sequence.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{16,0,43,43,-36,-49,-46,-16,40,34,-43,-24,13,-48,45,19,12,0,43,6,26,-23,50,28,-3,21,46,45,-32,-41,0,-27,42,19,47,-36,-21,-1,5,-21,-28,-43,23,-26,-5,21,-41,16,-37,38}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;not closed&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{10}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;closed&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">A 1-element sequence is closed under addition by definition.</td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
