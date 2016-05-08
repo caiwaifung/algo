@@ -1,12 +1,7 @@
-#include <algorithm>
-#include <cassert>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <tuple>
+#include <bits/stdc++.h>
 using namespace std;
 
-#define sz(a) static_cast<int>(a.size())
+#define sz(a) int(a.size())
 #define all(a) a.begin(), a.end()
 #define repn(i, n) for(int i=0; i<int(n); ++i)
 #define fi first
@@ -14,7 +9,6 @@ using namespace std;
 #define pb push_back
 #define mp make_pair
 typedef long long LL;
-typedef pair<LL,LL> PL;
 typedef vector<LL> VL;
 typedef pair<VL, VL> PVL;
 
@@ -52,34 +46,29 @@ pair<VL, vector<PVL>> init() {
     return mp(ps, es);
 }
 
-void check(const VL& ps, const vector<PVL>& es, LL i0, int target=0) {
-    auto die=[]() { cout<<-1<<endl; exit(0); };
-    VL p; repn(i, sz(es[target].fi)) p.pb(es[target].fi[i]+es[target].se[i]*i0);
+void check(const VL& ps, const vector<PVL>& es, LL x0, int z0=0) {
+    auto die=[](bool b=true) { if(b) { cout<<-1<<endl; exit(0); } };
+    VL p; repn(i, sz(es[z0].fi)) {
+        p.pb(es[z0].fi[i]+es[z0].se[i]*x0);
+    }
     for(const auto& e: es) {
-        VL divs;
+        LL div=-1;
         repn(i, sz(e.fi)) {
             LL d=p[i]-e.fi[i]; if(d<0) die();
             if(e.se[i]==0) {
-                if(d!=0) die();
+                die(d!=0);
             } else {
-                if(d%e.se[i]!=0) die();
-                divs.pb(d/e.se[i]);
+                die(d%e.se[i]!=0); d/=e.se[i];
+                die(div>=0 && d!=div); div=d;
             }
         }
-        if(!divs.empty()) {
-            for(LL div: divs) if(div!=divs[0]) die();
-        }
     }
-
-    const LL MOD=LL(1e9)+7;
-    auto pow=[&MOD](LL a, LL b) {
-        LL c=1; a%=MOD;
-        for(; b>0; b>>=1, a=a*a%MOD)
-            if(b&1) c=c*a%MOD;
-        return c;
+    const LL M=LL(1e9)+7;
+    function<LL(LL,LL)> pow=[&pow,&M](LL a, LL b) {
+        return b==0?1:(pow(a*a%M, b/2)*((b&1)?a:1)%M);
     };
     LL ans=1;
-    repn(i, sz(ps)) ans=ans*pow(ps[i], p[i])%MOD;
+    repn(i, sz(ps)) ans=ans*pow(ps[i], p[i])%M;
     cout<<ans<<endl;
     exit(0);
 }
@@ -87,7 +76,7 @@ void check(const VL& ps, const vector<PVL>& es, LL i0, int target=0) {
 struct Line {
     LL a, b, c;
     Line(LL a1, LL b1, LL a2, LL b2) : a(b1), b(-b2), c(a1-a2) {}
-    friend bool merge(const Line& u, const Line& v, LL* x, LL* y) {
+    friend bool intersect(const Line& u, const Line& v, LL* x, LL* y) {
         LL t=u.a*v.b-u.b*v.a;
         *x=u.b*v.c-u.c*v.b;
         *y=u.c*v.a-u.a*v.c;
@@ -117,19 +106,19 @@ int main() {
 
     for(const auto& e: es) {
         const auto& e0=es[0];
-        Line l1(e0.fi[ind], e0.se[ind], e.fi[ind], e.se[ind]);
+        Line l(e0.fi[ind], e0.se[ind], e.fi[ind], e.se[ind]);
         repn(i, sz(e0.fi)) {
-            Line l2(e0.fi[i], e0.se[i], e.fi[i], e.se[i]);
             LL x, y;
-            if(merge(l1, l2, &x, &y)) check(ps, es, x);
+            if(intersect(l, Line(e0.fi[i], e0.se[i], e.fi[i], e.se[i]), &x,&y))
+                check(ps, es, x);
         }
     }
     LL u=0, v=1;
     for(const auto& e: es) {
-        const auto& e0=es[0];
         LL x, dx;
-        if(solve(e0.fi[ind], e0.se[ind], e.fi[ind], e.se[ind], &x, &dx)) {
-            LL k, dk; if(solve(u, v, x, dx, &k, &dk)) {
+        if(solve(es[0].fi[ind], es[0].se[ind], e.fi[ind], e.se[ind], &x, &dx)) {
+            LL k, dk;
+            if(solve(u, v, x, dx, &k, &dk)) {
                 u=u+v*k, v=v*dk;
             }
         }

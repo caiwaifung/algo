@@ -7,7 +7,6 @@ int match() {
         vector<bool> vis(n, false);
         int j0=-1;
         while(1) {
-            if(j0>=0) vis[j0]=true;
             int i0=(j0<0?cur:lnk[j0]); if(i0<0) break;
             int minv=1<<30, minj=-1;
             repn(j, n) if(!vis[j]) {
@@ -23,7 +22,7 @@ int match() {
             } else {
                 slack[j]-=minv;
             }
-            j0=minj;
+            vis[j0]=true, j0=minj;
         }
         while(j0>=0) {
             int j=pre[j0];

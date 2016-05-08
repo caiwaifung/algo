@@ -36,46 +36,57 @@ const int N=150;
 
 int a[N][N], n;
 
-int match() {
-    VI lnk(n, -1), cx(n, 1<<30), cy(n, 0);
+int solve() {
+    static int cx[N], cy[N], lnk[N];
+    fillchar(cx, 0); fillchar(cy, 0);
+    fillchar(lnk, -1);
     repn(cur, n) {
-        VI slack(n, 1<<30), pre(n, -1);
-        vector<bool> vis(n, false);
+        static int pre[N], d[N];
+        static bool vis[N];
+        fillchar(d, 50); fillchar(vis, false);
         int j0=-1;
         while(1) {
-            if(j0>=0) vis[j0]=true;
-            int i0=(j0<0?cur:lnk[j0]);
+            //printf("cur=%d j0=%d\n",cur,j0);
+            int i0=j0<0?cur:lnk[j0];
             if(i0<0) break;
-            int d=1<<30, j1=-1;
+            int j1=-1, d1=1<<30;
             repn(j, n) if(!vis[j]) {
-                if(setmin(slack[j], cx[i0]+cy[j]-a[i0][j]))
-                    pre[j]=j0;
-                if(setmin(d, slack[j])) j1=j;
+                if(setmin(d[j], a[i0][j]-cx[i0]-cy[j])) pre[j]=j0;
+                if(setmin(d1, d[j])) j1=j;
             }
-            cx[cur]-=d;
-            repn(j, n) if(vis[j]) {
-                cx[lnk[j]]-=d;
-                cy[j]+=d;
+            cx[cur]+=d1;
+            repn(j, n) if(!vis[j]) {
+                d[j]-=d1;
             } else {
-                slack[j]-=d;
+                cx[lnk[j]]+=d1;
+                cy[j]-=d1;
             }
-            j0=j1;
+            vis[j1]=true, j0=j1;
         }
         while(j0>=0) {
             int j=pre[j0];
-            lnk[j0]=(j<0?cur:lnk[j]), j0=j;
+            lnk[j0]=j<0?cur:lnk[j];
+            j0=j;
         }
     }
-    int r=0; repn(j, n) r+=a[lnk[j]][j];
+    int r=0; repn(i, n) r+=a[lnk[i]][i];
     return r;
 }
 
 int main() {
     scanf("%d", &n);
-    repn(i, n) repn(j, n) scanf("%d", &a[i][j]);
+    int maxv=0;
+    repn(i, n) repn(j, n) {
+        scanf("%d", &a[i][j]);
+        setmax(maxv, a[i][j]);
+    }
     int ans=0;
-    repn(i, n) repn(j, n) ans+=a[i][j];
-    ans-=match();
+    repn(i, n) repn(j, n) {
+        ans+=a[i][j];
+        a[i][j]=maxv-a[i][j];
+    }
+    ans=ans-maxv*n+solve();
     printf("%d\n", ans);
+
     return 0;
 }
