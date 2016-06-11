@@ -31,27 +31,110 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-// a[1..n], b[1..n]
-struct Abstract {
-public:
-    void init(int n, int initial[]) {
-    }
+const int N=100010;
+LL next42(LL x) { LL y=1; while(y<x) y*=42; return y; }
 
-    void add_a(int l, int r, LL v) {
-    }
+struct Node {
+    LL buf=0;
+    LL v=0, nv=1;
+    LL diff=1;
 
-    void set(int l, int r, LL va, LL vb) {
+    void set(LL _v, LL _nv) {
+        buf=0;
+        v=_v, nv=_nv, diff=nv-v;
     }
+    void add(LL _v) {
+        if(v>=0) v+=_v;
+            else buf+=_v;
+        diff-=_v;
+    }
+} tr[N*4];
 
-    // (a[i], b[i])
-    PLL query_ind(int i) {
+void release(int x) {
+    if(tr[x].v>=0) {
+        tr[x*2].set(tr[x].v, tr[x].nv);
+        tr[x*2+1].set(tr[x].v, tr[x].nv);
+        tr[x].v=-1;
+    } else if(tr[x].buf>0) {
+        tr[x*2].add(tr[x].buf);
+        tr[x*2+1].add(tr[x].buf);
+        tr[x].buf=0;
     }
+}
 
-    // (min_i b[i]-a[i], i)
-    pair<LL,int> query_min_delta() {
+void update(int x) {
+    tr[x].diff=min(tr[x*2].diff, tr[x*2+1].diff);
+}
+
+void setval(int x, int s, int t, int st, int en, LL val) {
+    if(st<=s && t<=en) {
+        tr[x].set(val, next42(val));
+        return;
     }
-} abstract;
+    int mid=(s+t)/2;
+    release(x);
+    if(st<=mid) setval(x*2, s, mid, st, en, val);
+    if(mid<en) setval(x*2+1, mid+1, t, st, en, val);
+    update(x);
+}
+
+LL getval(int x, int s, int t, int ind) {
+    if(s==t) return tr[x].v;
+    int mid=(s+t)/2;
+    release(x);
+    if(ind<=mid) return getval(x*2, s, mid, ind);
+        else return getval(x*2+1, mid+1, t, ind);
+    update(x);
+}
+
+void fix(int x) {
+    if(tr[x].diff>=0) return;
+    if(tr[x].v>=0) {
+        tr[x].nv=next42(tr[x].v);
+        tr[x].diff=tr[x].nv-tr[x].v;
+        return;
+    }
+    release(x);
+    fix(x*2); fix(x*2+1);
+    update(x);
+}
+
+void addval(int x, int s, int t, int st, int en, LL val) {
+    if(st<=s && t<=en) {
+        tr[x].add(val);
+        fix(x);
+        return;
+    }
+    int mid=(s+t)/2;
+    release(x);
+    if(st<=mid) addval(x*2, s, mid, st, en, val);
+    if(mid<en) addval(x*2+1, mid+1, t, st, en, val);
+    update(x);
+}
 
 int main() {
+    int n, q; scanf("%d%d", &n,&q);
+    fill(tr, tr+N*4, Node());
+    rep(i, 1, n) {
+        int x; scanf("%d", &x);
+        setval(1, 1, n, i, i, x);
+    }
+    while(q--) {
+        int t; scanf("%d", &t);
+        if(t==1) {
+            int i; scanf("%d", &i);
+            LL r=getval(1, 1, n, i);
+            cout<<r<<endl;
+        } else if(t==2) {
+            int a, b, c; scanf("%d%d%d", &a,&b,&c);
+            setval(1, 1, n, a, b, c);
+        } else if(t==3) {
+            int a, b, c; scanf("%d%d%d", &a,&b,&c);
+            while(1) {
+                addval(1, 1, n, a, b, c);
+                if(tr[1].diff>0) break;
+            }
+        }
+    }
     return 0;
 }
