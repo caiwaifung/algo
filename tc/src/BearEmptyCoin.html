@@ -1,0 +1,44 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>Bear Limak has a fair coin.
+(Whenever he tosses the coin, it will land on each side with probability 50%.)
+Initially, both sides of the coin are empty.</p>
+<br></br>
+<p>Limak is going to play a game.
+At the beginning of the game, Limak's score is 0.
+The game will consist of <b>K</b> turns.
+Each turn will look as follows:</p>
+<ol>
+<li>Limak tosses the coin.</li>
+<li>If the visible side of the coin is empty, Limak chooses an arbitrary (possibly negative or extremely big) integer and writes it on that side of his coin.</li>
+<li>Limak adds the integer written on the visible side of the coin to his score.</li>
+</ol>
+<br></br>
+<p>Limak will win the game if his final score (after all <b>K</b> turns) is exactly <b>S</b>.
+Limak is smart and always follows a strategy that maximizes the probability of winning the game.</p>
+<br></br>
+<p>You are given the ints <b>K</b> and <b>S</b>.
+Let P be the probability that Limak wins the game.
+It can be shown that P multiplied by 2^<b>K</b> is an integer.
+Compute and return that integer.</p></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>BearEmptyCoin</td></tr><tr><td>Method:</td><td>winProbability</td></tr><tr><td>Parameters:</td><td>int, int</td></tr><tr><td>Returns:</td><td>long long</td></tr><tr><td>Method signature:</td><td>long long winProbability(int K, int S)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>K</b> will be between 1 and 60, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>S</b> will be between -1,000,000,000 and 1,000,000,000, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1</pre></td></tr><tr><td><pre>17</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2">After tossing a coin, Limak should write 17 on the visible side.
+His final score will be 17.
+The probability of winning is 1.
+You should return 1 * 2<sup>K</sup> = 2.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>-50</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4</pre></td></tr><tr><td><table><tr><td colspan="2">An optimal strategy looks as follows:
+<ul>
+<li>Toss the coin for the first time.</li>
+<li>Write -25 on the visible side.</li>
+<li>Add the number -25 to your score. Your score is now -25.</li>
+<li>Toss the coin for the second time.</li>
+<li>There are now two possibilities: either the visible side is empty, or it contains the -25 we wrote on the coin in the first round. If the visible side is empty, write -25 on that side as well.</li>
+<li>In either case, add -25 to your score. Your score is now -50.</li>
+</ul>
+When following this strategy you are guaranteed to win the game.
+Again, you should return 1 * 2<sup>K</sup>.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>-49</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2"><p>In this case you cannot guarantee to win the game.
+The best strategy will give you a 50% probability of winning.
+The return value should be 0.5 * 2<sup>K</sup> = 2.</p>
+<br></br>
+<p>One optimal strategy looks as follows:
+After the first coin toss, write 80,000,000,000 (i.e. 8 * 10<sup>10</sup>) on the visible side.
+Then, there are two possibilities for the second coin toss.
+If you see 80,000,000,000 again, your final score is 160,000,000,000 and you lose.
+If you see the other (still empty) side of the coin, you can write -80,000,000,049 and win the game beucase your final score is -49.</p>
+<br></br>
+<p>Obviously, there are other optimal strategies as well: you can write any integer x after the first coin toss, and then hope to see the other side on the coin and write (-49-x) there.</p></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>4</pre></td></tr><tr><td><pre>42</pre></td></tr></table></td></tr><tr><td><pre>Returns: 8</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>4</pre></td></tr><tr><td><pre>-123456789</pre></td></tr></table></td></tr><tr><td><pre>Returns: 6</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>18</pre></td></tr><tr><td><pre>123456</pre></td></tr></table></td></tr><tr><td><pre>Returns: 49870</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">6)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>60</pre></td></tr><tr><td><pre>0</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1152921504606846976</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
