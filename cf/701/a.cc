@@ -33,5 +33,9 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    int n; cin>>n;
+    VPI a(n); for(auto& x: a) { cin>>x.fi; static int i=0; x.se=++i; }
+    sort(all(a));
+    repn(i, n/2) cout<<a[i].se<<" "<<a[n-i-1].se<<endl;
     return 0;
 }

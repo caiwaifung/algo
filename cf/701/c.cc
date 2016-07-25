@@ -1,4 +1,4 @@
-#include <algorithm>
+#include <set>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -33,5 +33,28 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    int n; string s;
+    cin>>n>>s;
+
+    int num=0;
+    {
+        set<char> cs;
+        for(char c: s) cs.insert(c);
+        num=sz(cs);
+    }
+
+    VI cnt(256);
+    int ans=1<<30, tot=0;
+    for(int i=0, j=0; j<n; ++j) {
+        if(cnt[int(s[j])]++==0) ++tot;
+        if(tot==num) {
+            while(cnt[int(s[i])]>1) {
+                cnt[int(s[i++])]--;
+            }
+            setmin(ans, j-i+1);
+        }
+    }
+    cout<<ans<<endl;
+    
     return 0;
 }

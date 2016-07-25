@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -33,5 +32,22 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    int n, m; cin>>n>>m;
+    VI rs(n, 1), cs(n, 1);
+    int rcnt=n, ccnt=n;
+    LL tot=LL(n)*LL(n);
+    while(m--) {
+        int r, c; cin>>r>>c;
+        --r, --c;
+        if(rs[r]) {
+            rs[r]=0; --rcnt;
+            tot-=ccnt;
+        }
+        if(cs[c]) {
+            cs[c]=0; --ccnt;
+            tot-=rcnt;
+        }
+        cout<<tot<<endl;
+    }
     return 0;
 }
