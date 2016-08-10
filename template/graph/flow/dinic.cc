@@ -1,60 +1,56 @@
-template<size_t N, size_t E, class T, T INFI> class Dinic { //{{{
-    struct Edge {
-        int y;  T w;
-        Edge *next, *oppo;
-    } edges[E*2];
-    Edge *g[N], *ce[N];
-    int e_cnt, n, src, dst;
-
-    int d[N], q[N];
-    bool build() {
-        memset(d, 0, sizeof(d)); d[q[1]=src]=1;
-        for(int ss=0, tt=1; ss<tt; ) {
-            int x=q[++ss];
-            for(Edge *e=ce[x]=g[x]; e; e=e->next)
-                if(e->w>0 && d[e->y]==0) d[q[++tt]=e->y]=d[x]+1;
-        }
-        return d[dst]>0;
-    }
-    T find(int x, T rest) {
-        if(x==dst) return rest;
-        T ans=0;
-        for(Edge *&e=ce[x]; e; e=e->next)
-            if(e->w>0 && d[e->y]>d[x]) {
-                T cur=find(e->y, min(e->w,rest));
-                e->w-=cur; e->oppo->w+=cur;
-                ans+=cur; rest-=cur;
-                if(rest==0) break;
-            }
-        return ans;
-    }
+class Dinic {
 public:
-    Dinic() { init(); }
-    int s() { return src; }
-    int t() { return dst; }
-    void init() {
-        memset(g, 0, sizeof(g)); e_cnt=0;
-        n=2, src=1, dst=2;
+    typedef LL T;
+    explicit Dinic(int n) : n_(n), es_(n) {}
+    void add_edge(int x, int y, T w) { add_edge_(x, y, w); }
+    T compute_max(int s, int t) { return compute_max_(s, t); }
+
+private: // {{{
+    struct Edge { int y;  T w; Edge* oppo; };
+
+    void add_edge_(int x, int y, T w) {
+        Edge *e1, *e2;
+        es_[x].emplace_back(e1=new Edge{y, w, nullptr});
+        es_[y].emplace_back(e2=new Edge{x, 0, nullptr});
+        e1->oppo=e2, e2->oppo=e1;
     }
-    int new_node() { return ++n; }
-    void add_edge(int x, int y, T w1, T w2) {
-        Edge *e1=&edges[e_cnt++], *e2=&edges[e_cnt++];
-        e1->y=y, e1->w=w1, e1->oppo=e2, e1->next=g[x], g[x]=e1;
-        e2->y=x, e2->w=w2, e2->oppo=e1, e2->next=g[y], g[y]=e2;
+
+    T compute_max_(int s, int t) {
+        T ans=0;
+        while(1) {
+            VI dis(n_); dis[s]=1; 
+            queue<int> que; que.push(s);
+            while(!que.empty()) {
+                int x=que.front(); que.pop();
+                for(const auto& e: es_[x]) {
+                    if(e->w>0 && dis[e->y]==0) {
+                        dis[e->y]=dis[x]+1;
+                        que.push(e->y);
+                    }
+                }
+            }
+            if(dis[t]==0) return ans;
+
+            vector<size_t> ce(n_);
+            const function<T(int,T)> dfs=[&](int x, T rest) {
+                if(x==t) return rest;
+                T r=0;
+                for(size_t& i=ce[x]; i<es_[x].size(); ++i) {
+                    const auto& e=es_[x][i];
+                    if(e->w>0 && dis[e->y]>dis[x]) {
+                        T cur=dfs(e->y, min(e->w, rest));
+                        e->w-=cur, e->oppo->w+=cur;
+                        r+=cur, rest-=cur;
+                        if(rest==0) break;
+                    }
+                }
+                return r;
+            };
+            ans+=dfs(s, numeric_limits<T>::max());
+        }
     }
-    T compute() {
-        T ans=0; while(build()) ans+=find(src, INFI); return ans;
-    }
-    T get(int x, int y) {
-        for(Edge *e=g[x]; e; e=e->next)
-            if(e->y==y)
-                return e->oppo->w;
-        return 0;
-    }
-    vector<bool> get_left() {
-        build();
-        vector<bool> ans(n+1);
-        for(int i=1; i<=n; ++i) ans[i]=(d[i]>0);
-        return ans;
-    }
-}; //}}}
+
+    const int n_;
+    vector<vector<unique_ptr<Edge>>> es_;
+// }}}
+};
