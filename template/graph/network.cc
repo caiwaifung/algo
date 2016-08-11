@@ -1,41 +1,10 @@
-class Network { // {{{
+class Network {
     typedef int T;
     struct Edge { int y; T w; Edge* oppo; };
     const int n_, super_s_, super_t_;
     T super_total_ = 0;
     vector<vector<unique_ptr<Edge>>> es_;
 
-    T augment(int s, int t) {
-        VI dis(n_); dis[s]=1; 
-        queue<int> que; que.push(s);
-        while(!que.empty()) {
-            int x=que.front(); que.pop();
-            for(const auto& e: es_[x]) {
-                if(e->w>0 && dis[e->y]==0) {
-                    dis[e->y]=dis[x]+1;
-                    que.push(e->y);
-                }
-            }
-        }
-        if(dis[t]==0) return 0;
-
-        vector<size_t> ce(n_);
-        const function<T(int,T)> dfs=[&](int x, T rest) {
-            if(x==t) return rest;
-            T r=0;
-            for(size_t& i=ce[x]; i<es_[x].size(); ++i) {
-                const auto& e=es_[x][i];
-                if(e->w>0 && dis[e->y]>dis[x]) {
-                    T cur=dfs(e->y, min(e->w, rest));
-                    e->w-=cur, e->oppo->w+=cur;
-                    r+=cur, rest-=cur;
-                    if(rest==0) break;
-                }
-            }
-            return r;
-        };
-        return dfs(s, numeric_limits<T>::max());
-    }
 public:
     explicit Network(int n) : n_(n+2), super_s_(n), super_t_(n+1), es_(n_) {}
 
@@ -70,4 +39,37 @@ public:
     }
 
     T flow(void* e) const { return static_cast<Edge*>(e)->oppo->w; }
-};  // }}}
+
+private:
+    T augment(int s, int t) {
+        VI dis(n_); dis[s]=1; 
+        queue<int> que; que.push(s);
+        while(!que.empty()) {
+            int x=que.front(); que.pop();
+            for(const auto& e: es_[x]) {
+                if(e->w>0 && dis[e->y]==0) {
+                    dis[e->y]=dis[x]+1;
+                    que.push(e->y);
+                }
+            }
+        }
+        if(dis[t]==0) return 0;
+
+        vector<size_t> ce(n_);
+        const function<T(int,T)> dfs=[&](int x, T rest) {
+            if(x==t) return rest;
+            T r=0;
+            for(size_t& i=ce[x]; i<es_[x].size(); ++i) {
+                const auto& e=es_[x][i];
+                if(e->w>0 && dis[e->y]>dis[x]) {
+                    T cur=dfs(e->y, min(e->w, rest));
+                    e->w-=cur, e->oppo->w+=cur;
+                    r+=cur, rest-=cur;
+                    if(rest==0) break;
+                }
+            }
+            return r;
+        };
+        return dfs(s, numeric_limits<T>::max());
+    }
+};
