@@ -1,6 +1,5 @@
-int a[N][N], n;
-
-int match() {
+int match(const vector<vector<int>>& a) {
+    const int n=sz(a);
     VI lnk(n, -1), cx(n, 0), cy(n, 0);
     repn(cur, n) {
         VI slack(n, 1<<30), pre(n, -1);
