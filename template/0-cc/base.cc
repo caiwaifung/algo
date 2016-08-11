@@ -5,6 +5,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <limits>
+#include <memory>
+#include <queue>
 #include <string>
 #include <vector>
 using namespace std;
