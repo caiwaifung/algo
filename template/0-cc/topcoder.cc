@@ -8,6 +8,7 @@
 #include <limits>
 #include <memory>
 #include <queue>
+#include <sstream>
 #include <string>
 #include <vector>
 using namespace std;

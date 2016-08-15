@@ -1,21 +1,27 @@
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <limits>
+#include <memory>
+#include <queue>
 #include <sstream>
 #include <string>
 #include <vector>
 using namespace std;
 
-#define sz(a) static_cast<int>(a.size())
-#define all(a) a.begin(), a.end()
+#define all(a) (a).begin(), (a).end()
+#define sz(a) static_cast<int>((a).size())
+#define fillchar(a, x) memset(a, x, sizeof(a))
 #define rep(i, a, b) for(int i=int(a); i<=int(b); ++i)
 #define irep(i, a, b) for(int i=int(a); i>=int(b); --i)
+#define replr(i, a, b) rep(i, a, (b)-1)
+#define reprl(i, a, b) irep(i, (b)-1, a)
 #define repn(i, n) rep(i, 0, (n)-1)
 #define irepn(i, n) irep(i, (n)-1, 0)
-#define fillchar(a, x) memset(a, x, sizeof(a))
 #define fi first
 #define se second
 #define pb push_back
@@ -28,58 +34,65 @@ typedef vector<LL> VL;
 typedef vector<int> VI;
 typedef vector<PII> VPI;
 typedef vector<string> VS;
+template<class T, class S> ostream& operator<<(ostream& os, const pair<T, S>& v) { return os<<"("<<v.first<<", "<<v.second<<")"; }
+template<class T> ostream& operator<<(ostream& os, const vector<T>& v) { os<<"["; repn(i, sz(v)) { if(i) os<<", "; os<<v[i]; } return os<<"]"; }
 template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } return false; }
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-class Clicounting {
-    VI bc;
-    int bitcnt(LL s) {
-        return bc[s>>20]+bc[s&((1<<20)-1)];
-    }
-    void pre() {
-        bc.resize(1<<20);
-        bc[0]=0;
-        rep(i, 1, (1<<20)-1) bc[i]=1+bc[i^(i&-i)];
-    }
+int log_[1<<19], bits_[1<<19];
 
-    VL g; int n, ans;
-    void dfs(int i, LL s, int cnt) {
-        //printf("%d %d %d\n",i,int(s),cnt);
-        setmax(ans, cnt);
-        if(cnt+bitcnt(s)<=ans) return;
-        for(; i<n; ++i) if(s&(1LL<<i)) {
-            dfs(i+1, s&g[i], cnt+1);
-            s^=1LL<<i;
+class Clicounting {
+
+    int solve(const VS& g0) {
+        const int n=sz(g0);
+        if(n==1) return 1;
+
+        const int m=(n+1)/2;
+        static int g[2][19][2]; fillchar(g, 0);
+        repn(i, n) repn(j, n) if(g0[i][j]=='1') {
+            g[i/m][i%m][j/m]^=1<<(j%m);
         }
-    }
-    int solve(vector<string> t) {
-        g.resize(n);
-        repn(i, n) {
-            g[i]=0; repn(j, n) if(t[i][j]=='1') g[i]|=1LL<<j;
+        static int size[2][1<<19];
+        repn(p, 2) {
+            size[p][0]=0;
+            replr(s, 1, 1<<m) {
+                const int b=s&-s, i=log_[b];
+                size[p][s]=max(size[p][s^b], 1+size[p][s&g[p][i][p]]);
+            }
         }
-        ans=1; 
-        dfs(0, (1LL<<n)-1, 0);
-        //printf("ans=%d\n",ans);
+        static int cover[1<<19];
+        cover[0]=(1<<m)-1;
+        replr(s, 1, 1<<m) {
+            const int b=s&-s, i=log_[b];
+            cover[s]=cover[s^b]&g[0][i][1];
+        }
+
+        int ans=0;
+        repn(s, 1<<m) if(size[0][s]==bits_[s]) {
+            setmax(ans, bits_[s]+size[1][cover[s]]);
+        }
         return ans;
     }
 public:
-    int count(vector<string> p) {
-        pre();
+    int count(vector<string> graph) {
+        bits_[0]=0; replr(s, 1, 1<<19) bits_[s]=bits_[s^(s&-s)]+1;
+        repn(i, 19) log_[1<<i]=i;
 
-        n=sz(p); int m=0;
-        repn(i, n) repn(j, i) if(p[i][j]=='?') ++m;
-        int r=0;
-        repn(s, 1<<m) {
-            vector<string> t=p; int cur=0;
-            repn(i, n) repn(j, i) if(t[i][j]=='?') {
-                if(s&(1<<cur)) t[i][j]='1'; else t[i][j]='0';
-                t[j][i]=t[i][j];
+        const int n=sz(graph);
+        int num=0;
+        repn(i, n) repn(j, i) if(graph[i][j]=='?') ++num;
+        int ans=0;
+        repn(s, 1<<num) {
+            vector<string> g0=graph;
+            int cur=0;
+            repn(i, n) repn(j, i) if(graph[i][j]=='?') {
+                g0[i][j]=g0[j][i]=((s&(1<<cur))?'1':'0');
                 ++cur;
             }
-            r+=solve(t);
+            ans+=solve(g0);
         }
-        return r;
+        return (int)(ans);
     }
     
 // BEGIN CUT HERE
