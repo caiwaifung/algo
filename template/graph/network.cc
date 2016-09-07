@@ -2,7 +2,7 @@ class Network {
     typedef int T;
     struct Edge { int y; T w; Edge* oppo; };
     const int n_, super_s_, super_t_;
-    T super_total_ = 0;
+    T super_total_=0;
     vector<vector<unique_ptr<Edge>>> es_;
 
 public:
