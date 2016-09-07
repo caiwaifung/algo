@@ -1,4 +1,4 @@
-class Network {
+class Maxflow {
     typedef int T;
     struct Edge { int y; T w; Edge* oppo; };
     const int n_, super_s_, super_t_;
@@ -6,7 +6,8 @@ class Network {
     vector<vector<unique_ptr<Edge>>> es_;
 
 public:
-    explicit Network(int n) : n_(n+2), super_s_(n), super_t_(n+1), es_(n_) {}
+    explicit Maxflow(int n)
+        : n_(n+2), super_s_(n), super_t_(n+1), es_(n_) {}
 
     void* add_edge(int x, int y, T w) {
         Edge *e1, *e2;
@@ -15,7 +16,6 @@ public:
         e1->oppo=e2, e2->oppo=e1;
         return e1;
     }
-
     void* add_edge_with_lower_limit(int x, int y, T w, T lb) {
         if(lb>0) {
             add_edge(super_s_, y, lb);
