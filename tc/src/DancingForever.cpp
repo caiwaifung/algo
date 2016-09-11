@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <functional>
 #include <cassert>
 #include <iostream>
 #include <sstream>
@@ -13,17 +14,17 @@
 #include <map>
 using namespace std;
 
-#define _ (size_t)
+#define sz(a) ((a).size())
 #define all(a) a.begin(), a.end()
-#define forint(i, a, b) for(int i=int(a); i<=int(b); ++i)
-#define forintdown(i, a, b) for(int i=int(a); i>=int(b); --i)
-#define forn(i, n) forint(i, 0, (n)-1)
-#define forndown(i, n) forintdown(i, (n)-1, 0)
+#define rep(i, a, b) for(int i=int(a); i<=int(b); ++i)
+#define irep(i, a, b) for(int i=int(a); i>=int(b); --i)
+#define repn(i, n) rep(i, 0, (n)-1)
+#define irepn(i, n) irep(i, (n)-1, 0)
 #define fillchar(a, x) memset(a, x, sizeof(a))
 #define fi first
 #define se second
-#define PB push_back
-#define MP make_pair
+#define pb push_back
+#define mp make_pair
 typedef long long LL;
 typedef pair<LL,LL> PLL;
 typedef pair<int,int> PII;
@@ -36,70 +37,59 @@ template<class T> void setmax(T &a, T b) { if(b>a) a=b; }
 template<class T> void setmin(T &a, T b) { if(b<a) a=b; }
 template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
 
-template<size_t N, size_t M> class BipartiteGraph {
-    bool g[N][M], vis[M]; int n, m;
-    bool find(int x) {
-        if(vis[x]) return false; vis[x]=true;
-        for(int y=1; y<=m; ++y)
-            if(g[x][y]) {
-                if(ly[y]==0 || find(ly[y])) {
-                    ly[y]=x; lx[x]=y;
-                    return true;
-                }
+const int N=100;
+
+struct Bipartite {
+    bool a[N][N];
+    int mx[N], my[N];
+    bool vx[N], vy[N];
+    int n;
+
+    bool find(int i) {
+        vx[i]=true;
+        repn(j, n) if(a[i][j] && !vy[j]) {
+            vy[j]=true;
+            if(my[j]<0 || find(my[j])) {
+                mx[i]=j, my[j]=i;
+                return true;
             }
+        }
         return false;
     }
-    void dfs(int x) {
-        for(int y=1; y<=m; ++y)
-            if(g[x][y] && !vcy[y]) {
-                int x0=ly[y]; assert(x0>0 && vcx[x0]);
-                vcx[x0]=false; vcy[y]=true;
-                dfs(x0);
-            }
-    }
-public:
-    int lx[N], ly[M];
-    bool vcx[N], vcy[M];
-    BipartiteGraph(int n, int m) : n(n), m(m) {
-        assert(n<(int)N && m<(int)M);
-        memset(g, false, sizeof(g));
-    }
-    void addEdge(int i, int j) { g[i][j]=true; }
-    void delEdge(int i, int j) { g[i][j]=false; }
-    int match() {
-        memset(lx, 0, sizeof(lx));
-        memset(ly, 0, sizeof(ly));
+
+    int maxmatch() {
+        fillchar(mx, 0xff); fillchar(my, 0xff);
         int ans=0;
-        for(int i=1; i<=n; ++i) {
-            memset(vis, false, sizeof(vis));
-            if(find(i)) ans++;
+        repn(cur, n) {
+            fillchar(vx, false); fillchar(vy, false);
+            if(find(cur)) ++ans;
         }
         return ans;
     }
-    void vc() { // compute vertex cover
-        memset(vcx, false, sizeof(vcx));
-        memset(vcy, false, sizeof(vcy));
-        for(int i=1; i<=n; ++i) if(lx[i]) vcx[i]=true;
-        for(int i=1; i<=n; ++i) if(lx[i]==0) dfs(i);
+
+    void vc() {
+        fillchar(vx, false); fillchar(vy, false);
+        repn(i, n) if(mx[i]<0) {
+            find(i);
+        }
     }
 };
-
-// ------------------------ template ends here ------------------------ //
 
 class DancingForever {
 public:
     vector<int> getStablePairs(string x) {
-        int n=0; while(n*n<(int)x.size()) ++n;
-        BipartiteGraph<111,111> *g = new BipartiteGraph<111,111>(n, n);
-        forn(i, n) forn(j, n) if(x[_ (i*n+j)]=='Y') g->addEdge(i+1, j+1);
-        if(g->match()<n) {
-            g->vc();
-            forn(i, n) forn(j, n) if(g->vcx[i+1] || !g->vcy[j+1]) g->delEdge(i+1, j+1);
-            g->match();
+        static Bipartite b;
+        b.n=int(sqrt(sz(x))+0.5);
+        repn(i, b.n) repn(j, b.n) {
+            b.a[i][j]=(x[i*b.n+j]=='Y');
         }
         VI ans;
-        forn(i, n) if(g->lx[i+1]>0) {ans.PB(i); ans.PB(g->lx[i+1]-1);}
-        delete g;
+        if(b.maxmatch()<b.n) {
+            b.vc();
+            repn(i, b.n) if(b.vy[i]) { ans.pb(b.my[i]); ans.pb(i); }
+        } else {
+            repn(i, b.n) { ans.pb(i); ans.pb(b.mx[i]); }
+        }
         return ans;
     }
     
