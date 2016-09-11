@@ -8,22 +8,23 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <functional>
 #include <cmath>
 #include <set>
 #include <map>
 using namespace std;
 
-#define _ (size_t)
+#define sz(a) int(a.size())
 #define all(a) a.begin(), a.end()
-#define forint(i, a, b) for(int i=int(a); i<=int(b); ++i)
-#define forintdown(i, a, b) for(int i=int(a); i>=int(b); --i)
-#define forn(i, n) forint(i, 0, (n)-1)
-#define forndown(i, n) forintdown(i, (n)-1, 0)
+#define rep(i, a, b) for(int i=int(a); i<=int(b); ++i)
+#define irep(i, a, b) for(int i=int(a); i>=int(b); --i)
+#define repn(i, n) rep(i, 0, (n)-1)
+#define irepn(i, n) irep(i, (n)-1, 0)
 #define fillchar(a, x) memset(a, x, sizeof(a))
 #define fi first
 #define se second
-#define PB push_back
-#define MP make_pair
+#define pb push_back
+#define mp make_pair
 typedef long long LL;
 typedef pair<LL,LL> PLL;
 typedef pair<int,int> PII;
@@ -36,125 +37,92 @@ template<class T> void setmax(T &a, T b) { if(b>a) a=b; }
 template<class T> void setmin(T &a, T b) { if(b<a) a=b; }
 template<class T> T gcd(T a, T b) { return b==0?a:gcd(b,a%b); }
 
-// ------------------------ template ends here ------------------------ //
+const int N=50;
 
-template<size_t N, size_t M> class BipartiteGraph {
-    bool g[N][M], vis[M]; int n, m;
-    bool find(int x) {
-        for(int y=1; y<=m; ++y)
-            if(g[x][y] && !vis[y]) {
-                vis[y]=true;
-                if(ly[y]==0 || find(ly[y])) {
-                    ly[y]=x; lx[x]=y;
-                    return true;
-                }
+struct Bipartite {
+    bool a[N][N];
+    int n, m;
+
+    int matched[N];
+    bool vis[N];
+    bool find(int i) {
+        repn(j, m) if(a[i][j] && !vis[j]) {
+            vis[j]=true;
+            if(matched[j]<0 || find(matched[j])) {
+                matched[j]=i; return true;
             }
+        }
         return false;
     }
-    void dfs(int x) {
-        for(int y=1; y<=m; ++y)
-            if(g[x][y] && !vcy[y]) {
-                int x0=ly[y]; assert(x0>0 && vcx[x0]);
-                vcx[x0]=false; vcy[y]=true;
-                dfs(x0);
-            }
-    }
-public:
-    int lx[N], ly[M];
-    bool vcx[N], vcy[M];
-    BipartiteGraph(int n, int m) : n(n), m(m) {
-        assert(n<(int)N && m<(int)M);
-        memset(g, false, sizeof(g));
-    }
-    void addEdge(int i, int j) { g[i][j]=true; }
-    void delEdge(int i, int j) { g[i][j]=false; }
-    int match() {
-        memset(lx, 0, sizeof(lx));
-        memset(ly, 0, sizeof(ly));
+
+    int maxmatch() {
+        fillchar(matched, 0xff);
         int ans=0;
-        for(int i=1; i<=n; ++i) {
-            memset(vis, false, sizeof(vis));
-            if(find(i)) ans++;
+        repn(cur, n) {
+            fillchar(vis, false);
+            if(find(cur)) ++ans;
         }
         return ans;
-    }
-    void vc() { // compute vertex cover
-        memset(vcx, false, sizeof(vcx));
-        memset(vcy, false, sizeof(vcy));
-        for(int i=1; i<=n; ++i) if(lx[i]) vcx[i]=true;
-        for(int i=1; i<=n; ++i) if(lx[i]==0) dfs(i);
     }
 };
 
 class FoxMeeting {
-    int g[55][55], n;
-    int e[55][55], maxval;
-    bool hasfox[55];
-    VI fox;
+    int e[N][N], g[N][N];
+    VI foxes;
+    int n;
 
-    int D;
-    bool lab[55];
-    int dep[55], fat[55];
+    bool solve(int center, int limit) {
+        VI pre(n);
+        const function<void(int, int)> dfs=[&](int x, int fa) {
+            pre[x]=fa;
+            repn(y, n) if(e[x][y]>=0 && y!=fa) {
+                dfs(y, x);
+            }
+        };
+        dfs(center, -1);
 
-    void dfs(int x, int fa, int d) {
-        dep[x]=d; fat[x]=fa;
-        if(hasfox[x] && d>D) {
-            int y=x; while(d-dep[fat[y]]<=D) y=fat[y];
-            lab[y]=true;
-        }
-        forint(y, 1, n) if(e[x][y]<maxval && y!=fa) {
-            dfs(y, x, d+e[x][y]);
-            if(lab[y]) lab[x]=true;
-        }
-    }
-
-    bool ok(int _D, int root) {
-        D=_D;
-        fillchar(lab, false);
-        lab[root]=true;
-        dfs(root, -1, 0);
-        
-        int num=0;
-        forint(i, 1, n) if(lab[i]) ++num;
-
-        //printf("D=%d root=%d\n",D,root);
-
-        BipartiteGraph<55,55> graph(num, (int)fox.size());
-        int x=0;
-        forint(i, 1, n) if(lab[i]) {
-            //printf("lab %d\n",i);
-            ++x;
-            forn(j, fox.size()) {
-                int y=j+1;
-                if(g[i][fox[j]]<=D)// printf("e: %d - %d\n",i,j),
-                    graph.addEdge(x, y);
+        vector<bool> needs(n, false);
+        for(int x: foxes) {
+            int d=0, y=x;
+            while(pre[y]>=0 && d+e[pre[y]][y]<=limit) {
+                d+=e[pre[y]][y], y=pre[y];
+            }
+            while(y>=0) {
+                needs[y]=true, y=pre[y];
             }
         }
-        return graph.match()==num;
-    }
-    bool ok(int D) {
-        forint(i, 1, n) if(ok(D, i)) return true;
-        return false;
+        static Bipartite b;
+        b.n=n, b.m=sz(foxes);
+        repn(i, n) repn(j, sz(foxes)) {
+            b.a[i][j]=(needs[i] && g[i][foxes[j]]<=limit);
+        }
+        int expected=0;
+        repn(i, n) if(needs[i]) ++expected;
+        return b.maxmatch()==expected;
     }
 public:
     int maxDistance(vector <int> A, vector <int> B, vector <int> L, vector <int> foxes) {
-        n=(int)A.size()+1;
-        fillchar(g, 50); maxval=g[0][0];
-        forn(i, n-1) g[A[i]][B[i]]=g[B[i]][A[i]]=L[i];
-        memmove(e, g, sizeof(e));
-        forint(i, 1, n) g[i][i]=0;
-        forint(k, 1, n) forint(i, 1, n) forint(j, 1, n)
-            setmin(g[i][j], g[i][k]+g[k][j]);
+        n=sz(A)+1;
+        fillchar(e, 0xff);
+        repn(i, n-1) {
+            e[A[i]-1][B[i]-1]=e[B[i]-1][A[i]-1]=L[i];
+        }
+        for(int& x: foxes) --x;
+        this->foxes=foxes;
+        repn(i, n) repn(j, n) if(e[i][j]<0) g[i][j]=1<<29; else g[i][j]=e[i][j];
+        repn(i, n) g[i][i]=0;
+        repn(k, n) repn(i, n) repn(j, n) setmin(g[i][j], g[i][k]+g[k][j]);
 
-        fillchar(hasfox, false);
-        for(int i: foxes) hasfox[i]=true;
-        fox=foxes;
-
-        int le=0, ri=100000*50*2;
+        int le=0, ri=1<<30;
         while(le<ri) {
             int mid=(le+ri)/2;
-            if(ok(mid)) ri=mid;
-            else le=mid+1;
+            bool ok=false;
+            repn(i, n) if(solve(i, mid)) ok=true;
+            if(ok) {
+                ri=mid;
+            } else {
+                le=mid+1;
+            }
         }
         return le;
     }
