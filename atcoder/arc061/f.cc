@@ -41,7 +41,7 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 const LL MOD=LL(1e9)+7;
-const int N=300010;
+const int N=900010;
 
 LL m2[N], m3[N], inv[N], fac[N], inv_fac[N];
 
