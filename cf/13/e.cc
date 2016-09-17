@@ -70,24 +70,26 @@ PII answer(int i) {
 }
 
 int main() {
-    int m; scanf("%d%d", &n,&m);
+    ios_base::sync_with_stdio(false);
+    cin.tie(0), cout.tie(0);
+    int m; cin>>n>>m;
     repn(i, n) {
-        int a; scanf("%d", &a);
+        int a; cin>>a;
         ptr[i]=i+a;
         if(ptr[i]>=n) ptr[i]=-1;
     }
     irepn(i, n) calc_jump(i);
     while(m--) {
-        int op, i; scanf("%d%d", &op,&i);
+        int op, i; cin>>op>>i;
         --i;
         if(op==0) {
-            int a; scanf("%d", &a);
+            int a; cin>>a;
             ptr[i]=i+a;
             if(ptr[i]>=n) ptr[i]=-1;
             reprl(j, i/Q*Q, i+1) calc_jump(j);
         } else {
             PII r=answer(i);
-            printf("%d %d\n",r.fi+1, r.se+1);
+            cout<<r.fi+1<<" "<<r.se+1<<endl;
         }
     }
 
