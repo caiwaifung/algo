@@ -1,4 +1,4 @@
-#include <set>
+#include <map>
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -47,23 +47,29 @@ VPI es[N];
 int n, MOD;
 LL ans, inv10;
 
+LL ext_gcd(LL a, LL b, LL* x, LL* y) {
+    if(b==0) { *x=1, *y=0; return a; }
+    LL u, v; LL g=ext_gcd(b, a%b, &u, &v);
+    *x=v, *y=u-a/b*v;
+    return g;
+}
+
 LL inv(LL a) {
-    LL b=MOD-2, c=1;
-    for(; b>0; b>>=1, a=a*a%MOD)
-        if(b&1) c=c*a%MOD;
-    return c;
+    LL x, y; ext_gcd(a, MOD, &x, &y);
+    if(x<0) x+=MOD;
+    return x;
 }
 
 struct Set {
-    multiset<LL>* s;
+    map<LL, int>* s;
     LL u, inv_u, v;   // real_val = val * u + v, forall val in s
     Set() {
-        s=new multiset<LL>;
+        s=new map<LL, int>;
         u=inv_u=1, v=0;
     }
-    Set& insert(LL x) {
+    Set& insert(LL x, int val=1) {
         LL x0=(x-v+MOD)*inv_u%MOD;
-        s->insert(x0);
+        (*s)[x0]+=val;
         return *this;
     }
     Set& all_add(LL c) {
@@ -76,26 +82,27 @@ struct Set {
         (inv_u*=inv(c))%=MOD;
         return *this;
     }
-    LL count(LL x) const {
+    int count(LL x) const {
         LL x0=(x-v+MOD)*inv_u%MOD;
-        return s->count(x0);
+        const auto it=s->find(x0);
+        return it!=s->end() ? it->se : 0;
     }
     int size() const { return int(s->size()); }
 };
 
 void count(Set a, Set b) {
     if(a.size()<b.size()) { count(b, a); return; }
-    for(LL x: *b.s) {
-        LL x0=(x*b.u+b.v)%MOD;
-        ans+=a.count((MOD-x0)%MOD);
+    for(const auto kv: *b.s) {
+        LL x0=(kv.fi*b.u+b.v)%MOD;
+        ans+=LL(a.count((MOD-x0)%MOD))*LL(kv.se);
     }
 }
 
 Set merge(Set a, Set b) {
     if(a.size()<b.size()) return merge(b, a);
-    for(LL x: *b.s) {
-        LL x0=(x*b.u+b.v)%MOD;
-        a.insert(x0);
+    for(const auto& kv: *b.s) {
+        LL x0=(kv.fi*b.u+b.v)%MOD;
+        a.insert(x0, kv.se);
     }
     return a;
 }
