@@ -29,10 +29,12 @@ using namespace std;
 typedef long long LL;
 typedef pair<LL,LL> PLL;
 typedef pair<int,int> PII;
+typedef pair<LL,int> PLI;
 typedef pair<double,double> PDD;
 typedef vector<LL> VL;
 typedef vector<int> VI;
 typedef vector<PII> VPI;
+typedef vector<PLI> VPLI;
 typedef vector<string> VS;
 template<class T, class S> ostream& operator<<(ostream& os, const pair<T, S>& v) { return os<<"("<<v.first<<", "<<v.second<<")"; }
 template<class T> ostream& operator<<(ostream& os, const vector<T>& v) { os<<"["; repn(i, sz(v)) { if(i) os<<", "; os<<v[i]; } return os<<"]"; }
@@ -44,28 +46,28 @@ const int N=1000;
 const int M=10000;
 
 VPI es[N];
-int ea[M], eb[M];
-LL ec[M]; bool todo[M];
+int ea[M], eb[M]; LL ec[M]; 
+bool todo[M];
 int n, m, s, t;
 
-pair<LL, VI> spfa() {
+pair<LL, VI> dijkstra() {
     VL dis(n, 1LL<<55);
     VI pre(n, -1), prei(n, -1);
-    vector<bool> inside(n, false);
-    queue<int> que;
-    dis[s]=0, inside[s]=true, que.push(s);
+    vector<bool> vis(n, false);
+    dis[s]=0;
+    priority_queue<PLI, VPLI, greater<PLI>> que;
+    repn(i, n) que.push(mp(dis[i], i));
     while(!que.empty()) {
-        int x=que.front(); que.pop();
+        int x=que.top().se; que.pop();
+        if(vis[x]) continue;
+        vis[x]=true;
         for(const PII& e: es[x]) {
             int y=e.fi, i=e.se;
             if(setmin(dis[y], dis[x]+ec[i])) {
                 pre[y]=x, prei[y]=i;
-                if(!inside[y]) {
-                    inside[y]=true, que.push(y);
-                }
+                que.push(mp(dis[y], y));
             }
         }
-        inside[x]=false;
     }
     VI path;
     for(int x=t; prei[x]>=0; x=pre[x]) {
@@ -76,18 +78,19 @@ pair<LL, VI> spfa() {
 
 bool solve(LL target) {
     repn(i, m) if(todo[i]) ec[i]=1<<30;
-    if(spfa().fi<target) return false;
-    repn(i, m) if(todo[i]) ec[i]=1;
-    auto r=spfa();
-    if(r.fi>target) return false;
+    if(dijkstra().fi<target) return false;
 
-    repn(i, m) if(todo[i]) ec[i]=1<<30;
-    for(int i: r.se) if(todo[i]) ec[i]=1;
-    for(int i: r.se) if(todo[i]) {
-        ec[i]=target-r.fi+1;
-        break;
+    repn(i, m) if(todo[i]) ec[i]=1;
+    while(1) {
+        auto r=dijkstra();
+        if(r.fi>target) return false;
+        if(r.fi==target) return true;
+
+        for(int i: r.se) if(todo[i]) {
+            ec[i]=target-r.fi+1;
+            break;
+        }
     }
-    return true;
 }
 
 int main() {
