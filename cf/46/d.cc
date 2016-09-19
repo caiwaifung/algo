@@ -44,22 +44,20 @@ int main() {
     int len, b, f, q;
     cin>>len>>b>>f>>q;
     vector<pair<PII, int>> cars{{{-b, -b}, -1}, {{len+f,len+f}, -1}};
-    int num=0;
-    while(q--) {
+    repn(ind, q) {
         int op, k; cin>>op>>k;
         if(op==1) {
             bool found=false;
             repn(i, sz(cars)-1) {
                 if(cars[i+1].fi.fi-cars[i].fi.se>=b+f+k) {
                     const int x=cars[i].fi.se+b;
-                    cars.insert(cars.begin()+i+1, mp(mp(x, x+k), num));
+                    cars.insert(cars.begin()+i+1, mp(mp(x, x+k), ind));
                     cout<<x<<endl;
                     found=true;
                     break;
                 }
             }
             if(!found) cout<<-1<<endl;
-            ++num;
         } else {
             --k;
             repn(i, sz(cars)) if(cars[i].se==k) {
