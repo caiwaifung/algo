@@ -41,5 +41,22 @@ template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } r
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
 int main() {
+    int n, c; scanf("%d%d", &n,&c);
+    VI p(n), s(n);
+    repn(i, n) scanf("%d", &p[i]);
+    repn(i, n) scanf("%d", &s[i]);
+
+    VL f(1, 0);
+    repn(i, n) {
+        VL g(i+2);
+        repn(k, i+2) {
+            g[k]=1LL<<55;
+            if(k<=i) setmin(g[k], f[k]+p[i]+k*LL(c));
+            if(k>0) setmin(g[k], f[k-1]+s[i]);
+        }
+        f=g;
+    }
+    LL ans=*min_element(all(f));
+    printf("%lld\n", ans);
     return 0;
 }
