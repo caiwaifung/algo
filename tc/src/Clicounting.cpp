@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <numeric>
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -40,59 +41,63 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-int log_[1<<19], bits_[1<<19];
-
 class Clicounting {
+public:
+    int count(vector<string> g) {
+        const int n=sz(g);
+        vector<VI> id(n, VI(n));
+        int m=0; repn(i, n) replr(j, i+1, n) if(g[i][j]=='?') id[i][j]=id[j][i]=m++;
+        VI log(1<<20), cnt(1<<20);
+        repn(i, 20) log[1<<i]=i;
+        cnt[0]=0; replr(i, 1, 1<<20) cnt[i]=cnt[i&(i-1)]+1;
 
-    int solve(const VS& g0) {
-        const int n=sz(g0);
-        if(n==1) return 1;
+        vector<bool> left(n, false);
+        repn(i, n) repn(j, n) if(g[i][j]=='?') left[i]=left[j]=true;
+        while(accumulate(all(left), 0)<n/2) *find(all(left), false)=true;
+        VI a, b;
+        repn(i, n) (left[i]?a:b).pb(i);
 
-        const int m=(n+1)/2;
-        static int g[2][19][2]; fillchar(g, 0);
-        repn(i, n) repn(j, n) if(g0[i][j]=='1') {
-            g[i/m][i%m][j/m]^=1<<(j%m);
+        VI f(1<<sz(b));
+        f[0]=0;
+        replr(s, 1, 1<<sz(b)) {
+            const int i=log[s&-s];
+            int t=0; repn(j, sz(b)) if(s&(1<<j) && g[b[i]][b[j]]=='1') t|=1<<j;
+            f[s]=max(f[s^(1<<i)], 1+f[t]);
         }
-        static int size[2][1<<19];
-        repn(p, 2) {
-            size[p][0]=0;
-            replr(s, 1, 1<<m) {
-                const int b=s&-s, i=log_[b];
-                size[p][s]=max(size[p][s^b], 1+size[p][s&g[p][i][p]]);
+
+        VI needs(1<<sz(a));
+        needs[0]=0;
+        replr(s, 1, 1<<sz(a)) {
+            const int i=log[s&-s];
+            bool ok=true; int more=0;
+            repn(j, sz(a)) if(j!=i && s&(1<<j)) {
+                if(g[a[i]][a[j]]=='0') ok=false;
+                if(g[a[i]][a[j]]=='?') more|=1<<id[a[i]][a[j]];
+            }
+            if(ok && needs[s&s-1]>=0) {
+                needs[s]=needs[s&s-1]|more;
+            } else {
+                needs[s]=-1;
             }
         }
-        static int cover[1<<19];
-        cover[0]=(1<<m)-1;
-        replr(s, 1, 1<<m) {
-            const int b=s&-s, i=log_[b];
-            cover[s]=cover[s^b]&g[0][i][1];
-        }
 
+        VI gr(1<<sz(a));
+        gr[0]=(1<<sz(b))-1;
+        replr(s, 1, 1<<sz(a)) {
+            const int i=log[s&-s];
+            gr[s]=0;
+            repn(j, sz(b)) if(gr[s&s-1]&(1<<j) && g[a[i]][b[j]]=='1') gr[s]|=1<<j;
+        }
+        VI best(1<<m);
+        repn(s, 1<<sz(a)) if(needs[s]>=0) {
+            setmax(best[needs[s]], cnt[s]+f[gr[s]]);
+        }
         int ans=0;
-        repn(s, 1<<m) if(size[0][s]==bits_[s]) {
-            setmax(ans, bits_[s]+size[1][cover[s]]);
+        repn(s, 1<<m) {
+            ans+=best[s];
+            repn(i, m) if((s&(1<<i))==0) setmax(best[s|(1<<i)], best[s]);
         }
         return ans;
-    }
-public:
-    int count(vector<string> graph) {
-        bits_[0]=0; replr(s, 1, 1<<19) bits_[s]=bits_[s^(s&-s)]+1;
-        repn(i, 19) log_[1<<i]=i;
-
-        const int n=sz(graph);
-        int num=0;
-        repn(i, n) repn(j, i) if(graph[i][j]=='?') ++num;
-        int ans=0;
-        repn(s, 1<<num) {
-            vector<string> g0=graph;
-            int cur=0;
-            repn(i, n) repn(j, i) if(graph[i][j]=='?') {
-                g0[i][j]=g0[j][i]=((s&(1<<cur))?'1':'0');
-                ++cur;
-            }
-            ans+=solve(g0);
-        }
-        return (int)(ans);
     }
     
 // BEGIN CUT HERE
