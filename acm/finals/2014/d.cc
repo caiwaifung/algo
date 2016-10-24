@@ -1,7 +1,7 @@
+// 2:10 - 2:28
 #include <algorithm>
 #include <cassert>
 #include <cmath>
-#include <map>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -41,83 +41,47 @@ template<class T> bool setmax(T &_a, T _b) { if(_b>_a) { _a=_b; return true; } r
 template<class T> bool setmin(T &_a, T _b) { if(_b<_a) { _a=_b; return true; } return false; }
 template<class T> T gcd(T _a, T _b) { return _b==0?_a:gcd(_b,_a%_b); }
 
-const int N=100;
-const int M=N*N*2;
-const LL P=911;
-const LL MOD=LL(1e9)+7;
-
-VI es[N];
-int n, m, rev[M];
-
-void init() {
-    static int e[N][N];
-    fillchar(e, 0xff);
-    scanf("%d", &n), m=0;
+int main() {
+    int n; scanf("%d", &n);
+    vector<VI> es(n);
     repn(i, n) {
         int k; scanf("%d", &k);
         while(k--) {
-            int j; scanf("%d", &j);
-            --j;
-            e[i][j]=m++;
-            es[i].pb(e[i][j]);
+            static char s[33]; scanf("%s", s);
+            int cur=0;
+            for(char c: string(s)) {
+                cur|=1<<int(c-'a');
+            }
+            es[i].pb(cur);
         }
     }
-    repn(i, n) repn(j, n) if(e[i][j]>=0) {
-        rev[e[i][j]]=e[j][i];
-    }
-}
 
-void cal_labels(const VI& old_labels, VI* labels) {
-    repn(i, n) {
-        LL cur=0, p=1;
-        for(int e: es[i]) {
-            cur=(cur*P+old_labels[e])%MOD;
-            p=(p*P)%MOD;
-        }
-        for(int e: es[i]) {
-            cur=(cur*P-old_labels[e]*p)%MOD;
-            if(cur<0) cur+=MOD;
-            (*labels)[rev[e]]=int(cur);
-            cur=(cur+old_labels[e])%MOD;
-        }
-    }
-}
+    VI log(1<<n);
+    repn(i, n) log[1<<i]=i;
 
-void output(const VI& labels) {
-    map<LL, VI> rooms_by_hash;
+    const int kInf=1<<30;
+    vector<VI> ans(n, VI(n, kInf));
+    VI g(n);
     repn(i, n) {
-        LL r=1LL<<60;
-        repn(k, sz(es[i])) {
-            LL cur=0;
-            repn(k2, sz(es[i])) cur=(cur*9871+labels[es[i][(k+k2)%sz(es[i])]])%(LL(1e9)+21);
-            setmin(r, cur);
+        ans[i][i]=0;
+        g[i]=1<<i;
+    }
+    rep(steps, 1, n) {
+        VI G(1<<n);
+        G[0]=(1<<n)-1;
+        replr(s, 1, 1<<n) {
+            G[s]=G[s&(s-1)]&g[log[s&-s]];
+            //printf("%d %d: %d\n",steps,s,G[s]);
         }
-        rooms_by_hash[r].pb(i);
+        repn(i, n) {
+            for(int s: es[i]) g[i]|=G[s];
+            repn(j, n) if(g[i]&(1<<j)) setmin(ans[i][j], steps);
+        }
     }
-    vector<VI> groups;
-    for(const auto& kv: rooms_by_hash) {
-        groups.pb(kv.se);
-    }
-    sort(all(groups));
-    bool any=false;
-    for(const auto& group: groups) {
-        if(sz(group)==1) continue;
-        for(int i: group) printf("%d ", i+1);
+    repn(i, n) {
+        repn(j, n) printf("%d ", ans[i][j]<kInf?ans[i][j]:-1);
         printf("\n");
-        any=true;
     }
-    if(!any) printf("none\n");
-}
-
-int main() {
-    init();
-    VI labels(m), tmp(m);
-    repn(iter, m+1) {
-        cal_labels(labels, &tmp);
-        swap(labels, tmp);
-        for(int& x: labels) x^=123456789;
-    }
-    output(labels);
 
     return 0;
 }
