@@ -56,7 +56,7 @@ int main() {
     int ans=0;
     x=abs(x), y=abs(y);
     if(x%2!=0) ++ans, --x, --y;
-    ans+=x+y;
+    ans+=(x+y)/2;
     cout<<ans<<endl;
     return 0;
 }
