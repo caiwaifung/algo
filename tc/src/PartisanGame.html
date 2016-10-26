@@ -1,0 +1,28 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><p>
+Alice and Bob play a game with a pile of stones.
+Initially, there are <b>n</b> stones in the pile.
+The players take alternating turns, Alice goes first.
+</p>
+
+<p></p>
+
+<p>
+You are given two vector &lt;int&gt;s: <b>a</b> and <b>b</b>.
+The elements of <b>a</b> are allowed moves for Alice, and the elements of <b>b</b> are allowed moves for Bob.
+</p>
+
+<p></p>
+
+<p>
+In each turn, the current player must remove some stones from the pile.
+The number of removed stones must be equal to one of the player's allowed moves.
+If a player cannot take a valid turn, they lose the game.
+</p>
+Assume that both Alice and Bob play the game optimally.
+Return "Alice" if Alice wins, or "Bob" if Bob wins.
+In other words, return "Alice" if and only if the first player has a winning strategy for the given <b>n</b>, <b>a</b>, and <b>b</b>.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>PartisanGame</td></tr><tr><td>Method:</td><td>getWinner</td></tr><tr><td>Parameters:</td><td>int, vector &lt;int&gt;, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>string</td></tr><tr><td>Method signature:</td><td>string getWinner(int n, vector &lt;int&gt; a, vector &lt;int&gt; b)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>n</b> will be between 0 and 1,000,000,000, inclusive.  </td></tr><tr><td align="center" valign="top">-</td><td>all elements of <b> a </b> will be distinct.  </td></tr><tr><td align="center" valign="top">-</td><td>all elements of <b> b </b> will be distinct.   </td></tr><tr><td align="center" valign="top">-</td><td>all elements of <b> a </b> will be between 1 and 5, inclusive.  </td></tr><tr><td align="center" valign="top">-</td><td>all elements of <b> b </b> will be between 1 and 5, inclusive.  </td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>7</pre></td></tr><tr><td><pre>{3, 4}</pre></td></tr><tr><td><pre>{4}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Alice&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">Alice should take 4 stones from the pile.
+This will leave a pile of only 3 stones.
+In that situation, Bob has no valid move.
+(His only allowed move is 4, but it is not possible to remove 4 stones from a pile of only 3 stones.)
+Thus, Bob loses the game.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>10</pre></td></tr><tr><td><pre>{1}</pre></td></tr><tr><td><pre>{4, 3, 2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Bob&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">One winning strategy for Bob is to always take 4 stones.
+If Bob follows this strategy, Alice will lose the game during her third turn.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>104982</pre></td></tr><tr><td><pre>{2, 3, 4, 5}</pre></td></tr><tr><td><pre>{2, 5}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Alice&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>999999999</pre></td></tr><tr><td><pre>{4}</pre></td></tr><tr><td><pre>{5}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Bob&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1000000000</pre></td></tr><tr><td><pre>{1,2,3,4,5}</pre></td></tr><tr><td><pre>{1,2,3,4,5}</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Alice&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
