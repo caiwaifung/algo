@@ -143,10 +143,13 @@ bool reinforce(string& s, VI rules) {
 
     string old=s;
     repn(j, n) {
+        assert(label_w[j] || label_b[j]);
         if(!label_w[j]) {
+            assert(s[j]!='.');
             s[j]='X';
         }
         if(!label_b[j]) {
+            assert(s[j]!='X');
             s[j]='.';
         }
     }
