@@ -26,7 +26,7 @@ public:
     }
 
     // Returns -1 if no solution.
-    T compute_maxflow(int s, int t) {
+    T compute(int s, int t) {
         if(super_total_>0) {
             add_edge(t, s, numeric_limits<T>::max());
             LL r=0, tmp;
