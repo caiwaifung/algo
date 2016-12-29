@@ -1,0 +1,31 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><i>This problem has a non-standard time limit: 3 seconds.</i>
+<br></br>
+<br></br>
+You are given the ints <b>n</b> and <b>K</b>.
+<br></br>
+<br></br>
+Consider the following modular equation with <b>n</b> variables: (x[0] * x[1] * x[2] * ... * x[<b>n</b>-1]) mod <b>K</b> = v.
+How many solutions does it have for a given value v?
+<br></br>
+<br></br>
+Formally, we want to find the number of sequences (x[0], x[1], ..., x[<b>n</b>-1]) such that each x[i] is an integer between 0 and <b>K</b>-1, inclusive, and the product of all x[i] gives the remainder v when divided by <b>K</b>.
+<br></br>
+<br></br>
+You are also given a vector &lt;int&gt; <b>query</b> containing q elements.
+For each i, let answer[i] be the number of solutions the above equation has when v = <b>query</b>[i].
+<br></br>
+<br></br>
+Return a vector &lt;int&gt; with q elements.
+For each i, element i of the return value should be the number (answer[i] mod 10^9 + 7).</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>ModEquation</td></tr><tr><td>Method:</td><td>count</td></tr><tr><td>Parameters:</td><td>int, int, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>vector &lt;int&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;int&gt; count(int n, int K, vector &lt;int&gt; query)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>3.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>n</b> will be between 1 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>K</b> will be between 2 and 1,000,000,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>query</b> will contain between 1 and 1,000 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>query</b> will be between 0 and (<b>K</b>-1), inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>{0,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {3, 1 }</pre></td></tr><tr><td><table><tr><td colspan="2">The correct return value should have two elements:
+<ul>
+<li>Element 0 of the return value should be the number of solutions of the equation (x[0] * x[1]) mod 2 = 0.</li>
+<li>Element 1 of the return value should be the number of solutions of the equation (x[0] * x[1]) mod 2 = 1.</li>
+</ul>
+We have:
+<ul>
+<li>(0 * 0) % 2 = 0</li>
+<li>(0 * 1) % 2 = 0</li>
+<li>(1 * 0) % 2 = 0</li>
+<li>(1 * 1) % 2 = 1</li>
+</ul>
+So, the first equation has 3 solutions and the second equation has 1 solution.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>4</pre></td></tr><tr><td><pre>{0,1,2,3}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {8, 2, 4, 2 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>6</pre></td></tr><tr><td><pre>6</pre></td></tr><tr><td><pre>{4}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {2016 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>{0,0,0,1,1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {1, 1, 1, 1, 1, 1 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
