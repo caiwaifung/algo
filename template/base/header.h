@@ -52,7 +52,3 @@ template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 // clang-format on
 // }}}
 
-int main() {
-
-    return 0;
-}
