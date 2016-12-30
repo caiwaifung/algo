@@ -1,20 +1,35 @@
-template<class T> class MincostMaxflow {
-    struct Edge { int y; T w, c; Edge* oppo; };
-    const int n_;
-    vector<vector<unique_ptr<Edge>>> es_;
-public:
-    explicit MincostMaxflow(int n) : n_(n), es_(n) {}
+template<class T> struct CostNet {
+    CostNet(int n, int s, int t) : n_(n), s_(s), t_(t), es_(n_) {}
 
-    void add_edge(int x, int y, T w, T c) {
-        Edge *e1, *e2;
-        es_[x].emplace_back(e1=new Edge{y, w, c, nullptr});
-        es_[y].emplace_back(e2=new Edge{x, 0, -c, nullptr});
-        e1->oppo=e2, e2->oppo=e1;
+    void add_edge(int x, int y, T w, T c) { add_(x, y, w, c); }
+
+    // (flow, cost)
+    pair<T, T> mincost_maxflow() { return compute_(); }
+
+private:  //{{{
+    struct Edge { int y; T w, c; Edge* oppo; };
+    const int n_, s_, t_;
+    T w0_=0, c0_=0;
+    vector<vector<unique_ptr<Edge>>> es_;
+
+    void add_(int x, int y, T w, T c) {
+        if(c>=0) {
+            Edge *e1, *e2;
+            es_[x].emplace_back(e1=new Edge{y, w, c, nullptr});
+            es_[y].emplace_back(e2=new Edge{x, 0, -c, nullptr});
+            e1->oppo=e2, e2->oppo=e1;
+        } else {
+            w0_+=w;
+            c0_+=w*(-c);
+            add_edge(s_, y, w, 0);
+            add_edge(y, x, w, -c);
+            add_edge(x, t_, w, 0);
+        }
     }
 
-    // Returns (flow, cost).
-    pair<T, T> compute(int s, int t) {
-        pair<T, T> ans;
+    pair<T, T> compute_() {
+        int s=s_, t=t_;
+        pair<T, T> ans={-w0_, -c0_};
         while(1) {
             vector<T> dis(n_, numeric_limits<T>::max());
             vector<T> flow(n_);
@@ -52,4 +67,5 @@ public:
         }
         return ans;
     }
+    // }}}
 };
