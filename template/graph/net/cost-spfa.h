@@ -1,5 +1,7 @@
 template <class T> struct CostNet {
-    CostNet(int n, int s, int t) : n_(n), s_(s), t_(t), es_(n_) {}
+    const int s, t:
+
+    explicit CostNet(int n) : s(n), t(n+1), n_(n+2), es_(n_) {}
 
     void add(int x, int y, T w, T c) { add_(x, y, w, c); }
 
@@ -12,7 +14,7 @@ private:  //{{{
         T w, c;
         Edge* oppo;
     };
-    const int n_, s_, t_;
+    const int n_;
     T w0_ = 0, c0_ = 0;
     vector<vector<unique_ptr<Edge>>> es_;
 
