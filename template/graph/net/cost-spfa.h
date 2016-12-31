@@ -1,12 +1,13 @@
 template <class T> struct CostNet {
-    const int s, t:
+    const int s, t;
 
-    explicit CostNet(int n) : s(n), t(n+1), n_(n+2), es_(n_) {}
+    explicit CostNet(int n) : s(n), t(n + 1), n_(n + 2), es_(n_) {}
 
-    void add(int x, int y, T w, T c) { add_(x, y, w, c); }
+    void* add_edge(int x, int y, T w, T c) { return add_(x, y, w, c); }
 
     // (flow, cost)
     pair<T, T> compute() { return compute_(); }
+    T flow(void* e) { return flow_(e); }
 
 private:  //{{{
     struct Edge {
@@ -18,23 +19,25 @@ private:  //{{{
     T w0_ = 0, c0_ = 0;
     vector<vector<unique_ptr<Edge>>> es_;
 
-    void add_(int x, int y, T w, T c) {
+    void* add_(int x, int y, T w, T c) {
         if(c >= 0) {
             Edge *e1, *e2;
             es_[x].emplace_back(e1 = new Edge{y, w, c, nullptr});
             es_[y].emplace_back(e2 = new Edge{x, 0, -c, nullptr});
             e1->oppo = e2, e2->oppo = e1;
+            return static_cast<void*>(e1);
         } else {
+            // ???
             w0_ += w;
             c0_ += w * (-c);
             add_(s_, y, w, 0);
             add_(y, x, w, -c);
             add_(x, t_, w, 0);
+            return nullptr;
         }
     }
 
     pair<T, T> compute_() {
-        int s = s_, t = t_;
         pair<T, T> ans = {-w0_, -c0_};
         while(1) {
             vector<T> dis(n_, numeric_limits<T>::max());
@@ -74,5 +77,7 @@ private:  //{{{
         }
         return ans;
     }
+
+    T flow_(void* e) { return static_cast<Edge*>(e)->oppo->w; }
     // }}}
 };
