@@ -2,11 +2,11 @@ template <class T> struct Net {
     Net(int n, int s, int t)
         : n_(n + 2), s_(s), t_(t), super_s_(n), super_t_(n + 1), es_(n_) {}
 
-    void* add_edge(int x, int y, T w) { return add_(x, y, w); }
-    void* add_edge(int x, int y, pair<T, T> w) { return add_(x, y, w); }
+    void* add(int x, int y, T w) { return add_(x, y, w); }
+    void* add(int x, int y, pair<T, T> w) { return add_(x, y, w); }
 
     // returns -1 if no solution.
-    T maxflow() { return maxflow_(); }
+    T compute() { return compute_(); }
     T flow(void* e) { return flow_(e); }
 
 private:  // {{{
@@ -26,19 +26,20 @@ private:  // {{{
         e1->oppo = e2, e2->oppo = e1;
         return e1;
     }
+
     void* add_(int x, int y, pair<T, T> w) {
         assert(w.fi <= w.se);
         if(w.fi > 0) {
-            add_edge(super_s_, y, w.fi);
-            add_edge(x, super_t_, w.fi);
+            add(super_s_, y, w.fi);
+            add(x, super_t_, w.fi);
             super_total_ += w.fi;
         }
         return add_(x, y, w.se - w.fi);
     }
 
-    T maxflow_() {
+    T compute_() {
         if(super_total_ > 0) {
-            add_edge(t_, s_, numeric_limits<T>::max());
+            add_(t_, s_, numeric_limits<T>::max());
             LL r = 0, tmp;
             while((tmp = augment_(super_s_, super_t_)) > 0) r += tmp;
             if(r != super_total_) return -1;

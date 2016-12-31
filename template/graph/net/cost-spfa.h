@@ -1,10 +1,10 @@
 template <class T> struct CostNet {
     CostNet(int n, int s, int t) : n_(n), s_(s), t_(t), es_(n_) {}
 
-    void add_edge(int x, int y, T w, T c) { add_(x, y, w, c); }
+    void add(int x, int y, T w, T c) { add_(x, y, w, c); }
 
     // (flow, cost)
-    pair<T, T> mincost_maxflow() { return compute_(); }
+    pair<T, T> compute() { return compute_(); }
 
 private:  //{{{
     struct Edge {
