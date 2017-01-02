@@ -56,13 +56,30 @@ int main() {
     int n;
     string a, b;
     cin >> n >> a >> b;
-    const auto dir = [&](char c) { return (c == 'N' || c == 'S' ? 1 : 0); };
-
-    if(a.back() == b.back() || dir(a.back()) != dir(b.back())) {
-        printf("YES\n");
-    } else {
-        printf("NO\n");
+    reverse(all(b));
+    for(char& ch : b) {
+        if(ch == 'N')
+            ch = 'S';
+        else if(ch == 'S')
+            ch = 'N';
+        else if(ch == 'W')
+            ch = 'E';
+        else if(ch == 'E')
+            ch = 'W';
     }
+
+    VI fail(sz(b) + 1);
+    int j = fail[0] = -1;
+    repn(i, sz(b)) {
+        while(j >= 0 && b[i] != b[j]) j = fail[j];
+        fail[i + 1] = ++j;
+    }
+    j = 0;
+    repn(i, sz(a)) {
+        while(j >= 0 && a[i] != b[j]) j = fail[j];
+        ++j;
+    }
+    printf("%s\n", j > 0 ? "NO" : "YES");
 
     return 0;
 }
