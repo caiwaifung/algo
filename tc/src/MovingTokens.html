@@ -1,0 +1,38 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Fox Ciel is going to play a game with tokens.
+She has <b>n</b> bins, numbered 0 through <b>n</b>-1.
+At the beginning of the game each bin contains a single token.
+During the game each bin may contain arbitrarily many tokens.
+<br></br><br></br>
+Fox Ciel also has a rectangular matrix M with <b>n</b> rows and <b>m</b> columns.
+You are given the ints <b>n</b> and <b>m</b>.
+You are also given a vector &lt;int&gt; <b>moves</b> that encodes the content of M.
+For each i from 0 to <b>n</b>-1, inclusive, and for each j between 0 and <b>m</b>-1, inclusive, M[i][j] = <b>moves</b>[j*n+i].
+<br></br>
+The matrix M describes the valid moves Ciel can make in the game.
+Each turn of the game looks as follows:
+<ol>
+<li>Ciel chooses the value of j: an integer between 0 and <b>m</b>-1.</li>
+<li>For each i between 0 and <b>n</b>-1, inclusive, Ciel moves all tokens from bin i into bin M[i][j].</li>
+</ol>
+
+Note that all movement in step 2 occurs simultaneously.
+For example, if she wants to move all tokens from bin 0 to bin 1 and all tokens from bin 1 to bin 0, the bins 0 and 1 swap their content.
+<br></br>
+The game Fox Ciel plays consists of exactly 10^100 turns, each of the form described above.
+Her goal is to minimize the number of bins that contain some tokens at the end of the game.
+Calculate the best possible result she can obtain.
+In other words, return the smallest K such that Ciel can play the game in such a way that at the end of the game only K of the bins contain some tokens.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>MovingTokens</td></tr><tr><td>Method:</td><td>move</td></tr><tr><td>Parameters:</td><td>int, int, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>int</td></tr><tr><td>Method signature:</td><td>int move(int n, int m, vector &lt;int&gt; moves)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>n</b> will be between 1 and 50 inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>m</b> will be between 1 and 50 inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>moves</b> will contain exactly <b>n * m</b> elements.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>moves</b> will be between 0 and <b>n</b>-1.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>{0,1,
+0,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2">There are two bins.
+At the beginning of the game, each bin contains a token.
+In each turn of the game Ciel will choose either j=0 or j=1.
+Regardless of which j she chooses, the result will be that she should move all tokens from bin 0 to bin 0 and all tokens from bin 1 to bin 1.
+That is, nothing changes, all tokens stay where they were.
+Thus, after 10^100 turns we still have two bins that each contain a token.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>{0,0,
+1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2">This is the same setting as in Example 0, only the matrix M is different.
+The choice j=0 now means "put everything into bin 0" and the choice j=1 now means "put everything into bin 1".
+Regardless of how Ciel plays the game, after 10^100 turns one of the bins will contain both tokens and the other bin will be empty.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>3</pre></td></tr><tr><td><pre>1</pre></td></tr><tr><td><pre>{0,1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 2</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>2</pre></td></tr><tr><td><pre>5</pre></td></tr><tr><td><pre>{0,0,
+ 0,0,
+ 0,0,
+ 1,1,
+ 1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>3</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>{0,2,2,
+ 1,1,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

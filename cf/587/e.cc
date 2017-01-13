@@ -91,8 +91,8 @@ struct Value {
     }
 };
 
-Value tr[N];
-int buf[N];
+Value tr[N * 4];
+int buf[N * 4];
 
 void release(int x) {
     if(buf[x] != 0) {
@@ -152,7 +152,7 @@ int main() {
             modify(0, 0, n, l, r, x);
         } else {
             Value ret = get(0, 0, n, l, r);
-            //cout << ret.le << " " << ret.bases << endl;
+            // cout << ret.le << " " << ret.bases << endl;
             BaseBuilder builder;
             for(int x : ret.bases) builder.add(x);
             builder.add(ret.le);

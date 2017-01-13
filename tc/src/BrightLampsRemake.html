@@ -1,0 +1,46 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><i>This problem has a non-standard time limit: 4 seconds.</i>
+<br></br>
+<br></br>
+There are lots of tasks about lamps and buttons.
+Today you have to solve another one.
+<br></br>
+<br></br>
+We have m lamps, numbered 0 through m-1.
+You are given a string <b>init</b> with m characters.
+The string <b>init</b> describes the initial state of the lamps.
+If the i-th (0-based) character of <b>init</b> is '1', lamp i is initially turned on.
+Otherwise, the i-th character of <b>init</b> is '0' which means that lamp i is initially turned off.
+<br></br>
+<br></br>
+In addition to the m lamps there are n buttons, numbered 0 through n-1.
+Each button is connected to some subset of lamps (possibly none or all of them).
+You are given the information about the buttons in the vector &lt;string&gt; <b>buttons</b>.
+For each i and j, <b>buttons</b>[i][j] is '1' if button i is connected to lamp j, or '0' if they aren't connected.
+<br></br>
+<br></br>
+Pushing a button toggles all lamps that are connected to the button.
+(I.e., the ones that were on are now off and vice versa.)
+<br></br>
+<br></br>
+You already realized that the order in which you push the buttons does not matter.
+You also realized that it doesn't make sense to push the same button twice, because that has the same effect as not pushing it at all.
+Therefore, you have decided that you are going to push each button at most once.
+This means that there are 2^n ways to push the buttons.
+For each of those ways we are interested in the number of lamps that would be lit at the end.
+<br></br>
+<br></br>
+Compute two values:
+<ul>
+<li>X = the largest possible number of lamps that will be turned on after you push some buttons</li>
+<li>Y = the number of ways in which you can push some buttons so that in the final state exactly X lamps are turned on</li>
+</ul>
+
+Return the vector&lt;long long&gt; {X, Y}.
+(That is, a vector&lt;long long&gt; of length 2 in which element 0 is X and element 1 is Y.)</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>BrightLampsRemake</td></tr><tr><td>Method:</td><td>maxAndCount</td></tr><tr><td>Parameters:</td><td>string, vector &lt;string&gt;</td></tr><tr><td>Returns:</td><td>vector&lt;long long&gt;</td></tr><tr><td>Method signature:</td><td>vector&lt;long long&gt; maxAndCount(string init, vector &lt;string&gt; buttons)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>4.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>n will be between 1 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>m will be between 1 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>init</b> will contain exactly m characters.</td></tr><tr><td align="center" valign="top">-</td><td><b>buttons</b> will contain exactly n elements.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>buttons</b> will contain exactly m characters.</td></tr><tr><td align="center" valign="top">-</td><td>Each character in <b>init</b> will be '0' or '1'.</td></tr><tr><td align="center" valign="top">-</td><td>Each character in <b>buttons</b> will be '0' or '1'.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;0000&quot;</pre></td></tr><tr><td><pre>{&quot;1010&quot;, &quot;0100&quot;, &quot;0001&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {4, 1 }</pre></td></tr><tr><td><table><tr><td colspan="2">In the beginning all lamps are off.
+You can turn them all on by pushing each button once.
+Thus, it is possible to have X = 4 lamps on.
+The above way is the only way to achieve this number of lit lamps, hence Y = 1.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;1011&quot;</pre></td></tr><tr><td><pre>{&quot;0000&quot;, &quot;0000&quot;, &quot;0000&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {3, 8 }</pre></td></tr><tr><td><table><tr><td colspan="2">In the beginning three of the four lamps are turned on.
+There are three buttons.
+The buttons don't do anything.
+Thus, we have X = 3, and each of the Y = 2^3 = 8 ways of pushing the buttons leads to a state in which three lamps are on.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;00000&quot;</pre></td></tr><tr><td><pre>{&quot;11000&quot;, &quot;01100&quot;, &quot;00110&quot;, &quot;00011&quot;, &quot;10001&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {4, 10 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;10000&quot;</pre></td></tr><tr><td><pre>{&quot;11000&quot;, &quot;01100&quot;, &quot;00110&quot;, &quot;00011&quot;, &quot;10001&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {5, 2 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;0&quot;</pre></td></tr><tr><td><pre>{&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,
+ &quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {0, 1125899906842624 }</pre></td></tr><tr><td><table><tr><td colspan="2">Watch for overflow.</td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

@@ -2,7 +2,9 @@ class $CLASSNAME$ {
 public:
     $RC$ $METHODNAME$($METHODPARMS$) {
     }
+    // {{{
     $TESTCODE$
+    // }}}
 };
 
 $BEGINCUT$

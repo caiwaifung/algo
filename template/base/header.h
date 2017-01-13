@@ -33,6 +33,7 @@ using namespace std;
 #define se second
 #define pb push_back
 #define mp make_pair
+#define popcount __builtin_popcount
 typedef long long LL;
 typedef long double LD;
 typedef pair<int, int> PII;
