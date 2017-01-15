@@ -1,0 +1,111 @@
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <memory>
+#include <numeric>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+using namespace std;
+
+// {{{
+// clang-format off
+#define all(a) (a).begin(), (a).end()
+#define sz(a) static_cast<int>((a).size())
+#define fillchar(a, x) memset(a, x, sizeof(a))
+#define rep(i, a, b) for (int i = int(a); i <= int(b); ++i)
+#define irep(i, a, b) for (int i = int(a); i >= int(b); --i)
+#define replr(i, a, b) rep(i, a, (b)-1)
+#define reprl(i, a, b) irep(i, (b)-1, a)
+#define repn(i, n) rep(i, 0, (n)-1)
+#define irepn(i, n) irep(i, (n)-1, 0)
+#define fi first
+#define se second
+#define pb push_back
+#define mp make_pair
+#define popcount __builtin_popcount
+typedef long long LL;
+typedef long double LD;
+typedef pair<int, int> PII;
+typedef pair<LL, LL> PLL;
+typedef pair<double, double> PDD;
+typedef vector<int> VI;
+typedef vector<LL> VL;
+typedef vector<double> VD;
+typedef vector<string> VS;
+typedef vector<PII> VPI;
+typedef vector<PLL> VPL;
+template <class T, class S> ostream& operator<<(ostream& os, const pair<T, S>& v) { return os << "(" << v.first << ", " << v.second << ")"; }
+template <class T> ostream& operator<<(ostream& os, const vector<T>& v) { os << "["; repn(i, sz(v)) { if(i) os << ", "; os << v[i]; } return os << "]"; }
+template <class T> bool setmax(T& _a, T _b) { if(_a < _b) { _a = _b; return true; } return false; }
+template <class T> bool setmin(T& _a, T _b) { if(_b < _a) { _a = _b; return true; } return false; }
+template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
+// clang-format on
+// }}}
+
+const LL MOD = LL(1e9) + 7;
+
+LL inv[4001];
+
+void precompute() {
+    inv[1] = 1;
+    rep(i, 2, 4000) inv[i] = (MOD - MOD / i) * inv[MOD % i] % MOD;
+}
+
+LL solve() {
+    int n;
+    LL m;
+    scanf("%d%lld", &n, &m);
+    VI r(n);
+    LL sr = 0;
+    repn(i, n) {
+        scanf("%d", &r[i]);
+        sr += r[i];
+    }
+
+    const auto binom = [&](LL x, int y) {
+        if(y < 0 || y > x) return 0ll;
+        LL ans = 1;
+        rep(i, 1, y) {
+            (ans *= (x - i + 1)) %= MOD;
+            (ans *= inv[i]) %= MOD;
+        }
+        return ans;
+    };
+    VL f(4001);
+    repn(i, sz(f)) f[i] = binom(m - 1 + i - sr * 2 + n, n);
+
+    if(n == 1) {
+        return f[sr * 2];
+    } else {
+        LL coeff = 1;
+        rep(i, 1, n - 2)(coeff *= i) %= MOD;
+        LL ans = 0;
+        repn(i, n) replr(j, i + 1, n) {
+            (ans += coeff * f[r[i] + r[j]] * 2) %= MOD;
+        }
+        return ans;
+    }
+}
+
+int main() {
+    precompute();
+
+    int num;
+    scanf("%d", &num);
+    rep(i, 1, num) {
+        LL ans = solve();
+        printf("Case #%d: %lld\n", i, ans);
+    }
+    return 0;
+}
