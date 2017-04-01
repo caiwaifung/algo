@@ -1,0 +1,33 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>This task is about a group of people who like to play ping pong.
+All games of ping pong mentioned in this task are one-on-one games.
+<br></br>
+You are given a vector &lt;int&gt; <b>skills</b>.
+Each element of <b>skills</b> is the skill level of one person in the group.
+The skill levels are all distinct.
+Whenever two people play a game of ping pong, the one with the higher skill level always wins.
+<br></br>
+All people in the group would like to play but they only have a single table.
+Therefore, only two people can play at any given time.
+<br></br>
+There will be a sequence of games, numbered starting from 1.
+Game 1 will be played by the players who correspond to <b>skills</b>[0] and <b>skills</b>[1].
+All the remaining people will form a queue, in the order in which they are given in <b>skills</b>.
+After each game the following things will happen, in order:
+<ol>
+<li>The person who lost the game leaves the table and goes to the end of the queue.</li>
+<li>If the person who won the game has already won <b>N</b> games in a row, they also leave the table and they go to the end of the queue (behind the person who lost the last game).</li>
+<li>While there are fewer than two people at the table, the first person in the queue leaves the queue and goes to the table.</li>
+<li>The two people at the table play the next game.</li>
+</ol>
+
+You are given the vector &lt;int&gt; <b>skills</b>, the int <b>N</b>, and an int <b>K</b>.
+Return the two-element vector &lt;int&gt; { L, W }, where L and W are the skills of the loser and the winner of game <b>K</b>, in this order.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>PingPongQueue</td></tr><tr><td>Method:</td><td>whoPlaysNext</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, int, int</td></tr><tr><td>Returns:</td><td>vector &lt;int&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;int&gt; whoPlaysNext(vector &lt;int&gt; skills, int N, int K)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>skills</b> will contain between 2 and 50 elements, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element of <b>skills</b> will be between 1 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>All elements of <b>skills</b> will be distinct.</td></tr><tr><td align="center" valign="top">-</td><td><b>N</b> will be between 1 and 100, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>K</b> will be between 1 and 1000, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1, 2, 3}</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: {2, 3 }</pre></td></tr><tr><td><table><tr><td colspan="2">In all annotations, we call people by their skill. For example, "player 7" means "the player whose skill level is 7".
+<br></br>
+In this example players 1 and 2 play the first game, and player 2 wins.
+For the second game, player 3 joins player 2, so we return { 2, 3 }.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1, 2, 3}</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>4</pre></td></tr></table></td></tr><tr><td><pre>Returns: {1, 2 }</pre></td></tr><tr><td><table><tr><td colspan="2">The sequence of games is as follows:
+<ol>
+<li>Player 1 loses to player 2.</li>
+<li>Player 2 loses to player 3.</li>
+<li>Player 1 loses to player 3. After this player 1 joins the queue, player 3 also steps down because he just won 2 games in a row and joins the queue.</li>
+<li>Player 1 loses to player 2.</li>
+</ol></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{49, 24, 26, 12, 5, 33, 25, 30, 35, 41, 46, 23, 21, 3, 38, 43, 11, 19, 34, 29, 20, 32, 39, 7, 50}</pre></td></tr><tr><td><pre>10</pre></td></tr><tr><td><pre>399</pre></td></tr></table></td></tr><tr><td><pre>Returns: {12, 50 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{30, 12}</pre></td></tr><tr><td><pre>34</pre></td></tr><tr><td><pre>80</pre></td></tr></table></td></tr><tr><td><pre>Returns: {12, 30 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
