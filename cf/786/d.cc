@@ -1,3 +1,5 @@
+// 20:08 - 21:04 - wa sample
+//       - 21:17 - ac
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -54,15 +56,14 @@ template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 // }}}
 
 class Hash {
-    friend struct std::hash<Hash>;
-    static constexpr LL M1 = LL(1e9) + 7;
-    static constexpr LL M2 = LL(1e9) + 9;
-    static constexpr LL P1 = 911;
-    static constexpr LL P2 = 127;
-    static VL pow1, pow2, ipow1, ipow2;
+    static constexpr LL P1 = 911, M1 = LL(1e9) + 7;
+    static constexpr LL P2 = 127, M2 = LL(1e9) + 9;
+    static VL p1, p2, ip1, ip2;
 
+    friend struct hash<Hash>;
     LL h1, h2;
     int size;
+
     Hash(LL h1, LL h2, int size)
         : h1((h1 % M1 + M1) % M1), h2((h2 % M2 + M2) % M2), size(size) {}
 
@@ -75,103 +76,74 @@ public:
             }
             return r;
         };
-        pow1.resize(n + 1);
-        pow2.resize(n + 1);
-        ipow1.resize(n + 1);
-        ipow2.resize(n + 1);
-        pow1[0] = pow2[0] = 1;
+        p1.resize(n + 1), ip1.resize(n + 1);
+        p2.resize(n + 1), ip2.resize(n + 1);
+        p1[0] = p2[0] = 1;
         rep(i, 1, n) {
-            pow1[i] = pow1[i - 1] * P1 % M1;
-            pow2[i] = pow2[i - 1] * P2 % M2;
+            p1[i] = p1[i - 1] * P1 % M1;
+            p2[i] = p2[i - 1] * P2 % M2;
         }
-        ipow1[n] = pow(pow1[n], M1 - 2, M1);
-        ipow2[n] = pow(pow2[n], M2 - 2, M2);
+        ip1[n] = pow(p1[n], M1 - 2, M1);
+        ip2[n] = pow(p2[n], M2 - 2, M2);
         irep(i, n, 1) {
-            ipow1[i - 1] = ipow1[i] * P1 % M1;
-            ipow2[i - 1] = ipow2[i] * P2 % M2;
+            ip1[i - 1] = ip1[i] * P1 % M1;
+            ip2[i - 1] = ip2[i] * P2 % M2;
         }
     }
 
     Hash() : Hash(0, 0, 0) {}
-    Hash(int ch) : Hash(ch+1, ch+1, 1) {}
+    explicit Hash(int ch) : Hash(ch + 1, ch + 1, 1) {}
 
+    bool operator==(const Hash& b) const { return h1 == b.h1 && h2 == b.h2; }
     Hash operator+(const Hash& b) const {
-        return Hash(h1 * pow1[b.size] + b.h1, h2 * pow2[b.size] + b.h2,
+        return Hash(h1 * p1[b.size] + b.h1, h2 * p2[b.size] + b.h2,
                     size + b.size);
     }
     Hash remove_l(const Hash& b) const {
-        return Hash(h1 - b.h1 * pow1[size - b.size],
-                    h2 - b.h2 * pow2[size - b.size], size - b.size);
+        return Hash(h1 - b.h1 * p1[size - b.size],
+                    h2 - b.h2 * p2[size - b.size], size - b.size);
     }
     Hash remove_r(const Hash& b) const {
-        return Hash((h1 - b.h1) * ipow1[b.size], (h2 - b.h2) * ipow2[b.size],
+        return Hash((h1 - b.h1) * ip1[b.size], (h2 - b.h2) * ip2[b.size],
                     size - b.size);
     }
-
-    bool operator==(const Hash& b) const { return h1 == b.h1 && h2 == b.h2; }
 };
-VL Hash::ipow1, Hash::ipow2, Hash::pow1, Hash::pow2;
+VL Hash::p1, Hash::p2, Hash::ip1, Hash::ip2;
 namespace std {
 template <> struct hash<Hash> {
-    size_t operator()(const Hash& s) const { return s.h1 ^ s.h2; }
+    size_t operator()(const Hash& h) const { return h.h1 ^ h.h2; }
 };
 }
 
 const int N = 20000;
-const int Q = 20000;
 const int LOG = 16;
 
 struct Edge {
-    int ch;
-    bool valid;
+    int y, ch, *valid;
 };
 
-vector<pair<int, Edge*>> es[N];
+struct Query {
+    int y, i;
+};
+
+vector<Edge> es[N];
+vector<Query> qs[N];
 map<PII, int> e2c;
-Edge all_edges[N];
-VPI qs[N];
-int ans[Q];
-int n, qn;
+int n;
 
-void input() {
-    scanf("%d%d", &n, &qn);
-    repn(i, n - 1) {
-        int a, b;
-        char c;
-        scanf("%d%d %c", &a, &b, &c);
-        --a, --b;
-        all_edges[i].ch = int(c - 'a');
-        e2c[mp(a, b)] = e2c[mp(b, a)] = int(c - 'a');
-        es[a].pb(mp(b, &all_edges[i])), es[b].pb(mp(a, &all_edges[i]));
-    }
-    repn(i, qn) {
-        int x, y;
-        scanf("%d%d", &x, &y);
-        --x, --y;
-        qs[x].pb(mp(y, i));
-    }
-}
-
-int dep[N], up[N][LOG];
+int up[N][LOG], dep[N];
 Hash hu[N], hd[N];
 
-void init() {
-    const function<void(int, int, int)> dfs = [&](int x, int fa, int d) {
-        dep[x] = d;
-        fillchar(up[x], -1);
-        up[x][0] = fa;
-        for(int i = 0; up[x][i] >= 0; ++i) up[x][i + 1] = up[up[x][i]][i];
-        for(const auto& e : es[x]) {
-            const int y = e.fi;
-            if(y != fa) {
-                hu[y] = Hash(e.se->ch) + hu[x];
-                hd[y] = hd[x] + Hash(e.se->ch);
-                dfs(y, x, d + 1);
-            }
+void prepare(int x, int fa, int _dep, Hash _hu, Hash _hd) {
+    dep[x] = _dep, hu[x] = _hu, hd[x] = _hd;
+    fillchar(up[x], -1);
+    up[x][0] = fa;
+    for(int i = 0; up[x][i] >= 0; ++i) up[x][i + 1] = up[up[x][i]][i];
+    for(const auto& e : es[x]) {
+        if(e.y != fa) {
+            prepare(e.y, x, _dep + 1, Hash(e.ch) + _hu, _hd + Hash(e.ch));
         }
-    };
-    hu[0] = hd[0] = Hash();
-    dfs(0, -1, 0);
+    }
 }
 
 int go_up(int x, int d) {
@@ -186,42 +158,36 @@ int lca(int x, int y) {
     } else {
         y = go_up(y, -d);
     }
-    irepn(i, LOG) if(up[x][i] != up[y][i]) {
-        x = up[x][i];
-        y = up[y][i];
+    irepn(i, LOG) if(up[x][i] != up[y][i]) { x = up[x][i], y = up[y][i]; }
+    if(x != y) {
+        x = up[x][0], y = up[y][0];
     }
-    if(x != y) x = up[x][0];
+    assert(x == y);
     return x;
 }
 
-int dis(int x, int y) { return dep[x] + dep[y] - 2 * dep[lca(x, y)]; }
+int dis(int x, int y) { return dep[x] + dep[y] - dep[lca(x, y)] * 2; }
+
+int go(int x, int y, int d) {
+    if(d <= dep[x] - dep[lca(x, y)]) {
+        return go_up(x, d);
+    } else {
+        return go_up(y, dis(x, y) - d);
+    }
+}
+
+int next(int x, int y) { return go(x, y, 1); }
+
+int next_ch(int x, int y) { return e2c[mp(x, next(x, y))]; }
 
 Hash get_hash(int x, int y) {
     int z = lca(x, y);
     return hu[x].remove_r(hu[z]) + hd[y].remove_l(hd[z]);
 }
 
-int go(int x, int y, int d) {
-    int z = lca(x, y);
-    int dx = dep[x] - dep[z];
-    if(d <= dx) {
-        return go_up(x, d);
-    } else {
-        return go_up(y, dep[y] - dep[z] - (d - dx));
-    }
-}
-
-int next(int x, int y) { return go(x, y, 1); }
-
-int next_ch(int x, int y) {
-    y = next(x, y);
-    assert(e2c.count(mp(x, y)));
-    return e2c[mp(x, y)];
-}
-
 int compare(int x1, int y1, int x2, int y2) {
-    int d = min(dis(x1, y1), dis(x2, y2));
-    int le = 0, ri = d;
+    int d1 = dis(x1, y1), d2 = dis(x2, y2);
+    int le = 0, ri = min(d1, d2);
     while(le < ri) {
         int mid = (le + ri + 1) / 2;
         if(get_hash(x1, go(x1, y1, mid)) == get_hash(x2, go(x2, y2, mid))) {
@@ -230,30 +196,49 @@ int compare(int x1, int y1, int x2, int y2) {
             ri = mid - 1;
         }
     }
-    if(le == d) return 0;
-    return next_ch(go(x1, y1, le), y1) < next_ch(go(x2, y2, le), y2) ? -1 : 1;
+    if(le == d1 && le == d2) {
+        return 0;
+    } else if(le == d1) {
+        return -1;
+    } else if(le == d2) {
+        return 1;
+    }
+    int z1 = go(x1, y1, le), z2 = go(x2, y2, le);
+    assert(z1 != y1 && z2 != y2);
+    int c1 = next_ch(z1, y1), c2 = next_ch(z2, y2);
+    assert(c1 != c2);
+    return c1 < c2 ? -2 : 2;
 }
 
 class Trie {
     struct Node {
-        int count = 0, lt = 0, tot = 0;
-        Hash hash;
+        int val = 0, sum = 0, lt = 0;
         Node* child[26] = {nullptr};
-
-        Node() { assert(child[20] == nullptr); }
     };
     Node* root;
     unordered_map<Hash, Node*> h2n;
 
     Node* add(Node* cur, int x, int fa) {
         if(!cur) cur = new Node();
-        ++cur->count;
+        ++cur->val;
         for(const auto& e : es[x]) {
-            if(e.fi != fa && e.se->valid) {
-                cur->child[e.se->ch] = add(cur->child[e.se->ch], e.fi, x);
+            if(*e.valid && e.y != fa) {
+                cur->child[e.ch] = add(cur->child[e.ch], e.y, x);
             }
         }
         return cur;
+    }
+
+    void prepare(Node* cur, int lt, Hash h) {
+        h2n[h] = cur;
+        cur->lt = lt;
+        cur->sum = cur->val;
+        lt += cur->val;
+        repn(ch, 26) if(cur->child[ch]) {
+            prepare(cur->child[ch], lt, h + Hash(ch));
+            cur->sum += cur->child[ch]->sum;
+            lt += cur->child[ch]->sum;
+        }
     }
 
 public:
@@ -262,27 +247,11 @@ public:
     void add(int x, int fa, int ch) {
         root->child[ch] = add(root->child[ch], x, fa);
     }
+    void prepare() { prepare(root, 0, Hash()); }
 
-    void prepare() {
-        const function<void(Node*, Hash, int)> dfs = [&](Node* cur, Hash h,
-                                                         int tot) {
-            h2n[h] = cur;
-            cur->lt = tot;
-            cur->tot = cur->count;
-            cur->hash = h;
-            tot += cur->count;
-            repn(ch, 26) if(cur->child[ch]) {
-                dfs(cur->child[ch], h + Hash(ch), tot);
-                cur->tot += cur->child[ch]->tot;
-                tot += cur->child[ch]->tot;
-            }
-        };
-        dfs(root, Hash(), 0);
-    }
-
+    int count() const { return root->sum; }
     int count_lt(int x, int y) const {
-        const int d = dis(x, y);
-        int le = 0, ri = d;
+        int le = 0, ri = dis(x, y);
         while(le < ri) {
             int mid = (le + ri + 1) / 2;
             if(h2n.count(get_hash(x, go(x, y, mid)))) {
@@ -291,111 +260,109 @@ public:
                 ri = mid - 1;
             }
         }
-        const int z = go(x, y, le);
+        int z = go(x, y, le);
         Node* cur = h2n.find(get_hash(x, z))->se;
         int r = cur->lt;
-        if(le < d) {
-            r += cur->count;
+        if(z != y) {
             int ch = next_ch(z, y);
-            repn(i, ch) if(cur->child[i]) r += cur->child[i]->tot;
+            r += cur->val;
+            repn(i, ch) if(cur->child[i]) r += cur->child[i]->sum;
         }
         return r;
     }
-
-    int count() const { return root->tot; }
 };
 
-pair<int, VI> find_center(int start) {
-    VI xs;
-    VPI ss;
+pair<int, VI> find_center(int seed) {
+    VI xs, ss, ms;
     const function<int(int, int)> dfs = [&](int x, int fa) {
         int s = 1, m = 0;
         for(const auto& e : es[x]) {
-            if(e.fi != fa && e.se->valid) {
-                int tmp = dfs(e.fi, x);
-                s += tmp;
-                setmax(m, tmp);
+            if(*e.valid && e.y != fa) {
+                int sy = dfs(e.y, x);
+                s += sy, setmax(m, sy);
             }
         }
-        xs.pb(x), ss.pb(mp(s, m));
+        xs.pb(x), ss.pb(s), ms.pb(m);
         return s;
     };
-    dfs(start, -1);
-    for(auto& s : ss) {
-        setmax(s.se, sz(xs) - s.fi - 1);
-    }
-    int center_i = 0;
-    repn(i, sz(xs)) {
-        if(ss[i].se < ss[center_i].se) center_i = i;
-    }
-    return mp(xs[center_i], xs);
+    dfs(seed, -1);
+    repn(i, sz(xs)) setmax(ms[i], sz(xs) - ss[i]);
+    int j = 0;
+    repn(i, sz(xs)) if(ms[i] < ms[j]) j = i;
+    return mp(xs[j], xs);
 }
 
-void solve(int start) {
+void solve(int seed, VI* ans) {
     int center;
     VI xs;
-    tie(center, xs) = find_center(start);
+    tie(center, xs) = find_center(seed);
 
-    Trie tr;
     static Trie sub_tr[N];
+    Trie tr;
     for(const auto& e : es[center]) {
-        if(e.se->valid) {
-            sub_tr[e.fi] = Trie();
-            sub_tr[e.fi].add(e.fi, center, e.se->ch);
-            sub_tr[e.fi].prepare();
-            tr.add(e.fi, center, e.se->ch);
+        if(*e.valid) {
+            sub_tr[e.y] = Trie();
+            sub_tr[e.y].add(e.y, center, e.ch);
+            sub_tr[e.y].prepare();
+            tr.add(e.y, center, e.ch);
         }
     }
     tr.prepare();
-
-    for(int x : xs) {
+    for(const int x : xs) {
         for(const auto& q : qs[x]) {
-            const int y = q.fi, qi = q.se;
-            if(dis(x, y) < dis(x, center)) {
-                int z = go(x, center, dis(x, y));
-                int cmp = compare(x, z, x, y);
-                if(cmp < 0) {
-                    assert(center != x);
-                    const int sub_x = next(center, x);
-                    ans[qi] += sz(xs) - sub_tr[sub_x].count();
-                }
-            } else {
-                int z = go(x, y, dis(x, center));
-                int cmp = compare(x, center, x, z);
-                if(cmp < 0) {
-                    assert(center != x);
-                    const int sub_x = next(center, x);
-                    ans[qi] += sz(xs) - sub_tr[sub_x].count();
-                } else if(cmp == 0) {
-                    if(z != y && x != center) {
-                        ++ans[qi];
-                    }
-                    ans[qi] += tr.count_lt(z, y);
-                    if(x != center) {
-                        const int sub_x = next(center, x);
-                        ans[qi] -= sub_tr[sub_x].count_lt(z, y);
-                    }
+            const int y = q.y;
+            int cmp = compare(x, center, x, y);
+            if(cmp == -2) {
+                assert(x != center);
+                int sub_x = next(center, x);
+                (*ans)[q.i] += sz(xs) - sub_tr[sub_x].count();
+            } else if(cmp == -1) {
+                const int z = go(x, y, dis(x, center));
+                (*ans)[q.i] += tr.count_lt(z, y);
+                if(x != center) {
+                    (*ans)[q.i] += 1;
+                    int sub_x = next(center, x);
+                    (*ans)[q.i] -= sub_tr[sub_x].count_lt(z, y);
                 }
             }
         }
     }
-    xs.clear();
 
     for(const auto& e : es[center]) {
-        if(e.se->valid) {
-            e.se->valid = false;
-            solve(e.fi);
+        if(*e.valid) {
+            *e.valid = false;
+            solve(e.y, ans);
         }
     }
 }
 
 int main() {
-    Hash::init(N+10);
-    input();
-    init();
+    Hash::init(N + 10);
 
-    repn(i, n - 1) all_edges[i].valid = true;
-    solve(0);
-    repn(i, qn) printf("%d\n", ans[i]);
+    int q;
+    scanf("%d%d", &n, &q);
+    VI valid(n - 1, 1);
+    repn(i, n - 1) {
+        int a, b;
+        char s[5];
+        scanf("%d%d%s", &a, &b, s);
+        int ch = int(s[0] - 'a');
+        --a, --b;
+        es[a].pb(Edge{b, ch, &valid[i]});
+        es[b].pb(Edge{a, ch, &valid[i]});
+        e2c[mp(a, b)] = e2c[mp(b, a)] = ch;
+    }
+    repn(i, q) {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        --a, --b;
+        qs[a].pb(Query{b, i});
+    }
+
+    prepare(0, -1, 0, Hash(), Hash());
+
+    VI ans(q);
+    solve(0, &ans);
+    repn(i, q) printf("%d\n", ans[i]);
     return 0;
 }
