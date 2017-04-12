@@ -65,17 +65,24 @@ int main() {
     }
 
     int ans = 0;
-    repn(i, 99) {
+    bool updated = false;
+    repn(i, 199) {
+        if(i == 100) updated = false;
         if(abs(b) > l) {
             cout << ans << endl;
             return 0;
         }
         if(bad.count(b) == 0) {
+            updated = true;
             ++ans;
         }
         b *= q;
     }
-    cout << "inf" << endl;
+    if(updated) {
+        cout << "inf" << endl;
+    } else {
+        cout << ans << endl;
+    }
 
     return 0;
 }
