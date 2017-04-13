@@ -55,100 +55,80 @@ template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 // clang-format on
 // }}}
 
-template <class T> struct Net {
-    Net(int n, int s, int t)
-        : n_(n + 2), s_(s), t_(t), super_s_(n), super_t_(n + 1), es_(n_) {}
+template <class T> class Net {
+public:
+    Net(int n0, int s, int t)
+        : n(n0 + 2),
+          original_s(s),
+          original_t(t),
+          super_s(n),
+          super_t(n + 1),
+          es(n),
+          dis(n) {}
 
     void* add(int x, int y, T w) {
-        // printf("add %d %d %d\n", x, y, w);
-        return add_(x, y, w);
+        assert(x >= 0 && x < n && y >= 0 && y < n);
+        Edge *e1, *e2;
+        es[x].emplace_back(e1 = new Edge{y, w, nullptr});
+        es[y].emplace_back(e2 = new Edge{x, 0, nullptr});
+        e1->oppo = e2, e2->oppo = e1;
+        return e1;
     }
     void* add(int x, int y, pair<T, T> w) {
-        // printf("add %d %d %d,%d\n", x, y, w.fi, w.se);
-        return add_(x, y, w);
+        assert(w.fi <= w.se);
+        if(w.fi > 0) {
+            add(super_s, y, w.fi);
+            add(x, super_t, w.fi);
+            super_total += w.fi;
+        }
+        return add(x, y, w.se - w.fi);
     }
 
     // returns -1 if no solution.
-    T compute() { return compute_(); }
-    T flow(void* e) const { return flow_(e); }
-
-    VI dis_;
-    void compute_cut() {
-        dis_.resize(n_);
-        dis_[s_] = 1;
-        queue<int> que;
-        que.push(s_);
-        while(!que.empty()) {
-            int x = que.front();
-            que.pop();
-            for(const auto& e : es_[x]) {
-                if(e->w > 0 && dis_[e->y] == 0) {
-                    dis_[e->y] = dis_[x] + 1;
-                    que.push(e->y);
-                }
+    T compute() {
+        if(super_total > 0) {
+            add(original_t, original_s, numeric_limits<T>::max());
+            LL r = 0, tmp;
+            while((tmp = augment(super_s, super_t)) > 0) {
+                r += tmp;
             }
+            if(r != super_total) return -1;
         }
-    }
-    bool on_cut(void* e0) const {
-        Edge* e = (Edge*)e0;
-        return dis_[e->oppo->y] > 0 && dis_[e->y] == 0;
+        T ans = 0, tmp;
+        while((tmp = augment(original_s, original_t)) > 0) {
+            ans += tmp;
+        }
+        return ans;
     }
 
-private:  // {{{
+    T flow(void* e) const { return static_cast<Edge*>(e)->oppo->w; }
+    bool on_cut(void* e) const {
+        return dis[static_cast<Edge*>(e)->oppo->y] > 0 &&
+               dis[static_cast<Edge*>(e)->y] == 0;
+    }
+    VI left() const {
+        VI r;
+        repn(i, n) if(dis[i] > 0) r.pb(i);
+        return r;
+    }
+
+private:
     struct Edge {
         int y;
         T w;
         Edge* oppo;
     };
-    const int n_, s_, t_, super_s_, super_t_;
-    T super_total_ = 0;
-    vector<vector<unique_ptr<Edge>>> es_;
 
-    void* add_(int x, int y, T w) {
-        assert(x >= 0 && x < n_ && y >= 0 && y < n_);
-        Edge *e1, *e2;
-        es_[x].emplace_back(e1 = new Edge{y, w, nullptr});
-        es_[y].emplace_back(e2 = new Edge{x, 0, nullptr});
-        e1->oppo = e2, e2->oppo = e1;
-        return e1;
-    }
-
-    void* add_(int x, int y, pair<T, T> w) {
-        assert(w.fi <= w.se);
-        if(w.fi > 0) {
-            add(super_s_, y, w.fi);
-            add(x, super_t_, w.fi);
-            super_total_ += w.fi;
-        }
-        return add_(x, y, w.se - w.fi);
-    }
-
-    T compute_() {
-        if(super_total_ > 0) {
-            add_(t_, s_, numeric_limits<T>::max());
-            LL r = 0, tmp;
-            while((tmp = augment_(super_s_, super_t_)) > 0) r += tmp;
-            if(r != super_total_) return -1;
-        }
-        T ans = 0, tmp;
-        while((tmp = augment_(s_, t_)) > 0) ans += tmp;
-        return ans;
-    }
-
-    T flow_(void* e) const { return static_cast<Edge*>(e)->oppo->w; }
-
-    T augment_(int s, int t) {
-        // printf("aug %d %d\n", s, t);
-        VI dis(n_);
+    T augment(int s, int t) {
+        dis.resize(n);
+        fill(all(dis), 0);
         dis[s] = 1;
         queue<int> que;
         que.push(s);
         while(!que.empty()) {
             int x = que.front();
-            // printf("x=%d\n", x);
             que.pop();
-            for(const auto& e : es_[x]) {
-                // printf("y=%d\n", e->y);
+            for(const auto& e : es[x]) {
                 if(e->w > 0 && dis[e->y] == 0) {
                     dis[e->y] = dis[x] + 1;
                     que.push(e->y);
@@ -157,13 +137,12 @@ private:  // {{{
         }
         if(dis[t] == 0) return 0;
 
-        vector<size_t> ce(n_);
+        vector<size_t> ce(n);
         const function<T(int, T)> dfs = [&](int x, T rest) {
-            // printf("%d %d\n", x, rest);
             if(x == t) return rest;
             T r = 0;
-            for(size_t& i = ce[x]; i < es_[x].size(); ++i) {
-                const auto& e = es_[x][i];
+            for(size_t& i = ce[x]; i < es[x].size(); ++i) {
+                const auto& e = es[x][i];
                 if(e->w > 0 && dis[e->y] > dis[x]) {
                     T cur = dfs(e->y, min(e->w, rest));
                     e->w -= cur, e->oppo->w += cur;
@@ -175,7 +154,11 @@ private:  // {{{
         };
         return dfs(s, numeric_limits<T>::max());
     }
-    // }}}
+
+    const int n, original_s, original_t, super_s, super_t;
+    T super_total = 0;
+    vector<vector<unique_ptr<Edge>>> es;
+    VI dis;
 };
 
 const int LOG = 16;
@@ -280,7 +263,6 @@ int main() {
     // printf("#3\n");
 
     int ans = net.compute();
-    net.compute_cut();
     printf("%d\n", ans);
     const auto print = [](VI a) {
         printf("%d", sz(a));

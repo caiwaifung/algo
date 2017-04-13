@@ -56,17 +56,6 @@ template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 // }}}
 
 class Hash {
-    static constexpr LL P1 = 911, M1 = LL(1e9) + 7;
-    static constexpr LL P2 = 127, M2 = LL(1e9) + 9;
-    static VL p1, p2, ip1, ip2;
-
-    friend struct hash<Hash>;
-    LL h1, h2;
-    int size;
-
-    Hash(LL h1, LL h2, int size)
-        : h1((h1 % M1 + M1) % M1), h2((h2 % M2 + M2) % M2), size(size) {}
-
 public:
     static void init(int n) {
         const auto pow = [](LL a, LL b, LL mod) {
@@ -107,6 +96,18 @@ public:
         return Hash((h1 - b.h1) * ip1[b.size], (h2 - b.h2) * ip2[b.size],
                     size - b.size);
     }
+
+private:
+    friend struct hash<Hash>;
+    static constexpr LL P1 = 911, M1 = LL(1e9) + 7;
+    static constexpr LL P2 = 127, M2 = LL(1e9) + 9;
+
+    Hash(LL h1, LL h2, int size)
+        : h1((h1 % M1 + M1) % M1), h2((h2 % M2 + M2) % M2), size(size) {}
+
+    static VL p1, p2, ip1, ip2;
+    LL h1, h2;
+    int size;
 };
 VL Hash::p1, Hash::p2, Hash::ip1, Hash::ip2;
 namespace std {
