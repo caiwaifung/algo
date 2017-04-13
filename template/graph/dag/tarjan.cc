@@ -27,7 +27,7 @@ void solve() {
             ++num;
         }
     };
-    repn(i, n) if(belong[i] == 0) dfs(i);
+    repn(i, n) if(belong[i] == -1) dfs(i);
 
     // ...
 }
