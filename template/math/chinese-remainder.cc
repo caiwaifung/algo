@@ -14,8 +14,7 @@ LL chinese_remainder(LL n1, LL a1, LL n2, LL a2) {
 // Guarantee: 0 <= x < lcm(n1, n2).
 LL ext_chinese_remainder(LL n1, LL a1, LL n2, LL a2) {
     LL g = gcd(n1, n2);
-    if (a1 % g != a2 % g)
-        return -1;
+    if(a1 % g != a2 % g) return -1;
     LL x = chinese_remainder(n1 / g, a1 / g, n2 / g, a2 / g);
     return x * g + a1 % g;
 }
