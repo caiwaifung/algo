@@ -53,40 +53,27 @@ template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 // clang-format on
 // }}}
 
-// Finds x and y: a x + b y = gcd(a, b).  Returns gcd(a, b).
-//
-// Must: |a| + |b| > 0.
-LL ext_gcd(LL a, LL b, LL* x, LL* y) {
-    if(b == 0) {
-        *x = 1, *y = 0;
-        return a;
-    }
-    LL nx, ny;
-    LL d = ext_gcd(b, a % b, &nx, &ny);
-    *x = ny, *y = nx - (a / b) * ny;
-    return d;
-}
-
-LL solve() {
-    LL a, b, c, d;
-    cin >> a >> b >> c >> d;
-    if(b == d) return b;
-    LL x, y, g = ext_gcd(a, c, &x, &y);
-    // ax + cy = g
-    if((d - b) % g != 0) return -1;
-    LL t = (d - b) / g;
-    x *= t, y *= t, y = -y;
-    // ax - cy = d-b
-    // ax + b = cy + d, but maybe not minimal
-    LL dx = c / g, dy = a / g;
-    const auto go = [&](LL d) { x += dx * d, y += dy * d; };
-    if(x < 0) go((-x - 1) / dx + 1);
-    if(y < 0) go((-y - 1) / dy + 1);
-    go(-min(x / dx, y / dy));
-    return a * x + b;
-}
-
 int main() {
-    cout << solve() << endl;
+    int n, m;
+    cin >> n >> m;
+    repn(i, m) {
+        set<int> s;
+        int k;
+        cin >> k;
+        bool yes = true;
+        repn(j, k) {
+            int x;
+            cin >> x;
+            if(s.count(-x)) {
+                yes = false;
+            }
+            s.insert(x);
+        }
+        if(yes) {
+            cout << "YES" << endl;
+            return 0;
+        }
+    }
+    cout << "NO" << endl;
     return 0;
 }
