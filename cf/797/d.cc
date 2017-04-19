@@ -55,48 +55,6 @@ template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 
 const int INF = 1 << 30;
 
-class Tree {
-public:
-    Tree(int n) : n(n), tr(n * 4, {INF, -INF}) {}
-
-    void set(int i, int val) { set(0, 0, n, i, {val, val}); }
-    void unset(int i) { set(0, 0, n, i, {INF, -INF}); }
-    int get_min(int l, int r) { return get(0, 0, n, l, r).fi; }
-    int get_max(int l, int r) { return get(0, 0, n, l, r).se; }
-
-private:
-    PII merge(PII a, PII b) { return mp(min(a.fi, b.fi), max(a.se, b.se)); }
-
-    void set(int x, int l, int r, int i, PII val) {
-        if(l + 1 == r) {
-            tr[x] = val;
-            return;
-        }
-        const int m = (l + r) / 2;
-        if(i < m) {
-            set(x * 2 + 1, l, m, i, val);
-        } else {
-            set(x * 2 + 2, m, r, i, val);
-        }
-        tr[x] = merge(tr[x * 2 + 1], tr[x * 2 + 2]);
-    }
-
-    PII get(int x, int l, int r, int st, int en) {
-        if(st >= en) return {INF, -INF};
-        if(st <= l && r <= en) {
-            return tr[x];
-        }
-        const int m = (l + r) / 2;
-        PII ans = {INF, -INF};
-        if(st < m) ans = merge(ans, get(x * 2 + 1, l, m, st, en));
-        if(m < en) ans = merge(ans, get(x * 2 + 2, m, r, st, en));
-        return ans;
-    }
-
-    const int n;
-    VPI tr;
-};
-
 int main() {
     int n;
     scanf("%d", &n);
@@ -107,28 +65,16 @@ int main() {
         if(r[i] > 0) --r[i], fa[r[i]] = i;
     }
     int root = int(find(all(fa), -1) - fa.begin());
-    // printf("root=%d\n",root);
-    VI pos(n), ind;
-    const function<void(int)> prepare = [&](int x) {
-        if(l[x] >= 0) prepare(l[x]);
-        pos[x] = sz(ind), ind.pb(x);
-        if(r[x] >= 0) prepare(r[x]);
-    };
-    prepare(root);
 
-    Tree tr(n);
     unordered_set<int> oks;
-    const function<void(int)> solve = [&](int x) {
-        if(tr.get_max(0, pos[x]) <= val[x] &&
-           tr.get_min(pos[x] + 1, n) >= val[x]) {
+    const function<void(int, int, int)> solve = [&](int x, int lmax, int rmin) {
+        if(lmax <= val[x] && rmin >= val[x]) {
             oks.insert(val[x]);
         }
-        tr.set(pos[x], val[x]);
-        if(l[x] >= 0) solve(l[x]);
-        if(r[x] >= 0) solve(r[x]);
-        tr.unset(pos[x]);
+        if(l[x] >= 0) solve(l[x], lmax, min(rmin, val[x]));
+        if(r[x] >= 0) solve(r[x], max(lmax, val[x]), rmin);
     };
-    solve(root);
+    solve(root, -INF, INF);
 
     int ans = 0;
     for(int v : val) {
