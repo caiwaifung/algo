@@ -57,95 +57,91 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // }}}
 
 typedef complex<double> Complex;
-void fft(vector<Complex>* ptr_a, bool is_inv = false) {
-    auto& a = *ptr_a;
-    int n = sz(a);
-    static vector<Complex> b;
+struct F {
+    typedef complex<double> value_t;
+    static value_t root_of_unity(int n, bool is_inv = false) {
+        static constexpr double PI = 3.14159265358979323846264;
+        const double ang = PI * 2.0 / n;
+        return value_t(cos(ang), is_inv ? sin(ang) : -sin(ang));
+    }
+    static value_t add(const value_t& a, const value_t& b) { return a + b; }
+    static value_t sub(const value_t& a, const value_t& b) { return a - b; }
+    static value_t mul(const value_t& a, const value_t& b) { return a * b; }
+    static value_t div(const value_t& a, const value_t& b) { return a / b; }
+};
+template <class Field, class RandomIt>
+void fft(RandomIt a, RandomIt a_end, bool is_inv = false) {
+    typedef typename Field::value_t value_t;
+    const int n = int(a_end - a);
+    static vector<value_t> b;
     if(sz(b) < n) b.resize(n);
 
-    double arg = acos(-1.0);
     for(int t = n / 2; t >= 1; t /= 2) {
-        Complex w(cos(arg), is_inv ? sin(arg) : -sin(arg));
-        Complex p(1.0, 0.0);
-        for(int j = 0; j < n / 2; j += t, p *= w) {
+        value_t w = Field::root_of_unity(n / t, is_inv);
+        value_t p = 1;
+        for(int j = 0; j < n / 2; j += t, p = Field::mul(p, w)) {
             for(int i = 0; i < t; ++i) {
-                Complex u = a[i + j * 2];
-                Complex v = p * a[i + t + j * 2];
-                b[i + j] = u + v;
-                b[i + j + n / 2] = u - v;
+                value_t u = a[i + j * 2];
+                value_t v = Field::mul(p, a[i + t + j * 2]);
+                b[i + j] = Field::add(u, v);
+                b[i + j + n / 2] = Field::sub(u, v);
             }
         }
-        copy(b.begin(), b.begin() + n, a.begin());
-        arg /= 2;
+        copy(b.begin(), b.begin() + n, a);
     }
     if(is_inv) {
-        repn(i, n) a[i] /= n;
+        repn(i, n) a[i] = Field::div(a[i], n);
     }
 }
 
-class Convolution {
-public:
-    Convolution(const vector<double>& a) : n(sz(a)), data(all(a)) {
-        assert((n & (n - 1)) == 0);
-        if(n > S) fft(&data);
-    }
-    template <class Iter>
-    void convolute_with(Iter b_begin, Iter b_end, double* out) {
-        int len = int(b_end - b_begin);
-        if(n > S) {
-            vector<Complex> tmp(b_begin, b_end);
-            tmp.resize(n);
-            fft(&tmp);
-            repn(i, n) tmp[i] *= data[i];
-            fft(&tmp, true);
-            repn(i, n) out[i] += real(tmp[i]);
-        } else {
-            repn(i, n) repn(j, min(len, n - i)) {
-                out[i + j] += real(data[i]) * b_begin[j];
-            }
-        }
-    }
-
-private:
-    static constexpr int S = 64;
-    const int n;
-    vector<Complex> data;
-};
-
 class OnlineConvolution {
 public:
-    OnlineConvolution(const vector<double>& a) : n(sz(a)), prep(n), r(1) {
+    template <class Iter>
+    OnlineConvolution(Iter a, Iter a_end)
+        : n(int(a_end - a)), prep(n), r(n * 2) {
         assert((n & (n - 1)) == 0);
         for(int i = 0, j = 1; i < n; i = j, j <<= 1) {
-            vector<double> tmp((j - i) * 2);
-            copy(a.begin() + i, a.begin() + j, tmp.begin());
-            prep[i] = unique_ptr<Convolution>(new Convolution(tmp));
+            prep[i].resize((j - i) * 2);
+            copy(a + i, a + j, prep[i].begin());
+            if(sz(prep[i]) > S) fft<F>(all(prep[i]));
         }
     }
 
     double add(double bi) {
         b.pb(bi);
+        while(sz(r) < sz(b) + n) r.resize(sz(r) * 2);
         for(int i = 0, j = 1; i < n; i = j, j <<= 1) {
             const int len = j - i;
-            const int jm = (j - 1) >> 1;
-            if(((sz(b) - 1) & jm) == jm) {
-                ensure_r_len(j + sz(b));
-                prep[i]->convolute_with(b.end() - len, b.end(),
-                                        &r[i + sz(b) - len]);
+            if(len > sz(b)) break;
+            if(sz(b) % len == 0) {
+                convolute(i, b.end() - len, b.end(),
+                          r.begin() + i + sz(b) - len);
             }
         }
         return r[sz(b) - 1];
     }
 
 private:
-    void ensure_r_len(int required_len) {
-        int len = max(1, sz(r));
-        while(len < required_len) len *= 2;
-        r.resize(len);
+    template <class Iter, class OutIter>
+    void convolute(int i, Iter arr, Iter arr_end, OutIter out) {
+        const int len = int(arr_end - arr);
+        if(sz(prep[i]) > S) {
+            vector<F::value_t> tmp(sz(prep[i]));
+            copy(arr, arr_end, tmp.begin());
+            fft<F>(all(tmp));
+            repn(k, sz(tmp)) tmp[k] *= prep[i][k];
+            fft<F>(all(tmp), true);
+            repn(k, sz(tmp)) out[k] += real(tmp[k]);
+        } else {
+            repn(k, len) repn(j, sz(prep[i]) - k) {
+                out[j + k] += real(prep[i][j]) * arr[k];
+            }
+        }
     }
 
+    static constexpr int S = 128;
     const int n;
-    vector<unique_ptr<Convolution>> prep;
+    vector<vector<F::value_t>> prep;
     vector<double> b, r;
 };
 
@@ -174,7 +170,7 @@ int main() {
     repn(k, n) repn(i, n) repn(j, n) setmin(g[i][j], g[i][k] + g[k][j]);
 
     vector<OnlineConvolution*> oc(m);
-    repn(i, m) oc[i] = new OnlineConvolution(p[i]);
+    repn(i, m) oc[i] = new OnlineConvolution(all(p[i]));
     vector<VD> f(n, VD(t + 1));
     repn(x, n) rep(cur, 0, t) f[x][cur] = (x == n - 1 ? 0 : fine + g[x][n - 1]);
     rep(cur, 1, t) {
