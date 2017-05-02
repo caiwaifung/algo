@@ -8,6 +8,8 @@ TEST(Det, Small_2) { EXPECT_EQ(11, det({{6, 5}, {5, 6}}, 99)); }
 
 TEST(Det, Small_3) { EXPECT_EQ(7, det({{1, 2, 3}, {4, 3, 3}, {7, 7, 7}}, 99)); }
 
+TEST(Det, NegativeModUp) { EXPECT_EQ(100 - 11, det({{5, 6}, {6, 5}}, 100)); }
+
 TEST(Det, Mod) {
     EXPECT_EQ(
         470,
