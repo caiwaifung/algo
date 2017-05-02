@@ -3,7 +3,9 @@ TEST_ARGS=-isystem ~/googletest/googletest/include \
 	 -I ~/googletest/googletest \
 	 -I ~/googletest/googlemock \
 	 ~/googletest/googletest/src/gtest-all.cc \
-	 ~/googletest/googletest/src/gtest_main.cc
+	 ~/googletest/googletest/src/gtest_main.cc \
+	 -Wall -Wconversion -Wno-sign-conversion -Wextra -Wshadow \
+	 -fsanitize=address
 
 BM_ARGS=-isystem ~/benchmark/include \
 	 -I ~/benchmark \
@@ -16,6 +18,7 @@ TESTS = chinese-remainder_test \
 		ext-gcd_test \
 		fft_test \
 		hash_test \
+		online-convolution_test \
 
 BMS = fft_bm \
 
@@ -29,6 +32,8 @@ bm_%: %_bm
 %_test: tests/%_test.cc %.h
 	g++ --std=c++11 -o $@ $< $(TEST_ARGS)
 fft_test: tests/fft_test.cc fft.h field-complex.h field-intmod.h
+	g++ --std=c++11 -o $@ $< $(TEST_ARGS)
+online-convolution_test: tests/online-convolution_test.cc online-convolution.h fft.h field-complex.h field-intmod.h
 	g++ --std=c++11 -o $@ $< $(TEST_ARGS)
 
 fft_bm: tests/fft_bm.cc fft.h field-complex.h field-intmod.h
