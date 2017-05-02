@@ -1,7 +1,7 @@
 template <class Field, class RandomIt>
 void fft(RandomIt a, RandomIt a_end, bool is_inv = false) {
     typedef typename Field::value_t value_t;
-    const int n = a_end - a;
+    const int n = int(a_end - a);
     static vector<value_t> b;
     if(sz(b) < n) b.resize(n);
 
