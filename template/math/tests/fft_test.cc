@@ -1,4 +1,5 @@
 #include <gmock/gmock.h>
+#include <gtest/gtest-death-test.h>
 #include <gtest/gtest.h>
 #include "../../base/header.h"
 
@@ -30,6 +31,11 @@ TEST(FFTComplex, Convolution_8) {
     EXPECT_THAT(a, testing::ElementsAre(IS_REAL(5), IS_REAL(14), IS_REAL(26),
                                         IS_REAL(40), IS_REAL(30), IS_REAL(20),
                                         IS_REAL(11), IS_REAL(4)));
+}
+
+TEST(FFTComplex, LengthMustBePowerOfTwo) {
+    vector<complex<double>> a = {1, 2, 3};
+    EXPECT_DEATH(fft<ComplexField>(all(a)), "");
 }
 
 TEST(FFTInt, Convolution_4) {
