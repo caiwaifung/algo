@@ -1,0 +1,11 @@
+-------------------------------------------------------------
+Benchmark                      Time           CPU Iterations
+-------------------------------------------------------------
+BM_FFTComplex/16384         1140 us       1140 us        786
+BM_FFTComplex/65536         4269 us       4268 us        184
+BM_FFTComplex/262144       17862 us      17862 us         39
+BM_FFTComplex/1048576      96287 us      96286 us          7
+BM_FFTIntMod/16384           462 us        462 us       1500
+BM_FFTIntMod/65536          2199 us       2199 us        317
+BM_FFTIntMod/262144         9702 us       9702 us         70
+BM_FFTIntMod/1048576       44265 us      44262 us         16

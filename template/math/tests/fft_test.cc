@@ -1,6 +1,5 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
 #include "../../base/header.h"
 
 #include "../fft.h"
