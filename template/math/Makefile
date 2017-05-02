@@ -5,16 +5,17 @@ ARGS=-isystem ~/googletest/googletest/include \
 	 ~/googletest/googletest/src/gtest-all.cc \
 	 ~/googletest/googletest/src/gtest_main.cc
 
-TESTS = tests/hash_test.cc \
-		tests/ext-gcd_test.cc \
-		tests/fft_test.cc \
-		tests/fft-int_test.cc \
+TESTS = hash_test \
+		ext-gcd_test \
+		fft_test \
+		fft-int_test \
+		chinese-remainder_test
 
-all_tests: $(TESTS)
-	g++ --std=c++11 -o all_tests $(TESTS) $(ARGS)
+%_test: tests/%_test.cc %.h
+	g++ --std=c++11 -o $@ $< $(ARGS)
 
-run: all_tests
-	./all_tests
+run: $(TESTS)
+	for t in $(TESTS); do ./$$t; done
 
 clean:
-	rm all_tests
+	rm $(TESTS)
