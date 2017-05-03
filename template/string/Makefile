@@ -14,6 +14,7 @@ BM_ARGS=-isystem ~/benchmark/include \
 	 -DNDEBUG
 
 TESTS = kmp_test \
+		manacher_test \
 		sam_test \
 
 BMS = \
