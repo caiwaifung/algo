@@ -18,7 +18,9 @@ TESTS = chinese-remainder_test \
 		ext-gcd_test \
 		fft_test \
 		hash_test \
+		mu_test \
 		online-convolution_test \
+		phi_test \
 
 BMS = fft_bm \
 
