@@ -1,2 +1,4 @@
 + split out float version FFT, optimize performance
     - CF 553 E
+
++ more SAM use cases, maybe refine API
