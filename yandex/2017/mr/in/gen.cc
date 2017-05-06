@@ -57,28 +57,28 @@ template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a % m) { if(b & 1) r = r * a % m; } return r; }
 // clang-format on
 // }}}
-int rand_uniform(int n) {  // {{{
+int uniform(int minv, int maxv) {  // {{{
     static default_random_engine gen;
-    uniform_int_distribution<int> distr(0, n - 1);
+    uniform_int_distribution<int> distr(minv, maxv);
     return distr(gen);
 }
 
 VI rand_perm(int n) {
     VI a(n);
     iota(all(a), 0);
-    repn(i, n) swap(a[i], a[rand_uniform(i + 1)]);
+    repn(i, n) swap(a[i], a[uniform(0, i)]);
     return a;
 }
 // }}}
 
-void gen1(int n, int m, int k, int out_index) {
+void gen1(int n, int m, int k, string case_name) {
     ofstream f;
-    f.open(to_string(out_index) + ".in");
+    f.open(string("in/") + case_name + ".in");
     f << n << " " << m << " " << k << endl;
     set<PII> used;
     repn(i, 2 * k) {
         while(1) {
-            PII p = {rand_uniform(n), rand_uniform(m)};
+            PII p = {uniform(0, n - 1), uniform(0, m - 1)};
             if(used.count(p) == 0) {
                 used.insert(p);
                 f << p.fi << " " << p.se << endl;
@@ -89,7 +89,35 @@ void gen1(int n, int m, int k, int out_index) {
     f.close();
 }
 
+void gen2(int n, int m, int k, int d, string case_name) {
+    ofstream f;
+    f.open(string("in/") + case_name + ".in");
+    f << n << " " << m << " " << k << endl;
+    set<PII> used;
+    VPI ps, qs;
+    repn(i, k) {
+        PII p, q;
+        do {
+            p = {uniform(0, n - 1), uniform(0, m - 1)};
+            int x1 = max(0, p.fi - d), x2 = min(n - 1, p.fi + d);
+            int y1 = max(0, p.se - d), y2 = min(m - 1, p.se + d);
+            q = {uniform(x1, x2), uniform(y1, y2)};
+        } while(used.count(p) || used.count(q) || p == q);
+        ps.pb(p), used.insert(p);
+        qs.pb(q), used.insert(q);
+    }
+    for(const auto& p : ps) f << p.fi << " " << p.se << endl;
+    for(const auto& p : qs) f << p.fi << " " << p.se << endl;
+    f.close();
+}
+
 int main() {
-    repn(i, 10) gen1(50, 50, 16, i);
+    rep(i, 0, 9) {
+        gen1(uniform(3, 50), uniform(3, 50), uniform(3, 16), to_string(i));
+    }
+    rep(i, 10, 19) {
+        gen2(uniform(3, 50), uniform(3, 50), uniform(3, 16), uniform(1, 4),
+             to_string(i));
+    }
     return 0;
 }

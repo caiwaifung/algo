@@ -346,12 +346,16 @@ vector<VPI> find_matches() {
     };
     for(const auto& u : ps) net.add_edge(net.s, id(u.x, u.y, 0), 1, 0);
     for(const auto& u : qs) net.add_edge(id(u.x, u.y, 1), net.t, 1, 0);
+    static const int dx[4] = {0, 1, 0, -1};
+    static const int dy[4] = {1, 0, -1, 0};
     static void* es[99][99][9];
     repn(i, n) repn(j, m) { net.add_edge(id(i, j, 0), id(i, j, 1), 1, 0); }
     repn(i, n) repn(j, m) {
-        repn(d, sz(neighbors[i][j])) {
-            const auto& p = neighbors[i][j][d];
-            es[i][j][d] = net.add_edge(id(i, j, 1), id(p.x, p.y, 0), 1, 1);
+        repn(dir, 4) {
+            int i2 = i + dx[dir], j2 = j + dy[dir];
+            if(i2 >= 0 && i2 < n && j2 >= 0 && j2 < m) {
+                es[i][j][dir] = net.add_edge(id(i, j, 1), id(i2, j2, 0), 1, 1);
+            }
         }
     }
     auto r = net.compute();
@@ -361,11 +365,12 @@ vector<VPI> find_matches() {
     const function<PII(PII)> get = [&](PII u) {
         return f[u.x][u.y].x < 0 ? u : f[u.x][u.y] = get(f[u.x][u.y]);
     };
-    repn(i, n) repn(j, m) {
-        repn(d, sz(neighbors[i][j])) {
-            if(net.flow(es[i][j][d]) > 0) {
+    repn(i, n) repn(j, m) repn(dir, 4) {
+        int i2 = i + dx[dir], j2 = j + dy[dir];
+        if(i2 >= 0 && i2 < n && j2 >= 0 && j2 < m) {
+            if(net.flow(es[i][j][dir]) > 0) {
                 PII u = get({i, j});
-                PII v = get(neighbors[i][j][d]);
+                PII v = get({i2, j2});
                 if(u != v) f[u.x][u.y] = v;
             }
         }
