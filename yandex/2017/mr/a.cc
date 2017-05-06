@@ -143,6 +143,112 @@ private:
     T flow_(void* e) { return static_cast<Edge*>(e)->oppo->w; }
 };
 // }}}
+template <class T> class Net {  // {{{
+public:
+    Net(int n0, int s, int t)
+        : n(n0 + 2),
+          original_s(s),
+          original_t(t),
+          super_s(n),
+          super_t(n + 1),
+          es(n),
+          dis(n) {}
+
+    void* add(int x, int y, T w) {
+        assert(x >= 0 && x < n && y >= 0 && y < n);
+        Edge *e1, *e2;
+        es[x].emplace_back(e1 = new Edge{y, w, nullptr});
+        es[y].emplace_back(e2 = new Edge{x, 0, nullptr});
+        e1->oppo = e2, e2->oppo = e1;
+        return e1;
+    }
+    void* add(int x, int y, pair<T, T> w) {
+        assert(w.fi <= w.se);
+        if(w.fi > 0) {
+            add(super_s, y, w.fi);
+            add(x, super_t, w.fi);
+            super_total += w.fi;
+        }
+        return add(x, y, w.se - w.fi);
+    }
+
+    // returns -1 if no solution.
+    T compute() {
+        if(super_total > 0) {
+            add(original_t, original_s, numeric_limits<T>::max());
+            LL r = 0, tmp;
+            while((tmp = augment(super_s, super_t)) > 0) {
+                r += tmp;
+            }
+            if(r != super_total) return -1;
+        }
+        T ans = 0, tmp;
+        while((tmp = augment(original_s, original_t)) > 0) {
+            ans += tmp;
+        }
+        return ans;
+    }
+
+    T flow(void* e) const { return static_cast<Edge*>(e)->oppo->w; }
+    bool on_cut(void* e) const {
+        return dis[static_cast<Edge*>(e)->oppo->y] > 0 &&
+               dis[static_cast<Edge*>(e)->y] == 0;
+    }
+    VI left() const {
+        VI r;
+        repn(i, n) if(dis[i] > 0) r.pb(i);
+        return r;
+    }
+
+private:
+    struct Edge {
+        int y;
+        T w;
+        Edge* oppo;
+    };
+
+    T augment(int s, int t) {
+        dis.resize(n);
+        fill(all(dis), 0);
+        dis[s] = 1;
+        queue<int> que;
+        que.push(s);
+        while(!que.empty()) {
+            int x = que.front();
+            que.pop();
+            for(const auto& e : es[x]) {
+                if(e->w > 0 && dis[e->y] == 0) {
+                    dis[e->y] = dis[x] + 1;
+                    que.push(e->y);
+                }
+            }
+        }
+        if(dis[t] == 0) return 0;
+
+        vector<size_t> ce(n);
+        const function<T(int, T)> dfs = [&](int x, T rest) {
+            if(x == t) return rest;
+            T r = 0;
+            for(size_t& i = ce[x]; i < es[x].size(); ++i) {
+                const auto& e = es[x][i];
+                if(e->w > 0 && dis[e->y] > dis[x]) {
+                    T cur = dfs(e->y, min(e->w, rest));
+                    e->w -= cur, e->oppo->w += cur;
+                    r += cur, rest -= cur;
+                    if(rest == 0) break;
+                }
+            }
+            return r;
+        };
+        return dfs(s, numeric_limits<T>::max());
+    }
+
+    const int n, original_s, original_t, super_s, super_t;
+    T super_total = 0;
+    vector<vector<unique_ptr<Edge>>> es;
+    VI dis;
+};
+// }}}
 
 int rand_uniform(int n) {  // {{{
     static default_random_engine gen;
@@ -156,9 +262,46 @@ VI rand_perm(int n) {
     repn(i, n) swap(a[i], a[rand_uniform(i + 1)]);
     return a;
 }
+
+template <class T> void rand_shuffle(vector<T>* a) {
+    repn(i, sz(*a)) swap((*a)[i], (*a)[rand_uniform(i + 1)]);
+}
 // }}}
 
 // const int kInf = 1 << 30;
+
+VPI find_path(const VVI& a, PII start, PII end) {
+    if(a[start.x][start.y] >= 0) return {};
+    if(start == end) return {start};
+
+    const int n = sz(a), m = sz(a[0]);
+    vector<VPI> pre(n, VPI(m, {-1, -1}));
+    queue<PII> que;
+    pre[start.x][start.y] = start, que.push(start);
+    while(!que.empty()) {
+        const PII u = que.front();
+        que.pop();
+        static const int dx[4] = {0, 1, 0, -1};
+        static const int dy[4] = {1, 0, -1, 0};
+        const VI directions = rand_perm(4);
+        for(int i : directions) {
+            const PII v = {u.x + dx[i], u.y + dy[i]};
+            if(v.x < 0 || v.x >= n || v.y < 0 || v.y >= m) continue;
+            if(a[v.x][v.y] < 0 && pre[v.x][v.y].x < 0) {
+                pre[v.x][v.y] = u, que.push(v);
+                if(v == end) {
+                    VPI ans;
+                    for(PII p = end; p != start; p = pre[p.x][p.y]) {
+                        ans.pb(p);
+                    }
+                    ans.pb(start);
+                    return ans;
+                }
+            }
+        }
+    }
+    return {};
+}
 
 //==============================================================================
 // UTIL ENDS
@@ -184,7 +327,7 @@ vector<VPI> find_matches(int n, int m, int k, VPI p, VPI q) {
         }
     }
     auto r = net.compute();
-    //cout << r << endl;
+    // cout << r << endl;
     assert(r.fi == k);
 
     vector<vector<PII>> f(n, VPI(m, {-1, -1}));
@@ -230,6 +373,80 @@ void expand(int n, int m, VVI& a) {
     }
 }
 
+void adjust(int n, int m, int k, VVI& a, VPI p, VPI q) {
+    vector<vector<VPI>> neighbors(n);
+    repn(i, n) {
+        neighbors[i].resize(m);
+        repn(j, m) {
+            static const int dx[4] = {0, 1, 0, -1};
+            static const int dy[4] = {1, 0, -1, 0};
+            repn(d, 4) {
+                int i2 = i + dx[d], j2 = j + dy[d];
+                if(i2 < 0 || i2 >= n || j2 < 0 || j2 >= m) continue;
+                neighbors[i][j].pb(mp(i2, j2));
+            }
+        }
+    }
+    VVI core(n, VI(m, -1));
+    for(PII u : p) core[u.x][u.y] = 1;
+    for(PII u : q) core[u.x][u.y] = 2;
+
+    const auto adjust_pair = [&](int c1, int c2) {
+        VPI paths[2];
+        repn(cur, 2) {
+            VVI b = a;
+            PII start, end;
+            repn(i, n) repn(j, m) if(b[i][j] == (cur == 0 ? c1 : c2)) {
+                b[i][j] = -1;
+                if(core[i][j] == 1) start = mp(i, j);
+                if(core[i][j] == 2) end = mp(i, j);
+            }
+            paths[cur] = find_path(b, start, end);
+            assert(!paths[cur].empty());
+        }
+        VVI id(n, VI(m, -1));
+        VPI id2p;
+        repn(i, n) repn(j, m) if(a[i][j] == c1 || a[i][j] == c2) {
+            a[i][j] = c2;
+            id[i][j] = sz(id2p);
+            id2p.pb({i, j});
+        }
+        int s = sz(id2p), t = s + 1;
+        Net<int> net(sz(id2p) + 2, s, t);
+        for(PII u : paths[0]) net.add(s, id[u.x][u.y], 1 << 30);
+        for(PII u : paths[1]) net.add(id[u.x][u.y], t, 1 << 30);
+        repn(i, n) repn(j, m) if(id[i][j] >= 0) {
+            for(const auto& u : neighbors[i][j]) {
+                if(id[u.x][u.y] >= 0) {
+                    net.add(id[i][j], id[u.x][u.y], 1);
+                }
+            }
+        }
+        net.compute();
+        VI left = net.left();
+        for(int i : left) {
+            if(i != s) a[id2p[i].x][id2p[i].y] = c1;
+        }
+    };
+
+    int did = 0;
+    repn(_, 200) {
+        VPI pairs;
+        repn(i, k) replr(j, i + 1, k) pairs.pb(mp(i, j));
+        rand_shuffle(&pairs);
+        for(const auto& pair : pairs) {
+            vector<vector<bool>> adj(k, vector<bool>(k, false));
+            repn(i, n) repn(j, m) for(PII u : neighbors[i][j]) {
+                adj[a[i][j]][a[u.x][u.y]] = true;
+            }
+            if(!adj[pair.fi][pair.se]) continue;
+            adjust_pair(pair.fi, pair.se);
+            ++did;
+            if(did > 100) return;
+        }
+    }
+}
+
 void answer(const VVI& a) {
     for(const auto& row : a) {
         string s;
@@ -256,6 +473,8 @@ int main() {
         for(const auto u : matches[i]) a[u.x][u.y] = i;
     }
     expand(n, m, a);
+
+    adjust(n, m, k, a, p, q);
 
     answer(a);
 
