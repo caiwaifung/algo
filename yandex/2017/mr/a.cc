@@ -509,7 +509,7 @@ void clean_isolated() {
 
 double micro_adjust() {
     double cur_score = -1;
-    repn(_, 15) {
+    repn(_, 50) {
         repn(x, n) repn(y, m) if(occupied[x][y] == 3) occupied[x][y] = -1;
         repn(color, k) {
             VPI path = find_path(assignment, find_occupants(color), color);
@@ -646,7 +646,7 @@ int main() {
     double best_score = -1;
 
     std::clock_t start = std::clock();
-    repn(_, 100) {
+    repn(iter, 100) {
         vector<VPI> matches = find_matches();
         assert(sz(matches) == k);
         repn(i, k) {
@@ -661,7 +661,8 @@ int main() {
             best_assignment = assignment;
         }
         double elapsed_time = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-        if(elapsed_time >= 1.7) break;
+        double average_time = elapsed_time / (iter + 1);
+        if(elapsed_time + average_time >= 1.7) break;
     }
     assignment = best_assignment;
 

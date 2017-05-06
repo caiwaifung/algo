@@ -177,7 +177,7 @@ int main(int argc, char* argv[]) {
     if(argc > 1) {
         replr(i, 1, argc) cases.pb(argv[i]);
     } else {
-        repn(i, 20) cases.pb(to_string(i));
+        repn(i, 25) cases.pb(to_string(i));
     }
 
     double ans = 0, ansc = 0;

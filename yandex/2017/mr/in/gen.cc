@@ -113,6 +113,43 @@ void gen2(int n, int m, int k, int d, string case_name) {
     f.close();
 }
 
+void gen3(int n, int m, int k, string case_name) {
+    int s;
+    while(1) {
+        int l = (k + 7) / 4, r = min(n, m) / 2;
+        if(l <= r) {
+            s = uniform(l, r);
+            break;
+        }
+        k = uniform(3, 16);
+    }
+    int x1, y1, x2, y2;
+    while(1) {
+        x1 = uniform(0, n - s), y1 = uniform(0, m - s);
+        x2 = uniform(0, n - s), y2 = uniform(0, m - s);
+        if(abs(x1 - x2) < s && abs(y1 - y2) < s) continue;
+        break;
+    }
+    ofstream f;
+    f.open(string("in/") + case_name + ".in");
+    f << n << " " << m << " " << k << endl;
+    set<PII> used;
+    repn(i, k * 2) {
+        PII p;
+        do {
+            p = {uniform(0, s - 1), uniform(0, s - 1)};
+            if(i < k) {
+                p.fi += x1, p.se += y1;
+            } else {
+                p.fi += x2, p.se += y2;
+            }
+        } while(used.count(p));
+        used.insert(p);
+        f << p.fi << " " << p.se << endl;
+    }
+    f.close();
+}
+
 int main() {
     rep(i, 0, 9) {
         gen1(uniform(3, 50), uniform(3, 50), uniform(3, 16), to_string(i));
@@ -120,6 +157,9 @@ int main() {
     rep(i, 10, 19) {
         gen2(uniform(3, 50), uniform(3, 50), uniform(3, 16), uniform(1, 4),
              to_string(i));
+    }
+    rep(i, 20, 24) {
+        gen3(uniform(3, 50), uniform(3, 50), uniform(3, 16), to_string(i));
     }
     return 0;
 }
