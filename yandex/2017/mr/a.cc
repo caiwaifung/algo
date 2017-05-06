@@ -462,6 +462,27 @@ void adjust() {
     }
 }
 
+void clean_isolated() {
+    VVI vis(n, VI(m));
+    queue<PII> que;
+    repn(x, n) repn(y, m) if(occupied[x][y] >= 0) {
+        vis[x][y] = 1;
+        que.push({x, y});
+    }
+    while(!que.empty()) {
+        const PII u = que.front();
+        que.pop();
+        for(const auto& v : neighbors[u.x][u.y]) {
+            if(assignment[u.x][u.y] == assignment[v.x][v.y] && !vis[v.x][v.y]) {
+                vis[v.x][v.y] = 1;
+                que.push(v);
+            }
+        }
+    }
+    repn(x, n) repn(y, m) if(!vis[x][y]) assignment[x][y] = -1;
+    expand();
+}
+
 void adjust2() {
     VI cells(k), edges(k);
     repn(x, n) repn(y, m) {
@@ -475,7 +496,7 @@ void adjust2() {
         edges[assignment[x][y]] += e;
     }
     repn(i, k) assert(cells[i] > 0);
-    while(1) {
+    repn(_, 200) {
         bool found = false;
         VPI allpos;
         repn(x, n) repn(y, m) allpos.pb({x, y});
@@ -508,6 +529,7 @@ void adjust2() {
             }
         }
         if(!found) break;
+        clean_isolated();
     }
 }
 
