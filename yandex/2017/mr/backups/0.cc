@@ -60,89 +60,44 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
-template <class T> struct CostNet {  // {{{
-    const int s, t;
-
-    explicit CostNet(int n) : s(n), t(n + 1), n_(n + 2), es_(n_) {}
-
-    void* add_edge(int x, int y, T w, T c) { return add_(x, y, w, c); }
-
-    // (flow, cost)
-    pair<T, T> compute() { return compute_(); }
-    T flow(void* e) { return flow_(e); }
-
-private:
-    struct Edge {
-        int y;
-        T w, c;
-        Edge* oppo;
-    };
-    const int n_;
-    T w0_ = 0, c0_ = 0;
-    vector<vector<unique_ptr<Edge>>> es_;
-
-    void* add_(int x, int y, T w, T c) {
-        if(c >= 0) {
-            Edge *e1, *e2;
-            es_[x].emplace_back(e1 = new Edge{y, w, c, nullptr});
-            es_[y].emplace_back(e2 = new Edge{x, 0, -c, nullptr});
-            e1->oppo = e2, e2->oppo = e1;
-            return static_cast<void*>(e1);
-        } else {
-            // ???
-            w0_ += w;
-            c0_ += w * (-c);
-            add_(s, y, w, 0);
-            add_(y, x, w, -c);
-            add_(x, t, w, 0);
-            return nullptr;
-        }
-    }
-
-    pair<T, T> compute_() {
-        pair<T, T> ans = {-w0_, -c0_};
+VI mincost_match(const VVI& a) {  // {{{
+    const int n = sz(a);
+    VI x(n, -1000), y(n), matched(n, -1);
+    repn(cur, n) {
+        VI slack(n, 1 << 30), pre(n, -1);
+        vector<bool> vis(n, false);
+        int j0 = -1;
         while(1) {
-            vector<T> dis(n_, numeric_limits<T>::max());
-            vector<T> flow(n_);
-            vector<Edge*> pre(n_);
-            dis[s] = 0;
-            flow[s] = numeric_limits<T>::max();
-
-            vector<bool> inside(n_, false);
-            queue<int> que;
-            inside[s] = true;
-            que.push(s);
-            while(!que.empty()) {
-                const int x = que.front();
-                que.pop();
-                for(const auto& e : es_[x]) {
-                    if(e->w > 0 && setmin(dis[e->y], dis[x] + e->c)) {
-                        pre[e->y] = e.get();
-                        flow[e->y] = min(flow[x], e->w);
-                        if(!inside[e->y]) {
-                            inside[e->y] = true;
-                            que.push(e->y);
-                        }
-                    }
+            const int i0 = (j0 < 0 ? cur : matched[j0]);
+            if(i0 < 0) break;
+            int minv = 1 << 30, minj = -1;
+            repn(j, n) if(!vis[j]) {
+                if(setmin(slack[j], a[i0][j] - x[i0] - y[j])) {
+                    pre[j] = j0;
                 }
-                inside[x] = false;
+                if(setmin(minv, slack[j])) {
+                    minj = j;
+                }
             }
-            if(dis[t] == numeric_limits<T>::max()) {
-                return ans;
+            x[cur] += minv;
+            repn(j, n) if(vis[j]) {
+                x[matched[j]] += minv;
+                y[j] -= minv;
             }
-
-            ans.fi += flow[t], ans.se += flow[t] * dis[t];
-            for(int x = t; x != s; x = pre[x]->oppo->y) {
-                pre[x]->w -= flow[t];
-                pre[x]->oppo->w += flow[t];
+            else {
+                slack[j] -= minv;
             }
+            j0 = minj, vis[j0] = true;
         }
-        return ans;
+        while(j0 >= 0) {
+            const int j = pre[j0];
+            matched[j0] = (j < 0 ? cur : matched[j]), j0 = j;
+        }
     }
-
-    T flow_(void* e) { return static_cast<Edge*>(e)->oppo->w; }
-};
-// }}}
+    VI ans(n);
+    repn(j, n) ans[matched[j]] = j;
+    return ans;
+}  // }}}
 
 int rand_uniform(int n) {  // {{{
     static default_random_engine gen;
@@ -160,54 +115,79 @@ VI rand_perm(int n) {
 
 // const int kInf = 1 << 30;
 
+/*
+// -1: unvisited; >=0: blocked
+void bfs(VVI* a, int x, int y) {
+    if((*a)[x][y] >= 0) return;
+    // TODO
+}
+
+VVI bfs_func(const VVI& a, int x, int y) {
+    VVI tmp = a;
+    bfs(&tmp, x, y);
+    return tmp;
+}
+*/
+
+VPI find_path(const VVI& a, PII start, PII end) {
+    if(a[start.x][start.y] >= 0) return {};
+    if(start == end) return {start};
+
+    const int n = sz(a), m = sz(a[0]);
+    vector<VPI> pre(n, VPI(m, {-1, -1}));
+    queue<PII> que;
+    pre[start.x][start.y] = start, que.push(start);
+    while(!que.empty()) {
+        const PII u = que.front();
+        que.pop();
+        static const int dx[4] = {0, 1, 0, -1};
+        static const int dy[4] = {1, 0, -1, 0};
+        const VI directions = rand_perm(4);
+        for(int i : directions) {
+            const PII v = {u.x + dx[i], u.y + dy[i]};
+            if(v.x < 0 || v.x >= n || v.y < 0 || v.y >= m) continue;
+            if(a[v.x][v.y] < 0 && pre[v.x][v.y].x < 0) {
+                pre[v.x][v.y] = u, que.push(v);
+                if(v == end) {
+                    VPI ans;
+                    for(PII p = end; p != start; p = pre[p.x][p.y]) {
+                        ans.pb(p);
+                    }
+                    ans.pb(start);
+                    return ans;
+                }
+            }
+        }
+    }
+    return {};
+}
+
 //==============================================================================
 // UTIL ENDS
 //==============================================================================
 
 vector<VPI> find_matches(int n, int m, int k, VPI p, VPI q) {
-    CostNet<int> net(n * m * 2);
-    const auto id = [&](int i, int j, int ind) {
-        return (i * m + j) * 2 + ind;
-    };
-    for(const auto& u : p) net.add_edge(net.s, id(u.x, u.y, 0), 1, 0);
-    for(const auto& u : q) net.add_edge(id(u.x, u.y, 1), net.t, 1, 0);
-    static const int dx[4] = {0, 1, 0, -1};
-    static const int dy[4] = {1, 0, -1, 0};
-    static void* es[99][99][9];
-    repn(i, n) repn(j, m) { net.add_edge(id(i, j, 0), id(i, j, 1), 1, 0); }
-    repn(i, n) repn(j, m) {
-        repn(dir, 4) {
-            int i2 = i + dx[dir], j2 = j + dy[dir];
-            if(i2 >= 0 && i2 < n && j2 >= 0 && j2 < m) {
-                es[i][j][dir] = net.add_edge(id(i, j, 1), id(i2, j2, 0), 1, 1);
+    for(int step = 80;; step += 10) {
+        VVI cost(k, VI(k));
+        repn(i, k) repn(j, k) {
+            cost[i][j] = (abs(p[i].x - q[i].x) + abs(p[i].y - q[i].y)) * 100 +
+                         rand_uniform(step);
+        }
+        VI matches = mincost_match(cost);
+        vector<VPI> ans;
+        VVI a(n, VI(m, -1));
+        bool ok = true;
+        repn(i, k) {
+            VPI path = find_path(a, p[i], q[matches[i]]);
+            if(path.empty()) {
+                ok = false;
+                break;
             }
+            ans.pb(path);
+            for(const auto& u : path) a[u.x][u.y] = i;
         }
+        if(ok) return ans;
     }
-    auto r = net.compute();
-    //cout << r << endl;
-    assert(r.fi == k);
-
-    vector<vector<PII>> f(n, VPI(m, {-1, -1}));
-    const function<PII(PII)> get = [&](PII u) {
-        return f[u.x][u.y].x < 0 ? u : f[u.x][u.y] = get(f[u.x][u.y]);
-    };
-    repn(i, n) repn(j, m) repn(dir, 4) {
-        int i2 = i + dx[dir], j2 = j + dy[dir];
-        if(i2 >= 0 && i2 < n && j2 >= 0 && j2 < m) {
-            if(net.flow(es[i][j][dir]) > 0) {
-                PII u = get({i, j});
-                PII v = get({i2, j2});
-                if(u != v) f[u.x][u.y] = v;
-            }
-        }
-    }
-    vector<VPI> ans(k);
-    repn(cur, k) {
-        repn(i, n) repn(j, m) {
-            if(get({i, j}) == get(p[cur])) ans[cur].pb({i, j});
-        }
-    }
-    return ans;
 }
 
 void expand(int n, int m, VVI& a) {
