@@ -505,7 +505,7 @@ void clean_isolated() {
 }
 
 void micro_adjust() {
-    repn(_, 15) {
+    repn(_, 200) {
         repn(x, n) repn(y, m) if(occupied[x][y] == 3) occupied[x][y] = -1;
         repn(color, k) {
             VPI path = find_path(assignment, find_occupants(color), color);
