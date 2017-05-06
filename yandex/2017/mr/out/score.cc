@@ -98,29 +98,44 @@ double score(string case_name) {
                     r = 0, g = 0, b = 255;
                 }
             }
+            if(x % W == 0 || y % W == 0) r = g = b = 150;
             fprintf(f, "%d %d %d ", r, g, b);
         }
         fprintf(f, "\n");
     }
     fclose(f);
 
+    bool error = false;
     static bool vis[99][99];
+    static bool vis_color[333];
     fillchar(vis, false);
+    fillchar(vis_color, false);
     double sum = 0, sumc = 0;
     repn(sx, n) repn(sy, m) if(!vis[sx][sy]) {
         int cnt = 0, edges = 0;
         queue<PII> que;
-        int color = s[sx][sy];
+        int color = s[sx][sy], o1 = 0, o2 = 0;
+        if(vis_color[color]) {
+            printf("%s: error: color %c not connected\n", case_name.c_str(),
+                   char(color));
+            printf("  start: %d,%d\n", sx, sy);
+            error = true;
+        } else {
+            vis_color[color] = true;
+        }
         vis[sx][sy] = true, que.push({sx, sy});
         while(!que.empty()) {
             const auto p = que.front();
+            if(occupied[p.fi][p.se] == 1) ++o1;
+            if(occupied[p.fi][p.se] == 2) ++o2;
             que.pop();
             ++cnt;
             static const int dx[4] = {0, 1, 0, -1};
             static const int dy[4] = {1, 0, -1, 0};
             repn(i, 4) {
                 int x = p.fi + dx[i], y = p.se + dy[i];
-                if(x < 0 || x >= n || y < 0 || y >= m || s[x][y] != color) {
+                if(x < 0 || x >= n || y < 0 || y >= m ||
+                   int(s[x][y]) != color) {
                     ++edges;
                 } else {
                     if(!vis[x][y]) {
@@ -128,6 +143,17 @@ double score(string case_name) {
                     }
                 }
             }
+        }
+        if(o1 != 1 || o2 != 1) {
+            printf("%s: error: color %c has !=1 life/magic (%d %d)\n",
+                   case_name.c_str(), char(color), o1, o2);
+            printf("  start: %d,%d\n", sx, sy);
+            rep(o, 1, 2) repn(i, n) repn(j, m) {
+                if(s[i][j] == color && occupied[i][j] == o) {
+                    printf("  o%d: %d,%d\n", o, i, j);
+                }
+            }
+            error = true;
         }
         if(edges == 0) {
             printf("bad: cnt=%d color=%c\n", cnt, color);
@@ -138,12 +164,21 @@ double score(string case_name) {
     }
     double ans = sum / sumc * 160000;
     printf("%s: %.1lf  | n=%d m=%d k=%d\n", case_name.c_str(), ans, n, m, k);
+    if(error) {
+        printf("  config: %d %d k=%d\n", n, m, k);
+        printf("STOP\n");
+        exit(0);
+    }
     return ans;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     VS cases;
-    repn(i, 20) cases.pb(to_string(i));
+    if(argc > 1) {
+        replr(i, 1, argc) cases.pb(argv[i]);
+    } else {
+        repn(i, 20) cases.pb(to_string(i));
+    }
 
     double ans = 0, ansc = 0;
     for(const auto& s : cases) {

@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <complex>
 #include <cstdio>
@@ -58,7 +59,8 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 int uniform(int minv, int maxv) {  // {{{
-    static default_random_engine gen;
+    static mt19937 gen{
+        (unsigned)std::chrono::system_clock::now().time_since_epoch().count()};
     uniform_int_distribution<int> distr(minv, maxv);
     return distr(gen);
 }
