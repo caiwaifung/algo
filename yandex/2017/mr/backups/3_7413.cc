@@ -308,11 +308,6 @@ void init() {
     assignment = VVI(n, VI(m, -1));
 }
 
-double score(int nc, int ne) {
-    assert(nc > 0 && ne > 0);
-    return double(nc) / double(ne) / double(ne);
-}
-
 VPI find_path(const VVI& a, PII start, PII end) {
     if(a[start.x][start.y] >= 0) return {};
     if(start == end) return {start};
@@ -462,55 +457,6 @@ void adjust() {
     }
 }
 
-void adjust2() {
-    VI cells(k), edges(k);
-    repn(x, n) repn(y, m) {
-        int e = 4 - sz(neighbors[x][y]);
-        for(const auto& u : neighbors[x][y]) {
-            if(assignment[x][y] != assignment[u.x][u.y]) {
-                ++e;
-            }
-        }
-        cells[assignment[x][y]]++;
-        edges[assignment[x][y]] += e;
-    }
-    repn(i, k) assert(cells[i] > 0);
-    while(1) {
-        bool found = false;
-        VPI allpos;
-        repn(x, n) repn(y, m) allpos.pb({x, y});
-        rand_shuffle(&allpos);
-        for(const auto& u : allpos) {
-            if(occupied[u.x][u.y] >= 0) continue;
-            unordered_set<int> colors;
-            for(const auto& v : neighbors[u.x][u.y]) {
-                colors.insert(assignment[v.x][v.y]);
-            }
-            colors.erase(assignment[u.x][u.y]);
-            for(int c2 : colors) {
-                int c1 = assignment[u.x][u.y];
-                int e1 = 4, e2 = 4;
-                for(const auto& v : neighbors[u.x][u.y]) {
-                    int c = assignment[v.x][v.y];
-                    if(c == c1) e1 -= 2;
-                    if(c == c2) e2 -= 2;
-                }
-                double old_score =
-                    score(cells[c1], edges[c1]) + score(cells[c2], edges[c2]);
-                double new_score = score(cells[c1] - 1, edges[c1] - e1) +
-                                   score(cells[c2] + 1, edges[c2] + e2);
-                if(old_score < new_score) {
-                    assignment[u.x][u.y] = c2;
-                    cells[c1]--, edges[c1] -= e1;
-                    cells[c2]++, edges[c2] += e2;
-                    found = true;
-                }
-            }
-        }
-        if(!found) break;
-    }
-}
-
 void answer() {
     for(const auto& row : assignment) {
         string s;
@@ -528,14 +474,10 @@ int main() {
     vector<VPI> matches = find_matches();
     assert(sz(matches) == k);
     repn(i, k) {
-        for(const auto u : matches[i]) {
-            assignment[u.x][u.y] = i;
-            if(occupied[u.x][u.y] < 0) occupied[u.x][u.y] = 3;
-        }
+        for(const auto u : matches[i]) assignment[u.x][u.y] = i;
     }
     expand();
     adjust();
-    adjust2();
     answer();
 
     return 0;

@@ -8,7 +8,7 @@ gen: in/gen
 	in/gen
 
 a: a.cc
-	g++ a.cc -o a -O2 --std=c++11
+	g++ a.cc -o a -O2 --std=c++11 -fsanitize=address
 
 out/score: out/score.cc
 	g++ out/score.cc -o out/score --std=c++11
