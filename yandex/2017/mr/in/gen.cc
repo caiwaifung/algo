@@ -150,15 +150,24 @@ void gen3(int n, int m, int k, string case_name) {
     f.close();
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    unordered_set<int> applies;
+    if(argc > 1) {
+        replr(i, 1, argc) applies.insert(stoi(string(argv[i])));
+    } else {
+        repn(i, 25) applies.insert(i);
+    }
     rep(i, 0, 9) {
+        if(applies.count(i) == 0) continue;
         gen1(uniform(3, 50), uniform(3, 50), uniform(3, 16), to_string(i));
     }
     rep(i, 10, 19) {
+        if(applies.count(i) == 0) continue;
         gen2(uniform(3, 50), uniform(3, 50), uniform(3, 16), uniform(1, 4),
              to_string(i));
     }
     rep(i, 20, 24) {
+        if(applies.count(i) == 0) continue;
         gen3(uniform(3, 50), uniform(3, 50), uniform(3, 16), to_string(i));
     }
     return 0;

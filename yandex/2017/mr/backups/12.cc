@@ -155,8 +155,8 @@ public:
         : n(n0 + 2),
           original_s(s),
           original_t(t),
-          super_s(n0),
-          super_t(n0 + 1),
+          super_s(n),
+          super_t(n + 1),
           es(n),
           dis(n) {}
 
@@ -316,8 +316,7 @@ void init() {
 bool inside(PII u) { return u.x >= 0 && u.x < n && u.y >= 0 && u.y < m; }
 
 double score(int nc, int ne) {
-    // assert(nc > 0 && ne > 0);
-    setmax(ne, 1);
+    assert(nc > 0 && ne > 0);
     return double(nc) / double(ne) / double(ne);
 }
 
@@ -333,8 +332,7 @@ double current_score() {
     }
     double ans = 0;
     repn(i, k) {
-        // assert(cells[i] > 0 && edges[i] > 0);
-        setmax(edges[i], 1);
+        assert(cells[i] > 0 && edges[i] > 0);
         ans += double(cells[i]) / double(edges[i] * edges[i]);
     }
     return ans / k;
@@ -423,16 +421,16 @@ vector<VPI> find_matches() {
         net.add_edge(id(u.x, u.y, 1), net.t, 1, rand_uniform(5));
     static void* es[99][99][9];
     repn(i, n) repn(j, m) {
-        net.add_edge(id(i, j, 0), id(i, j, 1), 1, 200 + rand_uniform(10));
+        net.add_edge(id(i, j, 0), id(i, j, 1), 1, rand_uniform(5));
     }
     repn(i, n) repn(j, m) {
         repn(d, sz(neighbors[i][j])) {
             const auto& p = neighbors[i][j][d];
-            es[i][j][d] = net.add_edge(id(i, j, 1), id(p.x, p.y, 0), 1, 0);
+            es[i][j][d] = net.add_edge(id(i, j, 1), id(p.x, p.y, 0), 1, 200);
         }
     }
-    std::ignore = net.compute();
-    // assert(r.fi == k);
+    auto r = net.compute();
+    assert(r.fi == k);
 
     vector<vector<PII>> f(n, VPI(m, {-1, -1}));
     const function<PII(PII)> get = [&](PII u) {
@@ -490,12 +488,8 @@ void clean_isolated() {
             }
         }
     }
-    bool found = false;
-    repn(x, n) repn(y, m) if(!vis[x][y]) {
-        assignment[x][y] = -1;
-        found = true;
-    }
-    if(found) expand();
+    repn(x, n) repn(y, m) if(!vis[x][y]) assignment[x][y] = -1;
+    expand();
 }
 
 void adjust_pair(int c1, int c2) {
@@ -629,7 +623,7 @@ bool micro_adjust() {
     repn(x, n) repn(y, m) if(occupied[x][y] >= 3) occupied[x][y] = -1;
     repn(color, k) {
         VPI path = find_path(assignment, find_occupants(color), color);
-        // assert(!path.empty());
+        assert(!path.empty());
         for(const auto& p : path) {
             if(occupied[p.x][p.y] < 0) occupied[p.x][p.y] = 3;
         }
@@ -645,7 +639,7 @@ bool micro_adjust() {
             cells[assignment[x][y]]++;
             edges[assignment[x][y]] += e;
         }
-        // repn(i, k) assert(cells[i] > 0 && edges[i] > 0);
+        repn(i, k) assert(cells[i] > 0 && edges[i] > 0);
     };
     calculate();
 
@@ -676,6 +670,48 @@ bool micro_adjust() {
 
     VPI allpos;
     repn(x, n) repn(y, m) allpos.pb({x, y});
+    rand_shuffle(&allpos);
+    for(const auto& u : allpos) {
+        if(occupied[u.x][u.y] >= 0) continue;
+        unordered_map<int, int> colors;
+        for(const auto& v : neighbors[u.x][u.y]) {
+            colors[assignment[v.x][v.y]]++;
+        }
+        for(const auto& kv : colors) {
+            int c1 = assignment[u.x][u.y], c2 = kv.fi;
+            if(c1 == c2) continue;
+            if(colors.count(c1) == 0) continue;
+            if(update(c1, c2, 1, 4 - colors.at(c1) * 2,
+                      4 - colors.at(c2) * 2)) {
+                assignment[u.x][u.y] = c2;
+                update_assignment();
+            }
+        }
+    }
+    rand_shuffle(&allpos);
+    for(const auto& u1 : allpos) {
+        if(occupied[u1.x][u1.y] >= 0) continue;
+        for(const auto& u2 : neighbors[u1.x][u1.y]) {
+            if(occupied[u2.x][u2.y] >= 0 ||
+               assignment[u1.x][u1.y] != assignment[u2.x][u2.y])
+                continue;
+            unordered_map<int, int> colors;
+            for(const auto& v : duplicated_neighbors_of({u1, u2})) {
+                colors[assignment[v.x][v.y]]++;
+            }
+            for(const auto& kv : colors) {
+                int c1 = assignment[u1.x][u1.y], c2 = kv.fi;
+                if(c1 == c2) continue;
+                if(colors.count(c1) == 0) continue;
+                if(update(c1, c2, 2, 6 - colors.at(c1) * 2,
+                          6 - colors.at(c2) * 2)) {
+                    assignment[u1.x][u1.y] = c2;
+                    assignment[u2.x][u2.y] = c2;
+                    update_assignment();
+                }
+            }
+        }
+    }
     rand_shuffle(&allpos);
     for(const auto& u1 : allpos) {
         if(occupied[u1.x][u1.y] >= 0) continue;
@@ -709,31 +745,32 @@ bool micro_adjust() {
     rand_shuffle(&allpos);
     for(const auto& u1 : allpos) {
         if(occupied[u1.x][u1.y] >= 0) continue;
+        const int bc = assignment[u1.x][u1.y];
         repn(dx, 2) {
             const int dy = 1 - dx;
-            VPI us = {u1};
-            rep(d, 1, 10) {
-                unordered_map<int, int> colors;
-                for(const auto& v : duplicated_neighbors_of(us)) {
-                    colors[assignment[v.x][v.y]]++;
-                }
-                for(const auto& kv : colors) {
-                    int c1 = assignment[u1.x][u1.y], c2 = kv.fi;
-                    if(c1 == c2) continue;
-                    if(colors.count(c1) == 0) continue;
-                    if(update(c1, c2, sz(us),
-                              sz(us) * 2 + 2 - colors.at(c1) * 2,
-                              sz(us) * 2 + 2 - colors.at(c2) * 2)) {
-                        for(auto u : us) assignment[u.x][u.y] = c2;
-                        update_assignment();
-                    }
-                }
-                {
-                    PII u = {us.back().x + dx, us.back().y + dy};
-                    if(!inside(u) || occupied[u.x][u.y] >= 0 ||
-                       assignment[u.x][u.y] != assignment[u1.x][u1.y])
-                        break;
-                    us.pb(u);
+            const PII u2 = {u1.x + dx, u1.y + dy};
+            const PII u3 = {u2.x + dx, u2.y + dy};
+            const PII u4 = {u3.x + dx, u3.y + dy};
+            if(!inside(u4)) continue;
+            if(occupied[u2.x][u2.y] >= 0 || assignment[u2.x][u2.y] != bc ||
+               occupied[u3.x][u3.y] >= 0 || assignment[u3.x][u3.y] != bc ||
+               occupied[u4.x][u4.y] >= 0 || assignment[u4.x][u4.y] != bc)
+                continue;
+            unordered_map<int, int> colors;
+            for(const auto& v : duplicated_neighbors_of({u1, u2, u3, u4})) {
+                colors[assignment[v.x][v.y]]++;
+            }
+            for(const auto& kv : colors) {
+                int c1 = assignment[u1.x][u1.y], c2 = kv.fi;
+                if(c1 == c2) continue;
+                if(colors.count(c1) == 0) continue;
+                if(update(c1, c2, 4, 10 - colors.at(c1) * 2,
+                          10 - colors.at(c2) * 2)) {
+                    assignment[u1.x][u1.y] = c2;
+                    assignment[u2.x][u2.y] = c2;
+                    assignment[u3.x][u3.y] = c2;
+                    assignment[u4.x][u4.y] = c2;
+                    update_assignment();
                 }
             }
         }
@@ -753,10 +790,9 @@ int main() {
     const auto elapsed_time = [start_time] {
         return (std::clock() - start_time) / (double)CLOCKS_PER_SEC;
     };
-    repn(iter, 1000) {
+    repn(iter, 100) {
         vector<VPI> matches = find_matches();
-        // assert(sz(matches) == k);
-
+        assert(sz(matches) == k);
         assignment = VVI(n, VI(m, -1));
         repn(i, k) {
             for(const auto u : matches[i]) {
