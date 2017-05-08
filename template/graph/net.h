@@ -1,13 +1,16 @@
 template <class T> class Net {
 public:
-    Net(int n0, int s, int t)
-        : n(n0 + 2),
-          original_s(s),
-          original_t(t),
-          super_s(n),
-          super_t(n + 1),
+    Net(int n0)
+        : n(n0 + 4),
+          original_s(n0),
+          original_t(n0 + 1),
+          super_s(n0 + 2),
+          super_t(n0 + 3),
           es(n),
           dis(n) {}
+
+    int s() const { return original_s; }
+    int t() const { return original_t; }
 
     void* add(int x, int y, T w) {
         assert(x >= 0 && x < n && y >= 0 && y < n);
@@ -51,7 +54,7 @@ public:
     }
     VI left() const {
         VI r;
-        repn(i, n) if(dis[i] > 0) r.pb(i);
+        repn(i, n - 4) if(dis[i] > 0) r.pb(i);
         return r;
     }
 
