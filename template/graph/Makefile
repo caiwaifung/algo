@@ -13,7 +13,8 @@ BM_ARGS=-isystem ~/benchmark/include \
 	 -DHAVE_STD_REGEX \
 	 -DNDEBUG
 
-TESTS = net_test
+TESTS = net_test \
+		cost-net_test \
 
 BMS = \
 

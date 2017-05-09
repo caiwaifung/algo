@@ -1,59 +1,37 @@
-template <class T> struct CostNet {
-    const int s, t;
+template <class T> class CostNet {
+public:
+    explicit CostNet(int n0) : n(n0 + 2), src(n0), dst(n0 + 1), es(n) {}
 
-    explicit CostNet(int n) : s(n), t(n + 1), n_(n + 2), es_(n_) {}
+    int s() const { return src; }
+    int t() const { return dst; }
 
-    void* add_edge(int x, int y, T w, T c) { return add_(x, y, w, c); }
-
-    // (flow, cost)
-    pair<T, T> compute() { return compute_(); }
-    T flow(void* e) { return flow_(e); }
-
-private:  //{{{
-    struct Edge {
-        int y;
-        T w, c;
-        Edge* oppo;
-    };
-    const int n_;
-    T w0_ = 0, c0_ = 0;
-    vector<vector<unique_ptr<Edge>>> es_;
-
-    void* add_(int x, int y, T w, T c) {
-        if(c >= 0) {
-            Edge *e1, *e2;
-            es_[x].emplace_back(e1 = new Edge{y, w, c, nullptr});
-            es_[y].emplace_back(e2 = new Edge{x, 0, -c, nullptr});
-            e1->oppo = e2, e2->oppo = e1;
-            return static_cast<void*>(e1);
-        } else {
-            // ???
-            w0_ += w;
-            c0_ += w * (-c);
-            add_(s_, y, w, 0);
-            add_(y, x, w, -c);
-            add_(x, t_, w, 0);
-            return nullptr;
-        }
+    void* add(int x, int y, T w, T c) {
+        assert(c >= 0);
+        Edge *e1, *e2;
+        es[x].emplace_back(e1 = new Edge{y, w, c, nullptr});
+        es[y].emplace_back(e2 = new Edge{x, 0, -c, nullptr});
+        e1->oppo = e2, e2->oppo = e1;
+        return static_cast<void*>(e1);
     }
 
-    pair<T, T> compute_() {
-        pair<T, T> ans = {-w0_, -c0_};
+    // Returns (flow, cost).
+    pair<T, T> compute() {
+        pair<T, T> ans = {0, 0};
         while(1) {
-            vector<T> dis(n_, numeric_limits<T>::max());
-            vector<T> flow(n_);
-            vector<Edge*> pre(n_);
-            dis[s] = 0;
-            flow[s] = numeric_limits<T>::max();
+            vector<T> dis(n, numeric_limits<T>::max());
+            vector<T> flow(n);
+            vector<Edge*> pre(n);
+            dis[src] = 0;
+            flow[src] = numeric_limits<T>::max();
 
-            vector<bool> inside(n_, false);
+            vector<bool> inside(n, false);
             queue<int> que;
-            inside[s] = true;
-            que.push(s);
+            inside[src] = true;
+            que.push(src);
             while(!que.empty()) {
                 const int x = que.front();
                 que.pop();
-                for(const auto& e : es_[x]) {
+                for(const auto& e : es[x]) {
                     if(e->w > 0 && setmin(dis[e->y], dis[x] + e->c)) {
                         pre[e->y] = e.get();
                         flow[e->y] = min(flow[x], e->w);
@@ -65,19 +43,28 @@ private:  //{{{
                 }
                 inside[x] = false;
             }
-            if(dis[t] == numeric_limits<T>::max()) {
+            if(dis[dst] == numeric_limits<T>::max()) {
                 return ans;
             }
 
-            ans.fi += flow[t], ans.se += flow[t] * dis[t];
-            for(int x = t; x != s; x = pre[x]->oppo->y) {
-                pre[x]->w -= flow[t];
-                pre[x]->oppo->w += flow[t];
+            ans.fi += flow[dst], ans.se += flow[dst] * dis[dst];
+            for(int x = dst; x != src; x = pre[x]->oppo->y) {
+                pre[x]->w -= flow[dst];
+                pre[x]->oppo->w += flow[dst];
             }
         }
         return ans;
     }
 
-    T flow_(void* e) { return static_cast<Edge*>(e)->oppo->w; }
-    // }}}
+    T flow(void* e) { return static_cast<Edge*>(e)->oppo->w; }
+
+private:
+    struct Edge {
+        int y;
+        T w, c;
+        Edge* oppo;
+    };
+
+    const int n, src, dst;
+    vector<vector<unique_ptr<Edge>>> es;
 };

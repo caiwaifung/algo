@@ -1,6 +1,6 @@
 template <class T> class Net {
 public:
-    Net(int n0)
+    explicit Net(int n0)
         : n(n0 + 4),
           original_s(n0),
           original_t(n0 + 1),
