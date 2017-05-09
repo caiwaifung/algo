@@ -15,6 +15,7 @@ BM_ARGS=-isystem ~/benchmark/include \
 	 -DNDEBUG
 
 TESTS = cost-net_test \
+		hopcraft_test \
 		km_test \
 		net_test \
 		two-sat_test \
