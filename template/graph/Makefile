@@ -2,6 +2,7 @@ TEST_ARGS=-isystem ~/googletest/googletest/include \
 	 -isystem ~/googletest/googlemock/include \
 	 -I ~/googletest/googletest \
 	 -I ~/googletest/googlemock \
+	 ~/googletest/googlemock/src/gmock-all.cc \
 	 ~/googletest/googletest/src/gtest-all.cc \
 	 ~/googletest/googletest/src/gtest_main.cc \
 	 -Wall -Wconversion -Wno-sign-conversion -Wextra -Wshadow \
@@ -13,8 +14,9 @@ BM_ARGS=-isystem ~/benchmark/include \
 	 -DHAVE_STD_REGEX \
 	 -DNDEBUG
 
-TESTS = net_test \
-		cost-net_test \
+TESTS = cost-net_test \
+		net_test \
+		two-sat_test \
 
 BMS = \
 

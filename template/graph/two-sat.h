@@ -1,14 +1,16 @@
 class TwoSat {
 public:
-    TwoSat(int _n) : n(_n), es(n * 2) {}
+    TwoSat(int n) : n(n), es(n * 2) {}
 
     void add_conflict(PII a, PII b) {
+        assert(a.fi >= 0 && a.fi < n && a.se >= 0 && a.se <= 1);
+        assert(b.fi >= 0 && b.fi < n && b.se >= 0 && b.se <= 1);
         es[a.fi + a.se * n].pb(b.fi + (1 - b.se) * n);
         es[b.fi + b.se * n].pb(a.fi + (1 - a.se) * n);
     }
 
-    // returns r: r = {} if no solution
-    //            r[i] = value of variable i otherwise
+    // If no solution, returns {}; otherwise returns
+    // r: r[i] = value of variable i (0/1).
     VI solve() {
         VI belong(n * 2, -1), dfn(n * 2), low(n * 2), stack;
         int cur = 0, num = 0;
