@@ -15,6 +15,7 @@ BM_ARGS=-isystem ~/benchmark/include \
 
 TESTS = kmp_test \
 		manacher_test \
+		min-rep_test \
 		sam_test \
 
 BMS = \
