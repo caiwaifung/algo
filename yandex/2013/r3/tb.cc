@@ -71,3 +71,26 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
+int main() {
+    VS s = {"abc", "def","ghi"};
+    set<VS> ss;
+    queue<VS> que;
+    ss.insert(s), que.push(s);
+    while(!que.empty()) {
+        const VS cur = que.front();
+        constexpr int dx[4] = {0, 1, 0, -1};
+        constexpr int dy[4] = {1, 0, -1, 0};
+        repn(x, sz(cur)) repn(y, sz(cur[x])) repn(i, 4) {
+            int x0 = x + dx[i], y0 = y + dy[i];
+            if(x0 < 0 || x0 >= sz(cur) || y0 < 0 || y0 >= sz(cur[0])) continue;
+            VS tmp = cur;
+            tmp[x0][y0] = tmp[x][y], tmp[x][y] = '#';
+            if(ss.count(tmp) == 0) {
+                ss.insert(tmp), que.push(tmp);
+            }
+        }
+        que.pop();
+    }
+    cout << sz(ss) - 1 << endl;
+    return 0;
+}

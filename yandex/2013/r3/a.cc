@@ -1,3 +1,5 @@
+// 20:37 - est. 20:45
+//       - 20:40 - pass
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -71,3 +73,22 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
+int main() {
+    static double c[110][110];
+    fillchar(c, 0);
+    repn(i, 110) c[i][0] = c[i][i] = 1;
+    repn(i, 110) rep(j, 1, i - 1) c[i][j] = c[i - 1][j - 1] + c[i - 1][j];
+
+    VI a = read_vi();
+    int m = 0;
+    for(int x : a)
+        if(x >= 0) ++m;
+    double ans = 0;
+    for(int x : a) {
+        int cm = m;
+        if(x >= 0) --cm;
+        rep(k, 0, cm) { ans += x * c[cm][k] / c[sz(a)][k] / (sz(a) - k); }
+    }
+    printf("%.9lf\n", ans);
+    return 0;
+}

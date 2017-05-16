@@ -71,3 +71,36 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
+const LL MOD = 1000200013;
+
+int main() {
+    constexpr int N = 2550;
+    static LL c[N][N], fac[N];
+    fillchar(c, 0);
+    repn(i, N) c[i][0] = c[i][i] = 1;
+    repn(i, N) rep(j, 1, i - 1) {
+        c[i][j] = (c[i - 1][j - 1] + c[i - 1][j]) % MOD;
+    }
+    fac[0] = 1;
+    replr(i, 1, N) fac[i] = fac[i - 1] * i % MOD;
+    const LL inv2 = powmod(2, MOD - 2, MOD);
+    assert(inv2 * 2 % MOD == 1);
+
+    int n, m, num;
+    cin >> n >> m;
+    num = n * m;
+    LL ans = 0;
+    rep(k, 0, num - 1) {
+        LL tmp = 1;
+        (tmp *= c[num][k]) %= MOD;
+        (tmp *= c[num][k]) %= MOD;
+        if(k >= 1 && n > 1 && m > 1) {
+            (tmp *= fac[num - k]) %= MOD;
+            if(k == 1) (tmp *= inv2) %= MOD;
+        }
+        (ans += tmp) %= MOD;
+    }
+    cout << ans << endl;
+
+    return 0;
+}
