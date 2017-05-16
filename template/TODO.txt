@@ -2,6 +2,3 @@
     - CF553E
 
 + more SAM use cases, maybe refine API
-
-+ ac automaton
-    - CF696D

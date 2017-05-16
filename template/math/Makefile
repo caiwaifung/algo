@@ -17,7 +17,6 @@ TESTS = chinese-remainder_test \
 		det-int_test \
 		ext-gcd_test \
 		fft_test \
-		hash_test \
 		mu_test \
 		online-convolution_test \
 		phi_test \

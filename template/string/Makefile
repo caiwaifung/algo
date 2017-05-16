@@ -13,7 +13,8 @@ BM_ARGS=-isystem ~/benchmark/include \
 	 -DHAVE_STD_REGEX \
 	 -DNDEBUG
 
-TESTS = kmp_test \
+TESTS = hash_test \
+		kmp_test \
 		manacher_test \
 		min-rep_test \
 		sam_test \
