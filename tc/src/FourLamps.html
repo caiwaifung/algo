@@ -1,0 +1,58 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Fox Ciel has n lamps.
+The lamps are arranged in a row from the left to the right, and they are numbered 0 through n-1 in that order.
+You are given a string <b>init</b> with n characters that describes the initial state of the lamps:
+<b>init</b>[i] is '1' if lamp i is initially turned on, or '0' if it is initially turned off.
+<br></br>
+<br></br>
+You are also given an int <b>k</b>.
+Below we describe an operation.
+Ciel can use that operation at most <b>k</b> times.
+Compute and return the number of different final states she can obtain.
+(Two states of lamps are different if there is a lamp that is on in one state but off in the other. The initial state is always one of the possible final states.)
+<br></br>
+<br></br>
+The operation looks as follows:
+<ol>
+<li>Ciel chooses four consecutive lamps such that either exactly one of them is on, or exactly one of them is off. (If there is no such group of lamps, Ciel cannot perform any more operations.)</li>
+<li>Ciel divides all lamps into a left part and a right part so that the division point is in the middle of the four lamps chosen in the previous step. In other words, if the four chosen lamps are x, x+1, x+2, x+3, the left part is {0, 1, ..., x+1} and the right part is {x+2, ..., n-2, n-1}.</li>
+<li>Ciel chooses either the left part or the right part.</li>
+<li>Ciel toggles all lamps in the chosen part. (Toggling a lamp means switching it to the opposite state.)</li>
+</ol></td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>FourLamps</td></tr><tr><td>Method:</td><td>count</td></tr><tr><td>Parameters:</td><td>string, int</td></tr><tr><td>Returns:</td><td>long long</td></tr><tr><td>Method signature:</td><td>long long count(string init, int k)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>init</b> will contain between 4 and 50 characters, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each character in <b>init</b> will be '0' or '1'.</td></tr><tr><td align="center" valign="top">-</td><td><b>k</b> will be between 1 and 1,000,000,000, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;0001&quot;</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4</pre></td></tr><tr><td><table><tr><td colspan="2">As there are only four lamps, there is only one group of four consecutive lamps.
+If these four lamps satisfy the constraint, the left part will be lamps {0,1} and the right part will be lamps {2,3}.
+<br></br>
+<br></br>
+If Ciel performs zero operations, the only possible final state is the initial state "0001".
+<br></br>
+<br></br>
+If Ciel performs one operation, she can either toggle the left part or the right part. Toggling the left part produces the state "1101", toggling the right part produces the state "0010".
+<br></br>
+<br></br>
+Note that both states produced by the first operation still have the property that enables us to do the next operation: exactly one of the four lamps is off in "1101", and exactly one of them is on in "0010".
+<br></br>
+<br></br>
+What states can we reach by performing two operations?
+<br></br>
+<br></br>
+Toggling the left part and then the left part again will bring us back to "0001". Toggling the right part twice has the same effect.
+<br></br>
+<br></br>
+Toggling the left part and then the right part produces the final state "1110". Toggling the right half and then the left half leads to that state as well.
+<br></br>
+<br></br>
+In total there are four possible final states: "0001", "1101", "0010", "1110".</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;0001&quot;</pre></td></tr><tr><td><pre>1000000000</pre></td></tr></table></td></tr><tr><td><pre>Returns: 4</pre></td></tr><tr><td><table><tr><td colspan="2">In the previous scenario increasing <b>k</b> to 10^9 does not change the answer.
+The following operations won't produce any new states of the lamps.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;1010&quot;</pre></td></tr><tr><td><pre>100</pre></td></tr></table></td></tr><tr><td><pre>Returns: 1</pre></td></tr><tr><td><table><tr><td colspan="2">This time Ciel cannot make any operation because there are no four consecutive lamps with the required property.
+Thus, the only possible final state is the initial state.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;000111&quot;</pre></td></tr><tr><td><pre>3</pre></td></tr></table></td></tr><tr><td><pre>Returns: 12</pre></td></tr><tr><td><table><tr><td colspan="2">These are the states we can get:
+<ul>
+<li>"000111"</li>
+<li>"110111"</li>
+<li>"001000"</li>
+<li>"111011"</li>
+<li>"000100"</li>
+<li>"111000"</li>
+<li>"001111"</li>
+<li>"110000"</li>
+<li>"001011"</li>
+<li>"110100"</li>
+<li>"000011"</li>
+<li>"111100"</li>
+</ul></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;00000010000&quot;</pre></td></tr><tr><td><pre>5</pre></td></tr></table></td></tr><tr><td><pre>Returns: 58</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>&quot;10101100101010001011000100101000100001101&quot;</pre></td></tr><tr><td><pre>58</pre></td></tr></table></td></tr><tr><td><pre>Returns: 100256132848</pre></td></tr><tr><td><table><tr><td colspan="2">Watch for overflow.</td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

@@ -1,0 +1,19 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Fox Ciel has <b>c</b> cherries and <b>s</b> strawberries.
+She wants to bake some cakes.
+While doing so, she wants to follow some rules:
+<ul>
+<li>She must use exactly all cherries and all strawberries she has.</li>
+<li>The number of cakes can be arbitrary (i.e., any positive integer).</li>
+<li>Different cakes may contain different amounts of cherries and strawberries.</li>
+<li>Each cake must contain at least one cherry and at least one strawberry.</li>
+<li>A cake will taste bad if the number of cherries and the number of strawberries it contains happen to be coprime. Therefore, the numbers of cherries and strawberries in a cake must never be coprime. (Two positive integers are coprime if their greatest common divisor is 1.)</li>
+</ul>
+<br></br>
+You are given the ints <b>c</b> and <b>s</b>.
+Return "Possible" if Ciel can bake cakes according to the above rules, or "Impossible" if she cannot do so.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>FoxAndCake2</td></tr><tr><td>Method:</td><td>isPossible</td></tr><tr><td>Parameters:</td><td>int, int</td></tr><tr><td>Returns:</td><td>string</td></tr><tr><td>Method signature:</td><td>string isPossible(int c, int s)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td><b>c</b> will be between 1 and 1,000,000,000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>s</b> will be between 1 and 1,000,000,000, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>74</pre></td></tr><tr><td><pre>109</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Possible&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">One possible solution is to bake 3 cakes as follows:
+<ol>
+<li>A cake with 21 cherries and 14 strawberries.</li>
+<li>A cake with 20 cherries and 40 strawberries.</li>
+<li>A cake with 33 cherries and 55 strawberries.</li>
+</ol></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1000000000</pre></td></tr><tr><td><pre>1000000000</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Possible&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">Here Ciel can simply make one huge cake with 1000000000 cherries and 1000000000 strawberries.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>1</pre></td></tr><tr><td><pre>58</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Impossible&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">Ciel only has 1 cherry, so the only option is to bake one cake with 1 cherry and 58 strawberries.
+However, 1 and 58 are coprime, so this is not a good cake.</td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

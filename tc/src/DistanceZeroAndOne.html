@@ -1,0 +1,32 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>Fox Ciel used to have a graph G but she lost it somewhere.
+She now wants to reconstruct it and she needs your help to do so.
+<br></br>
+<br></br>
+Here is what she remembers about the graph:
+<ul>
+<li>G was a simple undirected graph on n nodes, numbered 0 through n-1.</li>
+<li>G was connected.</li>
+<li>All edges had unit lengths. (Thus, the distance between two nodes is simply the smallest number of edges one needs to traverse to get from one to the other.)</li>
+<li>For each node i, the distance between nodes 0 and i was <b>dist0</b>[i].</li>
+<li>For each node i, the distance between nodes 1 and i was <b>dist1</b>[i].</li>
+</ul>
+<br></br>
+You are given the vector &lt;int&gt;s <b>dist0</b> and <b>dist1</b>, each containing n elements.
+If there is at least one graph G that corresponds to these distances (and all the other constraints given above), return any such graph.
+More precisely, return a vector &lt;string&gt; R containing the adjacency matrix of the chosen graph G.
+For each i and j, R[i][j] should be 'Y' if nodes i and j are connected by an edge, or 'N' if they are not.
+<br></br>
+<br></br>
+If there is no solution, return an empty vector &lt;string&gt; instead.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>DistanceZeroAndOne</td></tr><tr><td>Method:</td><td>construct</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, vector &lt;int&gt;</td></tr><tr><td>Returns:</td><td>vector &lt;string&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;string&gt; construct(vector &lt;int&gt; dist0, vector &lt;int&gt; dist1)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>n will be between 2 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>dist0</b> will contain exactly n elemnets.</td></tr><tr><td align="center" valign="top">-</td><td><b>dist1</b> will contain exactly n elemnets.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>dist0</b> will be between 0 and n-1, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>dist1</b> will be between 0 and n-1, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,2,1}</pre></td></tr><tr><td><pre>{2,0,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;NNY&quot;, &quot;NNY&quot;, &quot;YYN&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2">We have a graph with three nodes.
+From the given distances we see that dist(0,1) = 2 and that dist(0,2) = dist(1,2) = 1.
+Thus, the graph G must look like this: 0 - 2 - 1.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,2,1}</pre></td></tr><tr><td><pre>{1,0,2}</pre></td></tr></table></td></tr><tr><td><pre>Returns: { }</pre></td></tr><tr><td><table><tr><td colspan="2">The value <b>dist0</b>[1] claims that the distance between nodes 0 and 1 is 2.
+On the other hand, the value <b>dist1</b>[0] claims that this distance is 1.
+As the graph is undirected, this is impossible.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{3,1,1,1}</pre></td></tr><tr><td><pre>{1,0,1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: { }</pre></td></tr><tr><td><table><tr><td colspan="2">The value <b>dist0</b>[0] cannot be 3.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,1,1,1}</pre></td></tr><tr><td><pre>{1,0,1,1}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;NYYY&quot;, &quot;YNYY&quot;, &quot;YYNN&quot;, &quot;YYNN&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,3,1,2,2,3,4,4}</pre></td></tr><tr><td><pre>{3,0,2,1,2,3,4,4}</pre></td></tr></table></td></tr><tr><td><pre>Returns: 
+{&quot;NNYNNNNN&quot;,
+ &quot;NNNYNNNN&quot;,
+ &quot;YNNYYNNN&quot;,
+ &quot;NYYNYNNN&quot;,
+ &quot;NNYYNYNN&quot;,
+ &quot;NNNNYNYY&quot;,
+ &quot;NNNNNYNN&quot;,
+ &quot;NNNNNYNN&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{0,1}</pre></td></tr><tr><td><pre>{1,0}</pre></td></tr></table></td></tr><tr><td><pre>Returns: {&quot;NY&quot;, &quot;YN&quot; }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
