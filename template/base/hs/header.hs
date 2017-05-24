@@ -1,7 +1,7 @@
-import Data.Functor
+import           Data.Functor
 
 getInts :: IO [Int]
 getInts = map read <$> words <$> getContents
-
-parsePairs [] = []
+parsePairs []       = []
 parsePairs (x:y:rs) = (x, y) : parsePairs rs
+
