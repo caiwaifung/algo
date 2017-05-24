@@ -1,14 +1,17 @@
+import qualified Data.ByteString.Char8 as B
 import           Data.Functor
 import           Data.List
+import           Data.Maybe
 
 getInts :: IO [Int]
-getInts = map read <$> words <$> getContents
-parsePairs []       = []
-parsePairs (x:y:rs) = (x, y) : parsePairs rs
+getInts = map (fst . fromJust . B.readInt) <$> B.words <$> B.getContents
+pair []       = []
+pair (x:y:rs) = (x, y) : pair rs
 clamp u v w = max u $ min v $ w
 
-main = getInts >>= print . go where
-    go (_:f:xs) = solve f (parsePairs xs)
+main = do
+    _:f:xs <- getInts
+    print $ solve f (pair xs)
 
 solve :: Int -> [(Int, Int)] -> Integer
 solve f ps = base + bonus where
