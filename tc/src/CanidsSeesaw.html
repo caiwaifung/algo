@@ -1,0 +1,37 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>There are n wolves and n foxes.
+Both wolves and foxes are numbered 0 through n-1.
+You are given the vector &lt;int&gt;s <b>wolf</b> and <b>fox</b>.
+Here, <b>wolf</b>[i] is the weight of wolf i and <b>fox</b>[i] is the weight of fox i.
+<br></br>
+<br></br>
+The wolves and the foxes are playing on a seesaw.
+Initially both sides of the seesaw are empty.
+Then, there will be n rounds.
+In each round a new wolf will sit on the left side of the seesaw and a new fox will sit on the right side of the seesaw.
+The wolves and foxes stay on the seesaw also for all future rounds.
+Thus, after x rounds there will be x wolves on the left side of the seesaw and x foxes on its right side.
+<br></br>
+<br></br>
+After each round, the side of the seesaw that touches the ground scores a point.
+All animals sit very close to the ends of the seesaw, hence the side that touches the ground is always the side where the total weight of animals is greater.
+(The constraints guarantee that there will never be a draw: one side will always be heavier than the other.)
+<br></br>
+<br></br>
+The wolves will go sit on the seesaw in numerical order: wolf 0 first, wolf 1 second, and so on.
+The foxes may choose any order in which to go on the seesaw.
+<br></br>
+<br></br>
+You are given an int <b>k</b>.
+The foxes want to score exactly <b>k</b> points.
+Can they do that? If yes, in what order should they go on the seesaw?
+<br></br>
+<br></br>
+Find and return a vector &lt;int&gt; containing a permutation of 0 through n-1: an order in which the foxes should go on the seesaw in order to score exactly <b>k</b> points.
+That is, return a vector &lt;int&gt; p such that fox p[0] should go on the seesaw first, fox p[1] second, and so on.
+<br></br>
+<br></br>
+If there are multiple solutions, you may return any of them.
+If there is no solution, return an empty vector &lt;int&gt; instead.</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>CanidsSeesaw</td></tr><tr><td>Method:</td><td>construct</td></tr><tr><td>Parameters:</td><td>vector &lt;int&gt;, vector &lt;int&gt;, int</td></tr><tr><td>Returns:</td><td>vector &lt;int&gt;</td></tr><tr><td>Method signature:</td><td>vector &lt;int&gt; construct(vector &lt;int&gt; wolf, vector &lt;int&gt; fox, int k)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>n will be between 1 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>wolf</b> will contain exactly n elements.</td></tr><tr><td align="center" valign="top">-</td><td><b>fox</b> will contain exactly n elements.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>wolf</b> will be between 1 and 3000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>fox</b> will be between 1 and 3000, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>k</b> will be between 0 and n, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td>For every permutation of the foxes, after each round the weights on both sides of the seesaw will be different.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{3,1}</pre></td></tr><tr><td><pre>{4,2}</pre></td></tr><tr><td><pre>1</pre></td></tr></table></td></tr><tr><td><pre>Returns: {1, 0 }</pre></td></tr><tr><td><table><tr><td colspan="2">First, note that after two rounds the wolves on the seesaw will have a total weight of 3+1 = 4, and the foxes will have a total weight of 4+2 = 6.
+At that moment the foxes will score a point.
+As they want to score exactly one point, they have to make sure that after the first round the wolves score a point.
+In order to do that, fox 1 should go on the seesaw first.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{1,3}</pre></td></tr><tr><td><pre>{4,2}</pre></td></tr><tr><td><pre>1</pre></td></tr></table></td></tr><tr><td><pre>Returns: { }</pre></td></tr><tr><td><table><tr><td colspan="2">This time the foxes will surely score both points, so there is no solution.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{10,10,10,10,10,10,10,10,10,10}</pre></td></tr><tr><td><pre>{1,100,1,100,1,100,1,100,1,100}</pre></td></tr><tr><td><pre>7</pre></td></tr></table></td></tr><tr><td><pre>Returns: {0, 2, 4, 1, 6, 3, 5, 7, 9, 8 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{10,10,10,10,10,10,10,10,10,10}</pre></td></tr><tr><td><pre>{1,100,1,100,1,100,1,100,1,100}</pre></td></tr><tr><td><pre>4</pre></td></tr></table></td></tr><tr><td><pre>Returns: { }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{2}</pre></td></tr><tr><td><pre>{1}</pre></td></tr><tr><td><pre>0</pre></td></tr></table></td></tr><tr><td><pre>Returns: {0 }</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>

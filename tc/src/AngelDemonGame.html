@@ -1,0 +1,69 @@
+<html><body bgcolor="#ccffcc" text="#000000"><table><tr><td colspan="2"><h3>Problem Statement</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td>The Angel and the Demon are playing a game on an undirected simple graph G.
+G contains n nodes numbered 0 through n-1.
+You are given a vector &lt;string&gt; <b>G</b>: its adjacency matrix.
+That is, for any i and j, nodes i and j are connected by an edge if and only if <b>G</b>[i][j] is 'Y'.
+<br></br>
+<br></br>
+You are also given two ints: <b>A</b> and <b>D</b>.
+The game is played as follows:
+The Angel chooses some unordered pairs of nodes and at the same time the Demon chooses some unordered pairs of nodes.
+The Angel must choose between 0 and <b>A</b> pairs, inclusive, and the Demon must choose between 0 and <b>D</b> pairs, inclusive.
+Then, both players reveal their choices.
+Next, the graph G is modified as follows:
+<br></br>
+<br></br>
+<pre>
+For each pair of nodes i != j:
+	If the Demon chose the pair (i, j), there will be no edge (i, j) in the new graph.
+	Otherwise:
+		If the Angel chose the pair (i, j), there will be an edge (i, j) in the new graph.
+		Otherwise:
+			The state of the edge (i, j) remains the same.
+                        That is, it is in the new graph if and only if it is in the old graph G.
+</pre>
+<br></br>
+<br></br>
+Finally, the game is evaluated.
+If the new graph contains a path between nodes 0 and n-1, the Angel wins.
+Otherwise, the Demon wins.
+<br></br>
+<br></br>
+We say that a player has a winning strategy if they can make a valid choice such that they are guaranteed to win the game regardless of the set of edges chosen by their opponent.
+If the Angel has a winning strategy, return "Angel".
+If the Demon has a winning strategy, return "Demon".
+Otherwise, return "Unknown".</td></tr><tr><td colspan="2"><h3>Definition</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Class:</td><td>AngelDemonGame</td></tr><tr><td>Method:</td><td>winner</td></tr><tr><td>Parameters:</td><td>vector &lt;string&gt;, int, int</td></tr><tr><td>Returns:</td><td>string</td></tr><tr><td>Method signature:</td><td>string winner(vector &lt;string&gt; G, int A, int D)</td></tr><tr><td colspan="2">(be sure your method is public)</td></tr></table></td></tr><tr><td colspan="2"><h3>Limits</h3></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td>Time limit (s):</td><td>2.000</td></tr><tr><td>Memory limit (MB):</td><td>256</td></tr><tr><td>Stack limit (MB):</td><td>256</td></tr></table></td></tr><tr><td colspan="2"><h3>Constraints</h3></td></tr><tr><td align="center" valign="top">-</td><td>n will be between 3 and 50, inclusive.</td></tr><tr><td align="center" valign="top">-</td><td><b>G</b> will contain exactly n elements.</td></tr><tr><td align="center" valign="top">-</td><td>Each element in <b>G</b> will contain exactly n characters.</td></tr><tr><td align="center" valign="top">-</td><td>Each character in <b>G</b> will be 'Y' or 'N'.</td></tr><tr><td align="center" valign="top">-</td><td>For each i and j, <b>G</b>[i][j] = <b>G</b>[j][i].</td></tr><tr><td align="center" valign="top">-</td><td>For each i, <b>G</b>[i][i] = 'N'.</td></tr><tr><td align="center" valign="top">-</td><td><b>A</b> and <b>D</b> will be between 2 and n*(n-1)/2, inclusive.</td></tr><tr><td colspan="2"><h3>Examples</h3></td></tr><tr><td align="center" nowrap="true">0)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;NYNY&quot;,
+ &quot;YNYY&quot;,
+ &quot;NYNN&quot;,
+ &quot;YYNN&quot;}</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Angel&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">G is a graph with 4 nodes and 4 edges:
+<pre>
+  1
+ /|\
+0 - 3
+  |
+  2
+</pre>
+A winning strategy for the Angel is to choose the pairs (0, 2) and (2, 3).
+It can be shown that with this choice the Angel will win regardless of the choice made by the Demon.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">1)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;NYNY&quot;,
+ &quot;YNYY&quot;,
+ &quot;NYNN&quot;,
+ &quot;YYNN&quot;}</pre></td></tr><tr><td><pre>6</pre></td></tr><tr><td><pre>6</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Demon&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">The graph G is the same but now each player can choose up to 6 pairs.
+This means that the Demon can select all possible unordered pairs of nodes.
+If the Demon does so, the new graph will have no edges and thus there will be no path between nodes 0 and 3.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">2)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;NNNN&quot;,
+ &quot;NNNN&quot;,
+ &quot;NNNN&quot;,
+ &quot;NNNN&quot;}</pre></td></tr><tr><td><pre>2</pre></td></tr><tr><td><pre>2</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Unknown&quot;</pre></td></tr><tr><td><table><tr><td colspan="2">It can be proved that in this case no player has a winning strategy.</td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">3)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;NYNNNY&quot;,
+ &quot;YNNYNN&quot;,
+ &quot;NNNNYN&quot;,
+ &quot;NYNNNN&quot;,
+ &quot;NNYNNN&quot;,
+ &quot;YNNNNN&quot;}</pre></td></tr><tr><td><pre>4</pre></td></tr><tr><td><pre>4</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Unknown&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">4)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;NYNNNY&quot;,
+ &quot;YNNYNN&quot;,
+ &quot;NNNNYN&quot;,
+ &quot;NYNNNN&quot;,
+ &quot;NNYNNN&quot;,
+ &quot;YNNNNN&quot;}</pre></td></tr><tr><td><pre>8</pre></td></tr><tr><td><pre>4</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Angel&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr><tr><td align="center" nowrap="true">5)</td><td></td></tr><tr><td>&#160;&#160;&#160;&#160;</td><td><table><tr><td><table><tr><td><pre>{&quot;NYNNNY&quot;,
+ &quot;YNNYNN&quot;,
+ &quot;NNNNYN&quot;,
+ &quot;NYNNNN&quot;,
+ &quot;NNYNNN&quot;,
+ &quot;YNNNNN&quot;}</pre></td></tr><tr><td><pre>4</pre></td></tr><tr><td><pre>8</pre></td></tr></table></td></tr><tr><td><pre>Returns: &quot;Demon&quot;</pre></td></tr><tr><td><table><tr><td colspan="2"></td></tr></table></td></tr></table></td></tr></table><p>This problem statement is the exclusive and proprietary property of TopCoder, Inc.  Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited.  (c)2003, TopCoder, Inc.  All rights reserved.  </p></body></html>
