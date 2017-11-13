@@ -79,7 +79,10 @@ public:
         a[sX] = t[sX];
         irep(i, sX - 1, 0) a[i] = a[i + 1] + t[i];
         rep(i, sX + 1, n - 1) a[i] = a[i - 1] + t[i];
-        repn(i, n) b[i] = a[i] + t[i] * abs(sY - eY);
+        repn(i, n) {
+            volatile int k = int(t[i] * abs(sY - eY));
+            b[i] = a[i] + k;
+        }
         rep(i, 1, n - 1) setmin(b[i], b[i - 1] + t[i]);
         irep(i, n - 2, 0) setmin(b[i], b[i + 1] + t[i]);
         return b[eX];
