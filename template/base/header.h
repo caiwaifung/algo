@@ -23,7 +23,7 @@ using namespace std;
 // {{{
 // clang-format off
 #define all(a) (a).begin(), (a).end()
-#define sz(a) static_cast<int>((a).size())
+#define len(a) static_cast<int>((a).size())
 #define fillchar(a, x) memset(a, x, sizeof(a))
 #define rep(i, a, b) for (int i = int(a); i <= int(b); ++i)
 #define irep(i, a, b) for (int i = int(a); i >= int(b); --i)
