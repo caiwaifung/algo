@@ -63,7 +63,6 @@ template <class T> bool setmin(T& _a, T _b) { if(_b < _a) { _a = _b; return true
 template <class T> T gcd(T _a, T _b) { return _b == 0 ? _a : gcd(_b, _a % _b); }
 int read_int() { int x; scanf("%d", &x); return x; }
 LL read_ll() { LL x; scanf("%lld", &x); return x; }
-string read_string() { string s; cin >> s; return s; }
 VI read_vi(int n = -1) { if (n < 0) scanf("%d", &n); VI a(n); repn(i, n) scanf("%d", &a[i]); return a; }
 VL read_vl(int n = -1) { if (n < 0) scanf("%d", &n); VL a(n); repn(i, n) scanf("%lld", &a[i]); return a; }
 VD read_vd(int n = -1) { if (n < 0) scanf("%d", &n); VD a(n); repn(i, n) scanf("%lf", &a[i]); return a; }
@@ -71,7 +70,18 @@ VPI read_vpi(int n = -1) { if (n < 0) scanf("%d", &n); VPI a(n); repn(i, n) scan
 VPL read_vpl(int n = -1) { if (n < 0) scanf("%d", &n); VPL a(n); repn(i, n) scanf("%lld%lld", &a[i].fi,&a[i].se); return a; }
 VPD read_vpd(int n = -1) { if (n < 0) scanf("%d", &n); VPD a(n); repn(i, n) scanf("%lf%lf", &a[i].fi,&a[i].se); return a; }
 inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a % m) { if(b & 1) r = r * a % m; } return r; }
-#define IN read_int()
 // clang-format on
 // }}}
 
+int main() {
+    int n = read_int();
+    VL a = read_vl(n), b(n);
+    partial_sum(all(a), b.begin());
+    repn(i, n) {
+        if (b[i] * 2 >= b.back()) {
+            printf("%d\n", i + 1);
+            break;
+        }
+    }
+    return 0;
+}

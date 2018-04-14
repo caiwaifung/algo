@@ -75,3 +75,18 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
+int main() {
+    const int INF = 1 << 30;
+    int n = IN, ans = INF;
+    for (int x = 1; x * x <= n; ++x) {
+        int a = x * x, b = n, cur = 0;
+        while (b > 0) {
+            if (a > 0 && a % 10 == b % 10) a /= 10, cur--;
+            cur++, b /= 10;
+        }
+        if (a == 0) setmin(ans, cur);
+    }
+    if (ans == INF) ans = -1;
+    printf("%d\n", ans);
+    return 0;
+}

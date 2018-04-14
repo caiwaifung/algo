@@ -75,3 +75,24 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
+int main() {
+    IN;
+    int a = IN, b = IN;
+    string s = read_string();
+    s += '*';
+    int cur = 0, ans = 0;
+    for (char c : s) {
+        if (c == '*') {
+            int x = cur / 2, y = cur - x;
+            if (a > b) swap(x, y);
+            setmin(x, a), setmin(y, b);
+            a -= x, b -= y;
+            ans += x + y;
+            cur = 0;
+        } else {
+            cur += 1;
+        }
+    }
+    printf("%d\n", ans);
+    return 0;
+}

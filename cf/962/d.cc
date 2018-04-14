@@ -75,3 +75,20 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
+int main() {
+    VL a = read_vl();
+    unordered_map<LL, int> loc;
+    repn(i, len(a)) {
+        while (loc.count(a[i])) {
+            a[loc[a[i]]] = -1;
+            loc.erase(a[i]);
+            a[i] *= 2;
+        }
+        loc[a[i]] = i;
+    }
+    a.erase(remove(all(a), -1), a.end());
+    printf("%d\n", len(a));
+    for (LL x : a) printf("%lld ", x);
+    printf("\n");
+    return 0;
+}
