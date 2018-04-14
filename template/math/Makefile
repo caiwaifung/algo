@@ -1,15 +1,15 @@
-TEST_ARGS=-isystem ~/googletest/googletest/include \
-	 -isystem ~/googletest/googlemock/include \
-	 -I ~/googletest/googletest \
-	 -I ~/googletest/googlemock \
-	 ~/googletest/googletest/src/gtest-all.cc \
-	 ~/googletest/googletest/src/gtest_main.cc \
+TEST_ARGS=-isystem ~/repo/googletest/googletest/include \
+	 -isystem ~/repo/googletest/googlemock/include \
+	 -I ~/repo/googletest/googletest \
+	 -I ~/repo/googletest/googlemock \
+	 ~/repo/googletest/googletest/src/gtest-all.cc \
+	 ~/repo/googletest/googletest/src/gtest_main.cc \
 	 -Wall -Wconversion -Wno-sign-conversion -Wextra -Wshadow \
 	 -fsanitize=address
 
-BM_ARGS=-isystem ~/benchmark/include \
-	 -I ~/benchmark \
-	 ~/benchmark/src/*.cc \
+BM_ARGS=-isystem ~/repo/benchmark/include \
+	 -I ~/repo/benchmark \
+	 ~/repo/benchmark/src/*.cc \
 	 -DHAVE_STD_REGEX \
 	 -DNDEBUG
 
