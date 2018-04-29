@@ -1,6 +1,6 @@
 template <class T> T det(vector<vector<T>> a, T mod) {
-    const int n = sz(a);
-    repn(i, n) assert(sz(a[i]) == n);
+    const int n = len(a);
+    repn(i, n) assert(len(a[i]) == n);
     LL ans = 1;
     repn(i, n) replr(j, i + 1, n) {
         while(a[j][i] != 0) {
