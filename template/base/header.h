@@ -1,3 +1,5 @@
+#ifndef H_ALGO_HEADER
+#define H_ALGO_HEADER
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -74,4 +76,4 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 #define IN read_int()
 // clang-format on
 // }}}
-
+#endif
