@@ -1,14 +1,5 @@
-cc_library(
-    name = "gcd",
-    hdrs = ["gcd.h"],
-    deps = ["//template/base"],
-)
+load("//template:template.bzl", "template_test")
 
-cc_test(
-    name = "gcd_test",
-    srcs = ["tests/gcd_test.cc"],
-    deps = [
-        ":gcd",
-        "@gtest//:gtest_main",
-    ],
-)
+template_test(name="det")
+template_test(name="fft")
+template_test(name="gcd")

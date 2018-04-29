@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "../../base/header.h"
-#include "../det-int.h"
+#include "../det.h"
 
 TEST(Det, Small_2) { EXPECT_EQ(11, det({{6, 5}, {5, 6}}, 99)); }
 
