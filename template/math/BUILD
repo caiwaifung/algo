@@ -1,17 +1,14 @@
 cc_library(
-    name = "ext-gcd",
-    hdrs = ["ext-gcd.h"],
+    name = "gcd",
+    hdrs = ["gcd.h"],
+    deps = ["//template/base"],
 )
 
 cc_test(
-    name = "chinese-remainder_test",
-    srcs = [
-        "chinese-remainder.h",
-        "tests/chinese-remainder_test.cc",
-    ],
+    name = "gcd_test",
+    srcs = ["tests/gcd_test.cc"],
     deps = [
-        ":ext-gcd",
-        "//template/base",
+        ":gcd",
         "@gtest//:gtest_main",
     ],
 )

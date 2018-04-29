@@ -3,11 +3,17 @@
 
 // clang-format off
 #include "../../base/header.h"
-#include "../ext-gcd.h"
-#include "../chinese-remainder.h"
+#include "../gcd.h"
 // clang-format on
 
 using namespace testing;
+
+TEST(Inv, Definition) {
+    EXPECT_TRUE(inv(1, 12) * 1 % 12 == 1);
+    EXPECT_TRUE(inv(5, 12) * 5 % 12 == 1);
+    EXPECT_TRUE(inv(7, 12) * 7 % 12 == 1);
+    EXPECT_TRUE(inv(11, 12) * 11 % 12 == 1);
+}
 
 TEST(ChineseRemainder, Simple) {
     LL x = chinese_remainder(5, 3, 6, 2);
