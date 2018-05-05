@@ -1,5 +1,3 @@
-#ifndef H_ALGO_HEADER
-#define H_ALGO_HEADER
 #include <algorithm>
 #include <bitset>
 #include <cassert>
@@ -24,6 +22,9 @@ using namespace std;
 
 // {{{
 // clang-format off
+#ifndef H_ALGO_HEADER
+#define H_ALGO_HEADER
+
 #define all(a) (a).begin(), (a).end()
 #define len(a) static_cast<int>((a).size())
 #define fillchar(a, x) memset(a, x, sizeof(a))
@@ -74,6 +75,8 @@ VPL read_vpl(int n = -1) { if (n < 0) scanf("%d", &n); VPL a(n); repn(i, n) scan
 VPD read_vpd(int n = -1) { if (n < 0) scanf("%d", &n); VPD a(n); repn(i, n) scanf("%lf%lf", &a[i].fi,&a[i].se); return a; }
 inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a % m) { if(b & 1) r = r * a % m; } return r; }
 #define IN read_int()
+
+#endif
 // clang-format on
 // }}}
-#endif
+
