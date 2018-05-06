@@ -84,3 +84,4 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 #endif
 // clang-format on
 // }}}
+
