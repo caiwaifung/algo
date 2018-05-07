@@ -1,15 +1,18 @@
+#include "../base/header.h"
+
 template <class T> class SAM {
-public:
+  public:
     static constexpr int MAX_C = 26;
     struct State {
         const int len;
         const bool is_end;
         State *succ[MAX_C] = {nullptr}, *f = nullptr;
+        vector<State*> children;
         T info;
 
         State(int len, bool is_end, State* copy = nullptr)
             : len(len), is_end(is_end) {
-            if(copy) {
+            if (copy) {
                 memcpy(succ, copy->succ, sizeof(succ));
                 f = copy->f;
             } else {
@@ -27,20 +30,20 @@ public:
         assert(ch >= 0 && ch < MAX_C);
         State *p = last_, *np = new State(p->len + 1, true);
         states_.pb(np);
-        for(; p && !p->succ[ch]; p = p->f) {
+        for (; p && !p->succ[ch]; p = p->f) {
             p->succ[ch] = np;
         }
-        if(!p) {
+        if (!p) {
             np->f = root_;
         } else {
             State* q = p->succ[ch];
-            if(q->len == p->len + 1) {
+            if (q->len == p->len + 1) {
                 np->f = q;
             } else {
                 State* nq = new State(p->len + 1, false, q);
                 states_.pb(nq);
                 np->f = q->f = nq;
-                for(; p && p->succ[ch] == q; p = p->f) {
+                for (; p && p->succ[ch] == q; p = p->f) {
                     p->succ[ch] = nq;
                 }
             }
@@ -53,13 +56,16 @@ public:
              [](const State* p, const State* q) { return p->len < q->len; });
         states_rev_ = states_;
         reverse(all(states_rev_));
+        for (State* p : states_rev_) {
+            if (p->f) p->f->children.pb(p);
+        }
     }
 
     State* root() const { return root_; }
     const vector<State*> states_top_down() const { return states_; }
     const vector<State*> states_bottom_up() const { return states_rev_; }
 
-private:
+  private:
     State *last_, *root_;
-    vector<State *> states_, states_rev_;
+    vector<State*> states_, states_rev_;
 };
