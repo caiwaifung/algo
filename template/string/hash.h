@@ -1,5 +1,7 @@
+#include "../base/header.h"
+
 class Hash {
-public:
+  public:
     static void init(int n) {
         p1.resize(n + 1), ip1.resize(n + 1);
         p2.resize(n + 1), ip2.resize(n + 1);
@@ -26,7 +28,7 @@ public:
         return Hash((h1 - b.h1) * ip1[b.s], (h2 - b.h2) * ip2[b.s], s - b.s);
     }
 
-private:
+  private:
     friend struct hash<Hash>;
     static constexpr LL P1 = 911, M1 = LL(1e9) + 7;
     static constexpr LL P2 = 127, M2 = LL(1e9) + 9;
@@ -43,4 +45,4 @@ namespace std {
 template <> struct hash<Hash> {
     size_t operator()(const Hash& h) const { return h.h1 ^ h.h2; }
 };
-}
+} // namespace std

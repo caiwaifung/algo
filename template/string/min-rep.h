@@ -1,14 +1,16 @@
+#include "../base/header.h"
+
 int min_representation(const string& a) {
-    const int n = sz(a);
+    const int n = len(a);
     int i = 0, j = 1, k = 0;
-    while(i < n && j < n && k < n) {
+    while (i < n && j < n && k < n) {
         const auto& ai = a[(i + k) % n];
         const auto& aj = a[(j + k) % n];
-        if(ai == aj) {
+        if (ai == aj) {
             ++k;
         } else {
             (ai > aj ? i : j) += k + 1;
-            if(i == j) ++j;
+            if (i == j) ++j;
             k = 0;
         }
     }
