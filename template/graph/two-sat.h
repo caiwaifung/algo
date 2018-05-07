@@ -1,5 +1,7 @@
+#include "../base/header.h"
+
 class TwoSat {
-public:
+  public:
     TwoSat(int n) : n(n), es(n * 2) {}
 
     void add_conflict(PII a, PII b) {
@@ -18,29 +20,29 @@ public:
             dfn[x] = low[x] = cur++;
             stack.pb(x);
             belong[x] = -2;
-            for(int y : es[x]) {
-                if(belong[y] == -1) {
+            for (int y : es[x]) {
+                if (belong[y] == -1) {
                     dfs(y);
                     setmin(low[x], low[y]);
-                } else if(belong[y] == -2) {
+                } else if (belong[y] == -2) {
                     setmin(low[x], dfn[y]);
                 }
             }
-            if(low[x] == dfn[x]) {
-                while(1) {
+            if (low[x] == dfn[x]) {
+                while (1) {
                     int y = stack.back();
                     stack.pop_back();
                     belong[y] = num;
-                    if(y == x) break;
+                    if (y == x) break;
                 }
                 ++num;
             }
         };
-        repn(i, n * 2) if(belong[i] == -1) dfs(i);
+        repn(i, n * 2) if (belong[i] == -1) dfs(i);
 
         VI r(n);
         repn(i, n) {
-            if(belong[i] == belong[i + n]) {
+            if (belong[i] == belong[i + n]) {
                 return VI();
             }
             r[i] = (belong[i] > belong[i + n]);
@@ -48,7 +50,7 @@ public:
         return r;
     }
 
-private:
+  private:
     const int n;
     vector<VI> es;
 };

@@ -1,26 +1,28 @@
+#include "../base/header.h"
+
 pair<int, VI> max_match(const vector<VI>& es) {
-    const int n = sz(es);
+    const int n = len(es);
     int m = 0;
-    repn(i, n) for(int j : es[i]) setmax(m, j + 1);
+    repn(i, n) for (int j : es[i]) setmax(m, j + 1);
     VI mx(n, -1), my(m, -1);
-    while(1) {
+    while (1) {
         vector<bool> vis(m, false);
         VI src(n, -1), pre(n, -1);
         queue<int> que;
-        repn(i, n) if(mx[i] < 0) {
+        repn(i, n) if (mx[i] < 0) {
             src[i] = i;
             que.push(i);
         }
         bool found = false;
-        while(!que.empty()) {
+        while (!que.empty()) {
             const int x = que.front();
             que.pop();
-            if(mx[src[x]] >= 0) continue;
-            for(int y : es[x]) {
-                if(!vis[y]) {
+            if (mx[src[x]] >= 0) continue;
+            for (int y : es[x]) {
+                if (!vis[y]) {
                     vis[y] = true;
-                    if(my[y] < 0) {
-                        for(int i = x, j = y; i >= 0;) {
+                    if (my[y] < 0) {
+                        for (int i = x, j = y; i >= 0;) {
                             const int j0 = mx[i];
                             mx[i] = j, my[j] = i;
                             i = pre[i], j = j0;
@@ -34,9 +36,9 @@ pair<int, VI> max_match(const vector<VI>& es) {
                 }
             }
         }
-        if(!found) break;
+        if (!found) break;
     }
     int ans = 0;
-    repn(i, n) if(mx[i] >= 0) ans++;
+    repn(i, n) if (mx[i] >= 0) ans++;
     return mp(ans, mx);
 }

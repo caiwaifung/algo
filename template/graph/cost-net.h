@@ -1,5 +1,7 @@
+#include "../base/header.h"
+
 template <class T> class CostNet {
-public:
+  public:
     explicit CostNet(int n0) : n(n0 + 2), src(n0), dst(n0 + 1), es(n) {}
 
     int s() const { return src; }
@@ -17,7 +19,7 @@ public:
     // Returns (flow, cost).
     pair<T, T> compute() {
         pair<T, T> ans = {0, 0};
-        while(1) {
+        while (1) {
             vector<T> dis(n, numeric_limits<T>::max());
             vector<T> flow(n);
             vector<Edge*> pre(n);
@@ -28,14 +30,14 @@ public:
             queue<int> que;
             inside[src] = true;
             que.push(src);
-            while(!que.empty()) {
+            while (!que.empty()) {
                 const int x = que.front();
                 que.pop();
-                for(const auto& e : es[x]) {
-                    if(e->w > 0 && setmin(dis[e->y], dis[x] + e->c)) {
+                for (const auto& e : es[x]) {
+                    if (e->w > 0 && setmin(dis[e->y], dis[x] + e->c)) {
                         pre[e->y] = e.get();
                         flow[e->y] = min(flow[x], e->w);
-                        if(!inside[e->y]) {
+                        if (!inside[e->y]) {
                             inside[e->y] = true;
                             que.push(e->y);
                         }
@@ -43,12 +45,12 @@ public:
                 }
                 inside[x] = false;
             }
-            if(dis[dst] == numeric_limits<T>::max()) {
+            if (dis[dst] == numeric_limits<T>::max()) {
                 return ans;
             }
 
             ans.fi += flow[dst], ans.se += flow[dst] * dis[dst];
-            for(int x = dst; x != src; x = pre[x]->oppo->y) {
+            for (int x = dst; x != src; x = pre[x]->oppo->y) {
                 pre[x]->w -= flow[dst];
                 pre[x]->oppo->w += flow[dst];
             }
@@ -58,7 +60,7 @@ public:
 
     T flow(void* e) { return static_cast<Edge*>(e)->oppo->w; }
 
-private:
+  private:
     struct Edge {
         int y;
         T w, c;

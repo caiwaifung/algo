@@ -1,13 +1,10 @@
+#include "../base/header.h"
+
 template <class T> class Net {
-public:
+  public:
     explicit Net(int n0)
-        : n(n0 + 4),
-          original_s(n0),
-          original_t(n0 + 1),
-          super_s(n0 + 2),
-          super_t(n0 + 3),
-          es(n),
-          dis(n) {}
+        : n(n0 + 4), original_s(n0), original_t(n0 + 1), super_s(n0 + 2),
+          super_t(n0 + 3), es(n), dis(n) {}
 
     int s() const { return original_s; }
     int t() const { return original_t; }
@@ -22,7 +19,7 @@ public:
     }
     void* add(int x, int y, pair<T, T> w) {
         assert(w.fi <= w.se);
-        if(w.fi > 0) {
+        if (w.fi > 0) {
             add(super_s, y, w.fi);
             add(x, super_t, w.fi);
             super_total += w.fi;
@@ -32,16 +29,16 @@ public:
 
     // returns -1 if no solution.
     T compute() {
-        if(super_total > 0) {
+        if (super_total > 0) {
             add(original_t, original_s, numeric_limits<T>::max());
             LL r = 0, tmp;
-            while((tmp = augment(super_s, super_t)) > 0) {
+            while ((tmp = augment(super_s, super_t)) > 0) {
                 r += tmp;
             }
-            if(r != super_total) return -1;
+            if (r != super_total) return -1;
         }
         T ans = 0, tmp;
-        while((tmp = augment(original_s, original_t)) > 0) {
+        while ((tmp = augment(original_s, original_t)) > 0) {
             ans += tmp;
         }
         return ans;
@@ -54,11 +51,11 @@ public:
     }
     VI left() const {
         VI r;
-        repn(i, n - 4) if(dis[i] > 0) r.pb(i);
+        repn(i, n - 4) if (dis[i] > 0) r.pb(i);
         return r;
     }
 
-private:
+  private:
     struct Edge {
         int y;
         T w;
@@ -71,29 +68,29 @@ private:
         dis[s] = 1;
         queue<int> que;
         que.push(s);
-        while(!que.empty()) {
+        while (!que.empty()) {
             int x = que.front();
             que.pop();
-            for(const auto& e : es[x]) {
-                if(e->w > 0 && dis[e->y] == 0) {
+            for (const auto& e : es[x]) {
+                if (e->w > 0 && dis[e->y] == 0) {
                     dis[e->y] = dis[x] + 1;
                     que.push(e->y);
                 }
             }
         }
-        if(dis[t] == 0) return 0;
+        if (dis[t] == 0) return 0;
 
         vector<size_t> ce(n);
         const function<T(int, T)> dfs = [&](int x, T rest) {
-            if(x == t) return rest;
+            if (x == t) return rest;
             T r = 0;
-            for(size_t& i = ce[x]; i < es[x].size(); ++i) {
+            for (size_t& i = ce[x]; i < es[x].size(); ++i) {
                 const auto& e = es[x][i];
-                if(e->w > 0 && dis[e->y] > dis[x]) {
+                if (e->w > 0 && dis[e->y] > dis[x]) {
                     T cur = dfs(e->y, min(e->w, rest));
                     e->w -= cur, e->oppo->w += cur;
                     r += cur, rest -= cur;
-                    if(rest == 0) break;
+                    if (rest == 0) break;
                 }
             }
             return r;
