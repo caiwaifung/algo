@@ -1,6 +1,6 @@
 #include "../base/header.h"
 
-// ans[i] = max prefix of t matches suffix of s[:i]
+// ans[i] = max prefix of t matches suffix of s[0..i]
 VI kmp(const string& s, const string& t) {
     VI fail(len(t) + 1);
     int j = fail[0] = -1;
