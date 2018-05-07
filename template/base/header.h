@@ -26,7 +26,7 @@ using namespace std;
 #define H_ALGO_HEADER
 
 #define all(a) (a).begin(), (a).end()
-#define len(a) static_cast<int>((a).size())
+template <class T> int len(const T& a) { return static_cast<int>(a.size()); }
 #define fillchar(a, x) memset(a, x, sizeof(a))
 #define rep(i, a, b) for (int i = int(a); i <= int(b); ++i)
 #define irep(i, a, b) for (int i = int(a); i >= int(b); --i)
@@ -61,7 +61,7 @@ typedef vector<VPI> VVPI;
 typedef vector<VPL> VVPL;
 
 template <class T, class S> ostream& operator<<(ostream& os, const pair<T, S>& v) { return os << "(" << v.first << ", " << v.second << ")"; }
-template <class T> ostream& operator<<(ostream& os, const vector<T>& v) { os << "["; repn(i, sz(v)) { if(i) os << ", "; os << v[i]; } return os << "]"; }
+template <class T> ostream& operator<<(ostream& os, const vector<T>& v) { os << "["; repn(i, len(v)) { if(i) os << ", "; os << v[i]; } return os << "]"; }
 int read_int() { int x; scanf("%d", &x); return x; }
 LL read_ll() { LL x; scanf("%lld", &x); return x; }
 string read_string() { string s; cin >> s; return s; }
