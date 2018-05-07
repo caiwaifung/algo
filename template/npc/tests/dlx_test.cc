@@ -1,13 +1,13 @@
+#include "../../base/header.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "../../base/header.h"
 
 #include "../dlx.h"
 
 using namespace testing;
 
 void add_nodes(DancingLinks* dlx, vector<VI> a) {
-    repn(i, sz(a)) repn(j, sz(a[i])) if(a[i][j]) dlx->add(i, j);
+    repn(i, len(a)) repn(j, len(a[i])) if (a[i][j]) dlx->add(i, j);
 }
 
 TEST(DancingLinks, Simple) {
@@ -32,14 +32,14 @@ TEST(DancingLinks, MultipleSolution) {
         ++found;
         EXPECT_THAT(ans,
                     AnyOf(ElementsAre(true, false), ElementsAre(false, true)));
-        return true;  // Continue searching.
+        return true; // Continue searching.
     });
     EXPECT_EQ(2, found);
 
     found = 0;
     dlx.solve([&](const vector<bool>&) {
         ++found;
-        return false;  // Stop when found.
+        return false; // Stop when found.
     });
     EXPECT_EQ(1, found);
 }
@@ -104,12 +104,12 @@ TEST(DancingLinks, PreChosen) {
 }
 
 VI solve_nqueen(VI a) {
-    const int n = sz(a);
+    const int n = len(a);
     DancingLinks dlx(n * n, n * 6);
     replr(y, n * 2, n * 6) dlx.ignore(y);
     repn(i, n) repn(j, n) {
         int x = i * n + j;
-        if(a[i] == j) dlx.choose(x);
+        if (a[i] == j) dlx.choose(x);
         dlx.add(x, i);
         dlx.add(x, n + j);
         dlx.add(x, n * 2 + (i + j));
@@ -117,14 +117,14 @@ VI solve_nqueen(VI a) {
     }
     VI r(n, -1);
     dlx.solve([&](const vector<bool>& ans) {
-        repn(i, n) repn(j, n) if(ans[i * n + j]) r[i] = j;
+        repn(i, n) repn(j, n) if (ans[i * n + j]) r[i] = j;
         return false;
     });
     return r;
 }
 
 void check_nqueen(VI a) {
-    const int n = sz(a);
+    const int n = len(a);
     repn(i, n) EXPECT_GE(a[i], 0);
     repn(i, n) replr(j, i + 1, n) {
         EXPECT_NE(a[i], a[j]);
