@@ -1,10 +1,10 @@
-void solve(int cs) {
-    printf("Case #%d: ", cs);
+int solve() {
 }
 
 int main() {
-    int num;
-    scanf("%d", &num);
-    rep(i, 1, num) { solve(i); }
+    for (int num = IN, cs = 1; cs <= num; ++cs) {
+        int ans = solve();
+        printf("Case #%d: %d\n", cs, ans);
+    }
     return 0;
 }
