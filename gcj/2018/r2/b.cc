@@ -85,51 +85,30 @@ inline LL powmod(LL a, LL b, LL m) { LL r = 1; for(; b > 0; b >>= 1, a = a * a %
 // clang-format on
 // }}}
 
-int solve(int A, int B, bool _ = false) {
-    int la = 1, lb = 1;
-    while (la * la < 2 * A) ++la;
-    while (lb * lb < 2 * B) ++lb;
-    ++la, ++lb;
-    if (_) la = A + 1, lb = B + 1;
-    static short f[505][505][35][35];
-    rep(a, 0, A) rep(b, 0, B) rep(ca, 0, la) rep(cb, 0, lb) {
-        f[a][b][ca][cb] = -1;
+int solve(int A, int B) {
+    static int ans[501][501];
+    static short f[501][501][37][37];
+    static bool done = false;
+    if (!done) {
+        fillchar(ans, 0);
+        fillchar(f, -1);
+        f[0][0][0][1] = 0;
+        rep(a, 0, 500) rep(b, 0, 500) rep(ca, 0, 35) rep(cb, 0, 35) {
+            const short cur = f[a][b][ca][cb];
+            if (cur < 0) continue;
+            setmax(ans[a][b], (int)cur);
+            if (a + ca <= 500 && b + cb <= 500) {
+                setmax(f[a + ca][b + cb][ca][cb + 1], short(cur + 1));
+            }
+            setmax(f[a][b][ca][cb + 1], cur);
+            setmax(f[a][b][ca + 1][0], cur);
+        }
+        done = true;
     }
-    f[A][B][0][1] = 0;
-    short ans = 0;
-    irep(a, A, 0) irep(b, B, 0) rep(ca, 0, la) rep(cb, 0, lb) {
-        const short cur = f[a][b][ca][cb];
-        if (cur < 0) continue;
-        // if (cur + a / max(1, ca) <= ans) continue;
-        setmax(ans, cur);
-        if (a >= ca && b >= cb)
-            setmax(f[a - ca][b - cb][ca][cb + 1], short(cur + 1));
-        setmax(f[a][b][ca][cb + 1], cur);
-        setmax(f[a][b][ca + 1][0], cur);
-    }
-    return ans;
-}
-
-void check() {
-    rep(A, 1, 30) rep(B, 1, 30) {
-        int r1 = solve(A, B), r2 = solve(A, B, true);
-        printf("%d %d: %d %d\n", A, B, r1, r2);
-        assert(r1 == r2);
-    }
-    exit(0);
-}
-
-void timer() {
-    repn(i, 100) {
-        int ans = solve(rand() % 500 + 1, rand() % 500 + 1);
-        printf("%d: %d\n", i, ans);
-    }
-    exit(0);
+    return ans[A][B];
 }
 
 int main() {
-    // check();
-    timer();
     int num;
     scanf("%d", &num);
     rep(i, 1, num) {
